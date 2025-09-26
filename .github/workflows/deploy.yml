@@ -71,7 +71,13 @@ jobs:
             --site "${{ steps.pages.outputs.origin }}" \
             --base "${{ steps.pages.outputs.base_path }}"
         working-directory: ${{ env.BUILD_PATH }}
-        
+      - name: Ensure .nojekyll to disable Jekyll on Pages
+        run: |
+          # Create dist if missing (astro build should create it) and add .nojekyll
+          mkdir -p ${{ env.BUILD_PATH }}/dist
+          touch ${{ env.BUILD_PATH }}/dist/.nojekyll
+        working-directory: ${{ env.BUILD_PATH }}
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
