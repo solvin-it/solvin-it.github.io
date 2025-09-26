@@ -53,8 +53,9 @@ import ThemeToggle from './ThemeToggle.tsx';
 
   <!-- Mobile Navigation Menu -->
   <div 
-    class="md:hidden fixed inset-0 top-16 bg-white dark:bg-gray-900 z-40 transform translate-x-full transition-transform duration-300 ease-in-out"
+    class="md:hidden fixed inset-0 top-16 bg-white dark:bg-gray-900 z-40 transform translate-x-full transition-transform duration-300 ease-in-out pointer-events-none"
     data-mobile-menu
+    style="touch-action: pan-y;" 
   >
     <div class="px-4 py-6 space-y-4">
       {siteConfig.navigation.map((item) => (
@@ -91,15 +92,17 @@ import ThemeToggle from './ThemeToggle.tsx';
       isOpen = !isOpen;
       button.setAttribute('aria-expanded', isOpen.toString());
       
-      if (isOpen) {
-        menu.classList.remove('translate-x-full');
-        overlay.classList.remove('opacity-0', 'pointer-events-none');
-        document.body.classList.add('overflow-hidden');
-      } else {
-        menu.classList.add('translate-x-full');
-        overlay.classList.add('opacity-0', 'pointer-events-none');
-        document.body.classList.remove('overflow-hidden');
-      }
+        if (isOpen) {
+          // Show menu and enable pointer events for interaction
+          menu.classList.remove('translate-x-full', 'pointer-events-none');
+          overlay.classList.remove('opacity-0', 'pointer-events-none');
+          document.body.classList.add('overflow-hidden');
+        } else {
+          // Hide menu and disable pointer events so off-screen menu can't be dragged into view
+          menu.classList.add('translate-x-full', 'pointer-events-none');
+          overlay.classList.add('opacity-0', 'pointer-events-none');
+          document.body.classList.remove('overflow-hidden');
+        }
     }
 
     function closeMenu() {
