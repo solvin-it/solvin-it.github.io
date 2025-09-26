@@ -1,0 +1,315 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { siteConfig } from '../content/site.ts';
+
+const title = `Experience | ${siteConfig.name}`;
+const description = 'My professional journey from Technical Solutions Engineer to AI/ML Engineer, featuring key roles, achievements, and technical evolution.';
+
+// Experience data
+const experiences = [
+  {
+    role: "AI/ML Engineer",
+    company: "Consulting & Freelance",
+    duration: "2023 - Present",
+    location: "Remote",
+    type: "current",
+    description: "Building production-ready AI/ML solutions for clients, specializing in RAG systems, LLM applications, and classical ML models.",
+    achievements: [
+      "Developed 15+ ML models with measurable business impact",
+      "Built RAG systems with 95% user satisfaction rates",
+      "Reduced customer churn by 23% through predictive modeling",
+      "Created interactive AI applications with 40s+ average engagement"
+    ],
+    technologies: ["Python", "LangChain", "OpenAI API", "Scikit-learn", "FastAPI", "Docker", "PostgreSQL", "React"]
+  },
+  {
+    role: "Senior Technical Solutions Engineer",
+    company: "FinTech Solutions Inc",
+    duration: "2020 - 2023",
+    location: "San Francisco, CA",
+    type: "previous",
+    description: "Led technical solutions delivery for enterprise clients, bridging business requirements with scalable technology implementations.",
+    achievements: [
+      "Delivered $2M+ in technical solutions across 20+ enterprise clients",
+      "Reduced client implementation time by 40% through automation",
+      "Built customer-facing APIs handling 10M+ requests/month",
+      "Mentored 5 junior engineers in solution architecture"
+    ],
+    technologies: ["JavaScript", "Node.js", "Python", "React", "PostgreSQL", "Redis", "AWS", "Docker"]
+  },
+  {
+    role: "Technical Solutions Engineer",
+    company: "Enterprise Systems Co",
+    duration: "2018 - 2020",
+    location: "Austin, TX",
+    type: "previous",
+    description: "Designed and implemented technical solutions for complex business challenges, working directly with stakeholders to translate requirements into working systems.",
+    achievements: [
+      "Architected solutions serving 500K+ daily active users",
+      "Improved system performance by 60% through optimization",
+      "Led cross-functional teams of 8+ engineers and designers",
+      "Established CI/CD practices reducing deployment time by 70%"
+    ],
+    technologies: ["Java", "Spring Boot", "Angular", "MySQL", "Jenkins", "AWS"]
+  },
+  {
+    role: "Software Engineer",
+    company: "Innovation Labs",
+    duration: "2016 - 2018",
+    location: "Austin, TX",
+    type: "previous", 
+    description: "Full-stack development on customer-facing applications, focusing on user experience and system reliability.",
+    achievements: [
+      "Built 10+ full-stack applications from concept to deployment",
+      "Maintained 99.9% uptime across production services",
+      "Implemented automated testing reducing bugs by 50%",
+      "Contributed to open-source projects with 1000+ GitHub stars"
+    ],
+    technologies: ["JavaScript", "React", "Node.js", "MongoDB", "Git", "Heroku"]
+  },
+  {
+    role: "Junior Software Developer",
+    company: "TechStart Solutions",
+    duration: "2015 - 2016",
+    location: "Dallas, TX",
+    type: "previous",
+    description: "Entry-level position focusing on web development and learning software engineering best practices.",
+    achievements: [
+      "Completed 50+ feature implementations under senior guidance",
+      "Participated in agile development processes",
+      "Built responsive web interfaces for mobile and desktop",
+      "Gained foundation in software testing and debugging"
+    ],
+    technologies: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"]
+  }
+];
+
+const skills = [
+  {
+    category: "AI/ML & Data Science",
+    skills: ["Python", "Scikit-learn", "Pandas", "NumPy", "LangChain", "OpenAI API", "RAG Systems", "Model Evaluation", "Feature Engineering"]
+  },
+  {
+    category: "Full-Stack Development", 
+    skills: ["JavaScript", "TypeScript", "React", "Next.js", "Node.js", "FastAPI", "RESTful APIs", "GraphQL"]
+  },
+  {
+    category: "Databases & Storage",
+    skills: ["PostgreSQL", "MongoDB", "Redis", "ChromaDB", "Vector Databases", "SQL Optimization"]
+  },
+  {
+    category: "DevOps & Cloud",
+    skills: ["Docker", "AWS", "CI/CD", "Git", "Linux", "Microservices", "System Architecture"]
+  },
+  {
+    category: "Business & Leadership",
+    skills: ["Stakeholder Management", "Technical Writing", "Mentoring", "Project Management", "Requirements Analysis"]
+  }
+];
+---
+
+<MainLayout title={title} description={description}>
+  <section class="section">
+    <div class="container max-w-4xl">
+      <!-- Page Header -->
+      <div class="text-center mb-16 animate-in">
+        <h1 class="heading-1 text-gray-900 dark:text-white mb-6">
+          Experience
+        </h1>
+        <p class="body-large max-w-3xl mx-auto">
+          My journey from software engineering to AI/ML, highlighting key roles, achievements, and the evolution of my technical expertise across 9+ years in the industry.
+        </p>
+      </div>
+
+      <!-- Experience Timeline -->
+      <div class="mb-20">
+        <h2 class="heading-3 text-gray-900 dark:text-white mb-8 animate-in">
+          Professional Timeline
+        </h2>
+        
+        <div class="space-y-8">
+          {experiences.map((exp, index) => (
+            <div 
+              class={`card p-8 animate-in ${exp.type === 'current' ? 'ring-2 ring-primary-500 ring-opacity-50' : ''}`}
+              style={`animation-delay: ${0.1 + index * 0.1}s`}
+            >
+              <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
+                <div class="mb-4 lg:mb-0">
+                  <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">
+                    {exp.role}
+                  </h3>
+                  <div class="text-lg text-primary-600 dark:text-primary-400 font-medium mb-1">
+                    {exp.company}
+                  </div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">
+                    {exp.location}
+                  </div>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                  <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
+                    {exp.duration}
+                  </span>
+                  {exp.type === 'current' && (
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
+                      Current
+                    </span>
+                  )}
+                </div>
+              </div>
+              
+              <p class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+                {exp.description}
+              </p>
+              
+              <div class="mb-6">
+                <h4 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                  Key Achievements
+                </h4>
+                <ul class="grid md:grid-cols-2 gap-2">
+                  {exp.achievements.map((achievement) => (
+                    <li class="flex items-start space-x-2">
+                      <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span class="text-sm text-gray-600 dark:text-gray-300">
+                        {achievement}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div>
+                <h4 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
+                  Technologies Used
+                </h4>
+                <div class="flex flex-wrap gap-2">
+                  {exp.technologies.map((tech) => (
+                    <span class="inline-block px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Skills Section -->
+      <div class="mb-20">
+        <h2 class="heading-3 text-gray-900 dark:text-white mb-8 animate-in">
+          Technical Skills
+        </h2>
+        
+        <div class="grid lg:grid-cols-2 gap-8">
+          {skills.map((skillGroup, index) => (
+            <div 
+              class="card p-6 animate-in"
+              style={`animation-delay: ${0.1 + index * 0.05}s`}
+            >
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                {skillGroup.category}
+              </h3>
+              <div class="flex flex-wrap gap-2">
+                {skillGroup.skills.map((skill) => (
+                  <span class="inline-block px-3 py-1 text-sm font-medium bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-lg">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Career Transition Section -->
+      <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 md:p-12 animate-in">
+        <h2 class="heading-3 text-gray-900 dark:text-white mb-6">
+          From Solutions Engineering to AI/ML
+        </h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="text-center">
+            <div class="text-3xl mb-3" role="img" aria-label="Foundation">
+              🏗️
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Strong Foundation
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              9 years of software engineering across full-stack, systems, and enterprise solutions built a solid technical foundation.
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <div class="text-3xl mb-3" role="img" aria-label="Bridge">
+              🌉
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              Natural Bridge
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              Solutions engineering experience in understanding business problems and building practical technology solutions directly applies to ML applications.
+            </p>
+          </div>
+          
+          <div class="text-center">
+            <div class="text-3xl mb-3" role="img" aria-label="Innovation">
+              🚀
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+              AI/ML Innovation
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              Now applying this foundation to build cutting-edge AI/ML solutions that solve real business problems with measurable impact.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Section -->
+      <div class="text-center mt-16 animate-in" style="animation-delay: 0.4s">
+        <div class="space-y-6">
+          <h2 class="heading-3 text-gray-900 dark:text-white">
+            Let's Build Something Amazing Together
+          </h2>
+          <p class="body-large max-w-2xl mx-auto">
+            I'm excited to bring my technical experience and AI/ML expertise to help your team deliver impactful solutions.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/contact" class="btn btn-primary">
+              Get in Touch
+            </a>
+            <a href="/resume" class="btn btn-secondary">
+              View Full Resume
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .animate-in {
+    animation: slideIn 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-in {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

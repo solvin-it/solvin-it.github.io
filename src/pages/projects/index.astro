@@ -1,0 +1,77 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { siteConfig } from '../../content/site.ts';
+
+const title = `Projects | ${siteConfig.name}`;
+const description = 'Explore my AI/ML and full-stack development projects, from customer churn prediction to RAG systems and production applications.';
+---
+
+<MainLayout title={title} description={description}>
+  <section class="section">
+    <div class="container">
+      <!-- Page Header -->
+      <div class="text-center mb-16 animate-in">
+        <h1 class="heading-1 text-gray-900 dark:text-white mb-6">
+          Projects
+        </h1>
+        <p class="body-large max-w-3xl mx-auto">
+          A showcase of AI/ML and full-stack projects I've built, highlighting end-to-end delivery from problem understanding to production deployment.
+        </p>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="grid md:grid-cols-2 gap-8 mb-16">
+        {siteConfig.featuredProjects.map((project, index) => (
+          <div 
+            class="animate-in" 
+            style={`animation-delay: ${0.1 + index * 0.1}s`}
+          >
+            <ProjectCard {...project} />
+          </div>
+        ))}
+      </div>
+
+      <!-- Additional Projects Section -->
+      <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 md:p-12 text-center animate-in" style="animation-delay: 0.6s">
+        <h2 class="heading-3 text-gray-900 dark:text-white mb-4">
+          More Projects Coming Soon
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
+          I'm constantly working on new projects and exploring cutting-edge AI/ML technologies. Check back soon for updates, or reach out to discuss potential collaborations.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/contact" class="btn btn-primary">
+            Let's Collaborate
+          </a>
+          <a href={siteConfig.author.github} target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+            View GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .animate-in {
+    animation: slideIn 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-in {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

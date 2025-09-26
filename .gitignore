@@ -1,0 +1,37 @@
+# Node.js dependencies
+node_modules/
+
+# Astro build output
+dist/
+.astro/
+
+# Tailwind CSS generated files
+# If you are using JIT or PostCSS to generate your CSS,
+# you might have a generated file that should be ignored.
+# For example, if you output to `src/styles/tailwind.css` and it's generated:
+# src/styles/tailwind.css
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor/IDE specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dependency lock files (if you prefer not to commit them)
+# yarn.lock
+# package-lock.json
+
+# Other temporary files
+.DS_Store
+Thumbs.db

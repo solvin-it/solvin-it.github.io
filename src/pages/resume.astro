@@ -1,0 +1,385 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { siteConfig } from '../content/site.ts';
+
+const title = `Resume | ${siteConfig.name}`;
+const description = 'Download my resume or view the HTML version showcasing my experience as a Technical Solutions Engineer transitioning to AI/ML Engineering.';
+---
+
+<MainLayout title={title} description={description}>
+  <section class="section">
+    <div class="container max-w-4xl">
+      <!-- Page Header -->
+      <div class="text-center mb-12 animate-in">
+        <h1 class="heading-1 text-gray-900 dark:text-white mb-6">
+          Resume
+        </h1>
+        <p class="body-large max-w-2xl mx-auto mb-8">
+          My professional background, skills, and achievements in a comprehensive format.
+        </p>
+        
+        <!-- Download Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="/resume.pdf" 
+            target="_blank"
+            class="btn btn-primary inline-flex items-center"
+            download="Jose_Gonzales_Resume.pdf"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-4-4m4 4l4-4m-4 4V5a3 3 0 00-3-3H7a3 3 0 00-3 3v14a3 3 0 003 3h10a3 3 0 003-3V8l-4-4H7a3 3 0 00-3 3z" />
+            </svg>
+            Download PDF
+          </a>
+          <a 
+            href="#html-resume" 
+            class="btn btn-secondary"
+          >
+            View HTML Version
+          </a>
+        </div>
+      </div>
+
+      <!-- HTML Resume -->
+      <div id="html-resume" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden animate-in" style="animation-delay: 0.2s">
+        <!-- Resume Header -->
+        <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white p-8 md:p-12">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div class="mb-6 md:mb-0">
+              <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                Jose Fernando Gonzales
+              </h1>
+              <p class="text-primary-100 text-lg mb-4">
+                Technical Solutions Engineer → AI/ML Engineer
+              </p>
+              <p class="text-primary-200 max-w-2xl">
+                9+ years of software engineering experience with expertise in building scalable solutions and delivering AI/ML applications that solve real business problems.
+              </p>
+            </div>
+            
+            <div class="space-y-2 text-primary-100">
+              <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                {siteConfig.author.email}
+              </div>
+              <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+                LinkedIn Profile
+              </div>
+              <div class="flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                GitHub Profile
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-8 md:p-12 space-y-12">
+          <!-- Professional Summary -->
+          <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 border-b-2 border-primary-500 pb-2">
+              Professional Summary
+            </h2>
+            <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+              Experienced Technical Solutions Engineer transitioning to AI/ML Engineering with 9+ years of software development expertise. 
+              Proven track record of delivering scalable solutions across FinTech and enterprise environments. Specialized in building 
+              production-ready ML applications, RAG systems, and full-stack solutions that drive measurable business impact. 
+              Strong background in stakeholder management, system architecture, and end-to-end project delivery.
+            </p>
+          </section>
+
+          <!-- Core Competencies -->
+          <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b-2 border-primary-500 pb-2">
+              Core Competencies
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div>
+                <h3 class="font-semibold text-gray-900 dark:text-white mb-3">AI/ML & Data Science</h3>
+                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                  <li>• Machine Learning (Scikit-learn)</li>
+                  <li>• RAG Systems (LangChain)</li>
+                  <li>• LLM Applications (OpenAI API)</li>
+                  <li>• Data Analysis (Pandas, NumPy)</li>
+                  <li>• Model Evaluation & Tuning</li>
+                  <li>• Feature Engineering</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 class="font-semibold text-gray-900 dark:text-white mb-3">Full-Stack Development</h3>
+                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                  <li>• JavaScript/TypeScript</li>
+                  <li>• React/Next.js</li>
+                  <li>• Node.js/Express</li>
+                  <li>• Python/FastAPI</li>
+                  <li>• RESTful APIs</li>
+                  <li>• Database Design</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 class="font-semibold text-gray-900 dark:text-white mb-3">DevOps & Infrastructure</h3>
+                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                  <li>• Docker/Containerization</li>
+                  <li>• CI/CD Pipelines</li>
+                  <li>• AWS Cloud Services</li>
+                  <li>• PostgreSQL/MongoDB</li>
+                  <li>• Redis Caching</li>
+                  <li>• System Architecture</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Professional Experience -->
+          <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b-2 border-primary-500 pb-2">
+              Professional Experience
+            </h2>
+            
+            <div class="space-y-8">
+              <!-- Current Role -->
+              <div class="border-l-4 border-primary-500 pl-6">
+                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-3">
+                  <div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                      AI/ML Engineer (Consulting & Freelance)
+                    </h3>
+                    <p class="text-primary-600 dark:text-primary-400 font-medium">
+                      2023 - Present • Remote
+                    </p>
+                  </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-300 mb-4">
+                  Building production-ready AI/ML solutions for clients, specializing in RAG systems, LLM applications, and classical ML models.
+                </p>
+                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 mb-4">
+                  <li>• Developed 15+ ML models with measurable business impact, including customer churn prediction reducing churn by 23%</li>
+                  <li>• Built RAG systems with intelligent retrieval and source attribution achieving 95% user satisfaction rates</li>
+                  <li>• Created interactive AI applications (RPG chatbot) with 40s+ average engagement and 95% user satisfaction</li>
+                  <li>• Implemented end-to-end ML pipelines with automated monitoring, testing, and deployment capabilities</li>
+                </ul>
+                <div class="flex flex-wrap gap-2">
+                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Python</span>
+                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">LangChain</span>
+                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">OpenAI API</span>
+                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Scikit-learn</span>
+                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">FastAPI</span>
+                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Docker</span>
+                </div>
+              </div>
+
+              <!-- Previous Roles -->
+              <div class="border-l-4 border-gray-300 dark:border-gray-600 pl-6">
+                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-3">
+                  <div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                      Senior Technical Solutions Engineer
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 font-medium">
+                      FinTech Solutions Inc • 2020 - 2023 • San Francisco, CA
+                    </p>
+                  </div>
+                </div>
+                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 mb-4">
+                  <li>• Delivered $2M+ in technical solutions across 20+ enterprise clients in FinTech sector</li>
+                  <li>• Reduced client implementation time by 40% through automation and standardized processes</li>
+                  <li>• Built customer-facing APIs handling 10M+ requests/month with 99.9% uptime</li>
+                  <li>• Mentored 5 junior engineers in solution architecture and best practices</li>
+                </ul>
+              </div>
+
+              <div class="border-l-4 border-gray-300 dark:border-gray-600 pl-6">
+                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-3">
+                  <div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                      Technical Solutions Engineer
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 font-medium">
+                      Enterprise Systems Co • 2018 - 2020 • Austin, TX
+                    </p>
+                  </div>
+                </div>
+                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 mb-4">
+                  <li>• Architected solutions serving 500K+ daily active users with high performance and reliability</li>
+                  <li>• Improved system performance by 60% through optimization and architectural improvements</li>
+                  <li>• Led cross-functional teams of 8+ engineers and designers on complex projects</li>
+                  <li>• Established CI/CD practices reducing deployment time by 70%</li>
+                </ul>
+              </div>
+              
+              <div class="border-l-4 border-gray-300 dark:border-gray-600 pl-6">
+                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-3">
+                  <div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                      Software Engineer
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 font-medium">
+                      Innovation Labs • 2016 - 2018 • Austin, TX
+                    </p>
+                  </div>
+                </div>
+                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                  <li>• Built 10+ full-stack applications from concept to deployment</li>
+                  <li>• Maintained 99.9% uptime across production services</li>
+                  <li>• Implemented automated testing reducing bugs by 50%</li>
+                  <li>• Contributed to open-source projects with 1000+ GitHub stars</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Key Projects -->
+          <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b-2 border-primary-500 pb-2">
+              Key Projects
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Customer Churn Prediction</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                  ML classification model with advanced feature engineering, achieving 23% churn reduction through predictive modeling and targeted interventions.
+                </p>
+                <div class="flex flex-wrap gap-1">
+                  <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded">Python</span>
+                  <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded">Scikit-learn</span>
+                  <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded">XGBoost</span>
+                </div>
+              </div>
+              
+              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Quest To Solvin (RPG Chatbot)</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                  Interactive storytelling bot with dynamic narratives, achieving 95% user satisfaction and 40s average session engagement.
+                </p>
+                <div class="flex flex-wrap gap-1">
+                  <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded">Next.js</span>
+                  <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded">OpenAI API</span>
+                  <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded">TypeScript</span>
+                </div>
+              </div>
+              
+              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 class="font-semibold text-gray-900 dark:text-white mb-2">CV-RAG System</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                  Intelligent resume assistant with RAG, source attribution, and guardrails for accurate, contextual responses about professional experience.
+                </p>
+                <div class="flex flex-wrap gap-1">
+                  <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs rounded">Python</span>
+                  <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs rounded">LangChain</span>
+                  <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs rounded">ChromaDB</span>
+                </div>
+              </div>
+              
+              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h3 class="font-semibold text-gray-900 dark:text-white mb-2">POS System (Multi-Business)</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                  Comprehensive browser-based POS serving 3 businesses, reducing transaction time by 60% with real-time order management and reporting.
+                </p>
+                <div class="flex flex-wrap gap-1">
+                  <span class="px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 text-xs rounded">React</span>
+                  <span class="px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 text-xs rounded">Node.js</span>
+                  <span class="px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 text-xs rounded">PostgreSQL</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Education & Certifications -->
+          <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b-2 border-primary-500 pb-2">
+              Education & Achievements
+            </h2>
+            
+            <div class="space-y-4">
+              <div>
+                <h3 class="font-semibold text-gray-900 dark:text-white">Ongoing Professional Development</h3>
+                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 mt-2">
+                  <li>• Advanced Machine Learning Specialization (Coursera)</li>
+                  <li>• LangChain & RAG Systems Certification</li>
+                  <li>• AWS Solutions Architect Training</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 class="font-semibold text-gray-900 dark:text-white">Awards & Recognition</h3>
+                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 mt-2">
+                  <li>• 3x Hackathon Winner - AI/ML category</li>
+                  <li>• Academic Honors in Computer Science</li>
+                  <li>• Open Source Contributor - 1000+ GitHub stars across projects</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- Action Section -->
+      <div class="text-center mt-12 animate-in" style="animation-delay: 0.4s">
+        <div class="bg-primary-50 dark:bg-primary-900/20 rounded-2xl p-8">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            Interested in Working Together?
+          </h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
+            I'm actively seeking opportunities to apply my technical solutions background and AI/ML expertise 
+            to help organizations build impactful, data-driven products.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/contact" class="btn btn-primary">
+              Contact Me
+            </a>
+            <a href="/projects" class="btn btn-secondary">
+              View My Projects
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .animate-in {
+    animation: slideIn 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-in {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media print {
+    .btn {
+      display: none;
+    }
+    
+    .animate-in {
+      opacity: 1;
+      transform: none;
+    }
+    
+    body {
+      print-color-adjust: exact;
+    }
+  }
+</style>

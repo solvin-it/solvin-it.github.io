@@ -1,0 +1,22 @@
+# Resume PDF Placeholder
+
+This is a placeholder file for the resume PDF. In a real implementation, you would:
+
+1. Create a professional PDF resume using tools like:
+   - LaTeX with a modern template
+   - Adobe InDesign or Canva
+   - Google Docs or Microsoft Word exported to PDF
+
+2. Name it `resume.pdf` and place it in the `public` folder
+
+3. Ensure the PDF includes:
+   - Contact information
+   - Professional summary
+   - Work experience with achievements
+   - Technical skills
+   - Education and certifications
+   - Key projects
+
+The download link in the resume page will serve this file to visitors.
+
+For now, the HTML version of the resume is available on the `/resume` page.

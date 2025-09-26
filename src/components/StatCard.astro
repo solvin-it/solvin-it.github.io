@@ -1,0 +1,35 @@
+---
+export interface Props {
+  label: string;
+  value: string;
+  icon: string;
+  tooltip: string;
+}
+
+const { label, value, icon, tooltip } = Astro.props;
+---
+
+<div class="card p-6 text-center group hover:scale-105 transition-all duration-150 ease-in-out">
+  <div class="text-3xl mb-3 group-hover:animate-pulse-soft" role="img" aria-label={tooltip}>
+    {icon}
+  </div>
+  
+  <div class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+    {value}
+  </div>
+  
+  <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">
+    {label}
+  </div>
+  
+  <!-- Tooltip -->
+  <div class="sr-only">
+    {tooltip}
+  </div>
+</div>
+
+<style>
+  .card:hover [role="img"] {
+    animation: pulse-soft 1s ease-in-out;
+  }
+</style>

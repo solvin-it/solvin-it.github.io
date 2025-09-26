@@ -1,0 +1,309 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import StatCard from '../components/StatCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { siteConfig } from '../content/site.ts';
+---
+
+<MainLayout
+  title={siteConfig.title}
+  description={siteConfig.description}
+>
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 overflow-hidden">
+    <div class="container">
+      <div class="grid xl:grid-cols-2 gap-12 xl:gap-20 items-center min-h-[80vh] py-12">
+        <!-- Hero Text -->
+        <div class="space-y-8 animate-in xl:max-w-2xl" style="animation-delay: 0.1s">
+          <div class="space-y-6">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-gray-900 dark:text-white leading-tight">
+              {siteConfig.hero.headline}
+            </h1>
+            <p class="text-lg sm:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl">
+              {siteConfig.hero.subhead}
+            </p>
+          </div>
+          
+          <!-- CTAs -->
+          <div class="flex flex-col sm:flex-row gap-4 pt-4">
+            <a href="/projects" class="btn btn-primary text-base px-8 py-4">
+              {siteConfig.hero.primaryCTA}
+            </a>
+            <a href="/resume.pdf" target="_blank" class="btn btn-secondary text-base px-8 py-4">
+              {siteConfig.hero.secondaryCTA}
+            </a>
+          </div>
+          
+          <div class="pt-2">
+            <button 
+              class="btn btn-ghost text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-base"
+              onclick="document.querySelector('[data-chat-fab]')?.click()"
+            >
+              💬 {siteConfig.hero.tertiaryCTA}
+            </button>
+          </div>
+        </div>
+        
+        <!-- Hero Visual -->
+        <div class="relative animate-in lg:h-auto" style="animation-delay: 0.3s">
+          <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-3xl p-6 lg:p-8 shadow-2xl transform hover:scale-105 transition-transform duration-300">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between text-white/80 text-sm">
+                <span class="font-mono">portfolio.py</span>
+                <div class="flex space-x-2">
+                  <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                  <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                  <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                </div>
+              </div>
+              <div class="font-mono text-sm lg:text-base text-white space-y-1 lg:space-y-2">
+                <div><span class="text-blue-300">import</span> <span class="text-green-300">experience</span></div>
+                <div><span class="text-blue-300">from</span> <span class="text-green-300">solutions_engineering</span> <span class="text-blue-300">import</span> <span class="text-yellow-300">ml_expertise</span></div>
+                <div class="py-2">
+                  <div><span class="text-purple-300">def</span> <span class="text-yellow-300">build_impact</span>():</div>
+                  <div class="ml-4"><span class="text-blue-300">return</span> {</div>
+                  <div class="ml-8"><span class="text-green-300">"problems_solved"</span>: <span class="text-orange-300">100+</span>,</div>
+                  <div class="ml-8"><span class="text-green-300">"models_deployed"</span>: <span class="text-orange-300">15+</span>,</div>
+                  <div class="ml-8"><span class="text-green-300">"business_value"</span>: <span class="text-green-300">"measurable"</span></div>
+                  <div class="ml-4">}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Floating badges -->
+          <div class="absolute -right-2 lg:-right-4 -top-2 lg:-top-4 bg-white dark:bg-gray-800 px-3 lg:px-4 py-2 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+            <div class="text-xs lg:text-sm font-semibold text-gray-600 dark:text-gray-300">Python</div>
+          </div>
+          <div class="absolute -left-2 lg:-left-4 top-1/3 bg-white dark:bg-gray-800 px-3 lg:px-4 py-2 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+            <div class="text-xs lg:text-sm font-semibold text-gray-600 dark:text-gray-300">React</div>
+          </div>
+          <div class="absolute -right-2 lg:-right-4 -bottom-2 lg:-bottom-4 bg-white dark:bg-gray-800 px-3 lg:px-4 py-2 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+            <div class="text-xs lg:text-sm font-semibold text-gray-600 dark:text-gray-300">AI/ML</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="section bg-white dark:bg-gray-800">
+    <div class="container">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
+        {siteConfig.stats.map((stat, index) => (
+          <div 
+            class="animate-in" 
+            style={`animation-delay: ${0.1 + index * 0.1}s`}
+          >
+            <StatCard {...stat} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects Section -->
+  <section class="section bg-gray-50 dark:bg-gray-900">
+    <div class="container">
+      <div class="text-center mb-16 animate-in">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-6">
+          Featured Projects
+        </h2>
+        <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-4xl mx-auto">
+          Here are some of my recent projects that showcase end-to-end delivery, from problem understanding to production deployment.
+        </p>
+      </div>
+      
+      <div class="grid lg:grid-cols-2 gap-8 lg:gap-12">
+        {siteConfig.featuredProjects.map((project, index) => (
+          <div 
+            class="animate-in" 
+            style={`animation-delay: ${0.1 + index * 0.1}s`}
+          >
+            <ProjectCard {...project} />
+          </div>
+        ))}
+      </div>
+      
+      <div class="text-center mt-16 animate-in" style="animation-delay: 0.5s">
+        <a href="/projects" class="btn btn-primary text-base px-8 py-4">
+          View All Projects
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How I Work Section -->
+  <section class="section bg-white dark:bg-gray-800">
+    <div class="container">
+      <div class="text-center mb-16 animate-in">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-6">
+          How I Work
+        </h2>
+        <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          My approach to delivering impactful solutions
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto">
+        {siteConfig.workPillars.map((pillar, index) => (
+          <div 
+            class="text-center animate-in p-6 lg:p-8"
+            style={`animation-delay: ${0.1 + index * 0.1}s`}
+          >
+            <div class="text-5xl lg:text-6xl mb-6" role="img" aria-label={pillar.title}>
+              {pillar.icon}
+            </div>
+            <h3 class="text-xl lg:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
+              {pillar.title}
+            </h3>
+            <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-base lg:text-lg">
+              {pillar.description}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Notes Section -->
+  <section class="section bg-gray-50 dark:bg-gray-900">
+    <div class="container">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-12 animate-in">
+        <div>
+          <h2 class="heading-2 text-gray-900 dark:text-white mb-4">
+            Latest Notes
+          </h2>
+          <p class="text-gray-600 dark:text-gray-300">
+            Thoughts on AI, ML, and software engineering
+          </p>
+        </div>
+        <a href="/notes" class="btn btn-ghost mt-4 sm:mt-0">
+          All notes →
+        </a>
+      </div>
+      
+      <!-- Mock blog posts - replace with real MDX content later -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <article class="card p-6 animate-in" style="animation-delay: 0.1s">
+          <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+            March 15, 2024
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            Building Production RAG Systems
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+            Key lessons learned from deploying retrieval-augmented generation systems in production environments.
+          </p>
+          <a href="/notes/building-production-rag-systems" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium">
+            Read more →
+          </a>
+        </article>
+        
+        <article class="card p-6 animate-in" style="animation-delay: 0.2s">
+          <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+            March 8, 2024
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            From Solutions Engineering to ML
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+            How my technical solutions background prepared me for AI/ML engineering challenges.
+          </p>
+          <a href="/notes/solutions-engineering-to-ml" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium">
+            Read more →
+          </a>
+        </article>
+        
+        <article class="card p-6 animate-in" style="animation-delay: 0.3s">
+          <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+            February 28, 2024
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            Evaluating LLM Applications
+          </h3>
+          <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
+            Practical approaches to measuring quality and performance in LLM-powered applications.
+          </p>
+          <a href="/notes/evaluating-llm-applications" class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium">
+            Read more →
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact CTA Banner -->
+  <section class="section">
+    <div class="container">
+      <div class="bg-gradient-to-r from-primary-600 to-primary-700 rounded-3xl p-8 lg:p-16 xl:p-20 text-center text-white animate-in max-w-5xl mx-auto">
+        <h2 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-6 leading-tight">
+          Open to AI/ML engineer roles—let's talk
+        </h2>
+        <p class="text-primary-100 mb-8 lg:mb-12 max-w-3xl mx-auto text-lg lg:text-xl leading-relaxed">
+          I'm excited to bring my technical solutions experience and AI/ML expertise to help your team build impactful products.
+        </p>
+        <a href="/contact" class="btn bg-white text-primary-600 hover:bg-gray-100 shadow-lg text-base px-8 py-4">
+          Get in Touch
+        </a>
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .animate-in {
+    animation: slideIn 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-in {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  // Add intersection observer for scroll animations
+  function initScrollAnimations() {
+    const elements = document.querySelectorAll('.animate-in');
+    
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '50px 0px -50px 0px'
+      });
+
+      elements.forEach((el) => {
+        observer.observe(el);
+      });
+    } else {
+      // Fallback for browsers without IntersectionObserver
+      elements.forEach((el) => {
+        (el as HTMLElement).style.opacity = '1';
+        (el as HTMLElement).style.transform = 'translateY(0)';
+      });
+    }
+  }
+
+  // Initialize animations
+  document.addEventListener('DOMContentLoaded', initScrollAnimations);
+  document.addEventListener('astro:after-swap', initScrollAnimations);
+</script>

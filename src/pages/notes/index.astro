@@ -1,0 +1,258 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { siteConfig } from '../content/site.ts';
+
+const title = `Notes | ${siteConfig.name}`;
+const description = 'Thoughts and insights on AI/ML, software engineering, and technology trends from my experience building production systems.';
+
+// Mock blog posts - in a real implementation, these would be fetched from MDX files
+const posts = [
+  {
+    title: "Building Production RAG Systems",
+    slug: "building-production-rag-systems",
+    excerpt: "Key lessons learned from deploying retrieval-augmented generation systems in production environments, including architecture decisions, performance optimization, and monitoring strategies.",
+    publishedAt: "2024-03-15",
+    readTime: "8 min read",
+    category: "AI/ML",
+    tags: ["RAG", "Production", "LLM", "Architecture"]
+  },
+  {
+    title: "From Solutions Engineering to ML",
+    slug: "solutions-engineering-to-ml", 
+    excerpt: "How my technical solutions background prepared me for AI/ML engineering challenges. The transferable skills, mindset shifts, and practical approaches that made the transition successful.",
+    publishedAt: "2024-03-08",
+    readTime: "6 min read",
+    category: "Career",
+    tags: ["Career", "AI/ML", "Solutions Engineering", "Transition"]
+  },
+  {
+    title: "Evaluating LLM Applications",
+    slug: "evaluating-llm-applications",
+    excerpt: "Practical approaches to measuring quality and performance in LLM-powered applications. From automated metrics to human evaluation frameworks and everything in between.",
+    publishedAt: "2024-02-28",
+    readTime: "10 min read",
+    category: "AI/ML",
+    tags: ["LLM", "Evaluation", "Testing", "Quality"]
+  },
+  {
+    title: "The Art of Feature Engineering",
+    slug: "art-of-feature-engineering",
+    excerpt: "Domain expertise beats algorithm choice every time. How thoughtful feature engineering can dramatically improve model performance and business impact.",
+    publishedAt: "2024-02-15",
+    readTime: "7 min read",
+    category: "Data Science",
+    tags: ["Feature Engineering", "Machine Learning", "Data Science"]
+  },
+  {
+    title: "Real-Time Systems with Socket.io",
+    slug: "realtime-systems-socketio",
+    excerpt: "Building scalable real-time applications with Socket.io. Architecture patterns, performance considerations, and lessons from production deployments.",
+    publishedAt: "2024-02-01",
+    readTime: "9 min read",
+    category: "Full Stack",
+    tags: ["Socket.io", "Real-time", "Node.js", "WebSocket"]
+  },
+  {
+    title: "Prompt Engineering Best Practices",
+    slug: "prompt-engineering-best-practices",
+    excerpt: "Systematic approaches to prompt design for reliable LLM applications. Structure, context management, and optimization techniques that actually work.",
+    publishedAt: "2024-01-18",
+    readTime: "12 min read", 
+    category: "AI/ML",
+    tags: ["Prompt Engineering", "LLM", "OpenAI", "Best Practices"]
+  }
+];
+
+const categories = ["All", "AI/ML", "Data Science", "Full Stack", "Career"];
+---
+
+<MainLayout title={title} description={description}>
+  <section class="section">
+    <div class="container max-w-6xl">
+      <!-- Page Header -->
+      <div class="text-center mb-16 animate-in">
+        <h1 class="heading-1 text-gray-900 dark:text-white mb-6">
+          Notes
+        </h1>
+        <p class="body-large max-w-3xl mx-auto">
+          Thoughts and insights on AI/ML, software engineering, and technology trends from my experience building production systems and solving real-world problems.
+        </p>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="flex flex-wrap justify-center gap-3 mb-12 animate-in" style="animation-delay: 0.1s">
+        {categories.map((category) => (
+          <button 
+            class="px-4 py-2 text-sm font-medium rounded-full transition-colors category-filter"
+            data-category={category.toLowerCase()}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
+      <!-- Posts Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="posts-grid">
+        {posts.map((post, index) => (
+          <article 
+            class="card p-6 h-full flex flex-col hover:shadow-lg transition-all duration-300 ease-in-out group animate-in"
+            style={`animation-delay: ${0.1 + index * 0.05}s`}
+            data-category={post.category.toLowerCase()}
+          >
+            <!-- Post Meta -->
+            <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
+              <div class="flex items-center space-x-2">
+                <span class={`px-2 py-1 rounded-full text-xs font-medium ${
+                  post.category === 'AI/ML' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' :
+                  post.category === 'Data Science' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
+                  post.category === 'Full Stack' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300' :
+                  'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300'
+                }`}>
+                  {post.category}
+                </span>
+              </div>
+              <time datetime={post.publishedAt}>
+                {new Date(post.publishedAt).toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'short', 
+                  day: 'numeric' 
+                })}
+              </time>
+            </div>
+
+            <!-- Post Content -->
+            <div class="flex-1">
+              <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                {post.title}
+              </h2>
+              
+              <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
+                {post.excerpt}
+              </p>
+              
+              <div class="flex flex-wrap gap-2 mb-4">
+                {post.tags.map((tag) => (
+                  <span class="inline-block px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <!-- Post Footer -->
+            <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+              <span class="text-xs text-gray-500 dark:text-gray-400">
+                {post.readTime}
+              </span>
+              
+              <a 
+                href={`/notes/${post.slug}`}
+                class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium inline-flex items-center group-hover:translate-x-1 transition-transform"
+              >
+                Read more 
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- Coming Soon Section -->
+      <div class="text-center mt-16 animate-in" style="animation-delay: 0.6s">
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 md:p-12">
+          <h2 class="heading-3 text-gray-900 dark:text-white mb-4">
+            More Content Coming Soon
+          </h2>
+          <p class="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
+            I'm constantly learning and building new things. Subscribe to get notified when I publish new insights about AI/ML, software engineering, and technology trends.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/contact" class="btn btn-primary">
+              Get in Touch
+            </a>
+            <a href={siteConfig.author.github} target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+              Follow on GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .animate-in {
+    animation: slideIn 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @keyframes slideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-in {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .category-filter {
+    @apply bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600;
+  }
+  
+  .category-filter.active {
+    @apply bg-primary-600 text-white hover:bg-primary-700;
+  }
+</style>
+
+<script>
+  function initCategoryFilter() {
+    const filterButtons = document.querySelectorAll('.category-filter');
+    const posts = document.querySelectorAll('[data-category]');
+    
+    // Set initial active state
+    filterButtons[0]?.classList.add('active');
+    
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const category = button.getAttribute('data-category');
+        
+        // Update active button
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        // Filter posts
+        posts.forEach(post => {
+          const postCategory = post.getAttribute('data-category');
+          
+          if (category === 'all' || postCategory === category) {
+            post.style.display = 'block';
+            post.style.opacity = '1';
+            post.style.transform = 'translateY(0)';
+          } else {
+            post.style.opacity = '0';
+            post.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+              if (post.style.opacity === '0') {
+                post.style.display = 'none';
+              }
+            }, 200);
+          }
+        });
+      });
+    });
+  }
+
+  // Initialize filter functionality
+  document.addEventListener('DOMContentLoaded', initCategoryFilter);
+  document.addEventListener('astro:after-swap', initCategoryFilter);
+</script>
