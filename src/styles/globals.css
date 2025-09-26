@@ -10,11 +10,15 @@
   }
   
   body {
-    font-feature-settings: 'rlig' 1, 'calt' 1;
+    font-feature-settings: 'rlig' 1, 'calt' 1, 'kern' 1, 'liga' 1;
     overflow-x: hidden;
     position: relative;
     width: 100%;
     min-height: 100vh;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(181, 145, 90, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(159, 130, 107, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(214, 208, 196, 0.04) 0%, transparent 50%);
   }
   
   /* Ensure main content stays in view */
@@ -22,6 +26,30 @@
     position: relative;
     z-index: 1;
     width: 100%;
+  }
+  
+  /* Elegant text selection */
+  ::selection {
+    background: rgba(181, 145, 90, 0.2);
+    color: inherit;
+  }
+  
+  /* Refined scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(181, 145, 90, 0.3);
+    border-radius: 3px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(181, 145, 90, 0.5);
   }
   
   /* Focus styles */
@@ -49,57 +77,113 @@
 @layer components {
   /* Button styles */
   .btn {
-    @apply inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-lg transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center px-8 py-4 text-sm font-medium rounded-none transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border-2 font-serif tracking-wide;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
   
   .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 shadow-sm hover:shadow-md active:transform active:scale-95;
+    @apply bg-primary-600 text-neutral-25 border-primary-600 hover:bg-primary-700 hover:border-primary-700 focus:ring-primary-500 shadow-lg hover:shadow-xl active:transform active:scale-98 relative overflow-hidden;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.6s;
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
   }
   
   .btn-secondary {
-    @apply bg-transparent text-gray-700 dark:text-gray-300 border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 focus:ring-gray-500;
+    @apply bg-transparent text-primary-700 dark:text-primary-400 border-2 border-primary-600 dark:border-primary-500 hover:bg-primary-600 hover:text-neutral-25 dark:hover:bg-primary-600 dark:hover:text-neutral-25 focus:ring-primary-500;
   }
   
   .btn-ghost {
-    @apply bg-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800;
+    @apply bg-transparent text-neutral-700 dark:text-neutral-300 border-transparent hover:text-primary-700 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/20 hover:border-primary-200;
   }
   
   /* Card styles */
   .card {
-    @apply bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all duration-150 ease-in-out;
+    @apply bg-neutral-25 dark:bg-neutral-900 rounded-none shadow-lg border border-neutral-200 dark:border-neutral-800 hover:shadow-xl transition-all duration-300 ease-in-out relative;
+    background-image: 
+      linear-gradient(45deg, transparent 49%, rgba(181, 145, 90, 0.02) 50%, transparent 51%),
+      radial-gradient(circle at 100% 0%, rgba(159, 130, 107, 0.03) 0%, transparent 50%);
+  }
+  
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(181, 145, 90, 0.3), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .card:hover::before {
+    opacity: 1;
   }
   
   /* Section padding */
   .section {
-    @apply py-16 sm:py-20 lg:py-24 xl:py-32;
+    @apply py-20 sm:py-24 lg:py-28 xl:py-36;
   }
   
   /* Container */
   .container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16;
+    @apply max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 2xl:px-20;
   }
   
   /* Typography */
   .heading-1 {
-    @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+    @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-medium tracking-tight leading-tight;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
   }
   
   .heading-2 {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight;
+    @apply text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif font-medium tracking-tight leading-tight;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
   }
   
   .heading-3 {
-    @apply text-2xl md:text-3xl font-semibold tracking-tight;
+    @apply text-2xl md:text-3xl lg:text-4xl font-serif font-medium tracking-tight leading-tight;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
   }
   
   .body-large {
-    @apply text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed;
+    @apply text-lg md:text-xl text-neutral-600 dark:text-neutral-300 leading-relaxed font-light;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+  
+  /* Elegant dividers */
+  .divider {
+    @apply relative;
+  }
+  
+  .divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(181, 145, 90, 0.4), transparent);
   }
   
   /* Animations */
   .animate-in {
-    @apply opacity-0 translate-y-4;
-    animation: slideIn 0.6s ease-out forwards;
+    @apply opacity-0 translate-y-6;
+    animation: slideIn 0.8s ease-out forwards;
   }
   
   @keyframes slideIn {
