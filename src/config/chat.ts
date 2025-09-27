@@ -1,4 +1,4 @@
-const defaultBaseUrl = 'http://127.0.0.1:8000';
+const defaultBaseUrl = 'https://rag-on-me.solvin.co';
 
 // Exported so the widget can easily update request targets when deploying.
 export const CHAT_API_BASE_URL =
