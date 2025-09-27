@@ -7,12 +7,16 @@
 
 - 📞 +63 936 505 5435
 - 📧 [josefernando.a.gonzales@gmail.com](mailto:josefernando.a.gonzales@gmail.com)
-- 🌐 [LinkedIn](https://www.notion.so/jose-fernando/www.linkedin.com/in/jose-fernando-gonzales)
+- 🌐 [LinkedIn](https://www.linkedin.com/in/jose-fernando-gonzales)
+- 💻 [Github](https://github.com/solvin-it)
 - 📍 Makati City, Philippines
 
 # Professional Summary
 
-> Technical Solutions Engineer and Business Analyst with over 9 years of experience bridging technical teams and business stakeholders in the FinTech and IT sectors. Promoted to Technical Solutions Engineer in December 2024, with a strong track record of defining solutions, designing systems, and ensuring operational excellence in payment platforms and enterprise applications. Skilled in requirements analysis, solution design, SQL, Python, API integration, and cloud-native systems. Experienced in supporting sales and product teams, enhancing merchant integration, and driving continuous improvement of core platforms. Currently pursuing a **Post Graduate Diploma in Artificial Intelligence and Machine Learning (Emeritus x Asian Institute of Management, March 2025 – June 2026)** to strengthen expertise in applied AI/ML solutions. Seeking to leverage my technical and business expertise to contribute to AI/ML-enabled products, FinTech innovation, and scalable digital solutions.
+> **Technical Solutions Engineer** with over 9 years of experience delivering value by bridging technical teams and business stakeholders in the **FinTech and IT sectors**. I have defined solutions, designed scalable systems, and ensured operational excellence for **payment platforms and enterprise applications**, while also supporting sales and product teams, improving merchant integration, and driving continuous platform enhancements. My expertise covers **requirements analysis, solution design, SQL, Python, API integration, and cloud-native systems**, enabling me to contribute end-to-end from design through delivery.
+> 
+> 
+> Alongside this, I am expanding into **Artificial Intelligence and Machine Learning** through a **Post Graduate Diploma (AIM x Emeritus, 2025–2026)**. I have recently applied **Spec-Driven Development with AI Agents** (GPT-5 Codex, OpenAI Codex) to accelerate prototyping, and built projects in **Machine Learning and Retrieval-Augmented Generation (RAG)** to strengthen my applied AI portfolio. My goal is to leverage this **hybrid technical, business, and AI/ML expertise** to help create **AI-enabled products, FinTech innovation, and scalable digital solutions**.
 > 
 
 # Technical Skills
@@ -23,10 +27,14 @@
 - Business Analysis
 - SQL
 - Python
-- API
+- Machine Learning (scikit-learn, basic PyTorch/TensorFlow)
+- Retrieval Augmented Generation (LangChain, PGVector)
+- Spec-Driven Development with AI Agents
+- API Integration
+- Prompt Engineering
 - Jira
 - HTML, Bootstrap/CSS
-- Prompt Engineering
+- OpenAI Codex
 
 # Business Skills
 
