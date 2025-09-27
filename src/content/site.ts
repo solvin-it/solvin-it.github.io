@@ -65,10 +65,10 @@ export const siteConfig = {
       liveUrl: 'https://churn.solvin.co/',
     },
     {
-      title: 'Multi-Business POS System',
-      description: 'Full-stack web application for restaurant and carwash operations management',
+      title: 'Gentleman\'s POS',
+      description: 'Modular Python web application for dual-service business operations (carwash & restaurant)',
       outcome: 'Reduced transaction processing time by 60% across 2 businesses with real-world deployment',
-      stack: ['Python', 'Flask', 'MySQL', 'HTML/CSS', 'Docker'],
+      stack: ['Python', 'Flask', 'SQLModel', 'Docker', 'ESC/POS Printers'],
       slug: 'pos-system',
       repoUrl: 'https://github.com/solvin-it/pos-system',
       liveUrl: null,

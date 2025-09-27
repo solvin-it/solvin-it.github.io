@@ -1,0 +1,398 @@
+---
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+---
+
+<ProjectLayout
+  title="RAG-on-Me"
+  description="A minimal Retrieval-Augmented Generation system that turns my resume into an interactive chatbot for recruiters and demonstrates modern AI pipeline architecture."
+  technologies={['Python', 'LangChain', 'LangGraph', 'FastAPI', 'PostgreSQL', 'pgvector', 'OpenAI API']}
+  outcome="Built a production-ready RAG system with persistent memory and turned my portfolio into an interactive AI assistant"
+  timeline="1 week (learning → deployment)"
+  role="AI Engineer & Backend Developer"
+  repoUrl="https://github.com/solvin-it/rag-on-me"
+>
+
+<!-- Project Overview Section -->
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">
+    Project Overview
+  </h2>
+  
+  <div class="space-y-6">
+    <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+      <strong>RAG-on-Me</strong> is a minimal Retrieval-Augmented Generation (RAG) system I built to demonstrate the core moving parts of a modern AI pipeline—without hiding behind heavy frameworks. The project answers questions about my <strong>experience, projects, and skills</strong>, grounded strictly in my documents (CV, case studies, READMEs).
+    </p>
+    
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+        <h3 class="font-semibold text-blue-800 dark:text-blue-200 mb-2 flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          Learning Exercise
+        </h3>
+        <p class="text-blue-700 dark:text-blue-300">Deeply understand RAG mechanics from scratch</p>
+      </div>
+      
+      <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6">
+        <h3 class="font-semibold text-green-800 dark:text-green-200 mb-2 flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6" />
+          </svg>
+          Portfolio Showcase
+        </h3>
+        <p class="text-green-700 dark:text-green-300">Interactive resume that recruiters can query directly</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Problem & Opportunity Section -->
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">
+    Problem & Opportunity
+  </h2>
+  
+  <div class="space-y-6">
+    <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+      RAG has become a standard design for grounding LLMs with external knowledge. Yet many examples are over-engineered or tied to a single library. I wanted to create something <strong>compact, transparent, and reusable</strong> that could serve as both a personal assistant and a code reference for others exploring RAG.
+    </p>
+    
+    <div class="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-6">
+      <div class="flex items-start space-x-3">
+        <svg class="w-6 h-6 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <div>
+          <h3 class="font-semibold text-primary-800 dark:text-primary-200 mb-2">The Opportunity</h3>
+          <p class="text-primary-700 dark:text-primary-300">
+            A system that not only <strong>demonstrates technical skill</strong> but also <strong>functions as an interactive resume</strong>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Scope & Features Section -->
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">
+    Scope & Features
+  </h2>
+  
+  <div class="grid md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+        <svg class="w-6 h-6 mr-2 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        Core Features
+      </h3>
+      <div class="space-y-3">
+        <div class="flex items-start space-x-3">
+          <div class="w-2 h-2 bg-primary-600 dark:bg-primary-400 rounded-full mt-2 flex-shrink-0"></div>
+          <span class="text-gray-700 dark:text-gray-300"><strong>Markdown ingestion:</strong> Load structured documents like <code class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-sm">cv.md</code> into pgvector store</span>
+        </div>
+        <div class="flex items-start space-x-3">
+          <div class="w-2 h-2 bg-primary-600 dark:bg-primary-400 rounded-full mt-2 flex-shrink-0"></div>
+          <span class="text-gray-700 dark:text-gray-300"><strong>Threaded chat:</strong> Each thread_id maintains conversation state</span>
+        </div>
+        <div class="flex items-start space-x-3">
+          <div class="w-2 h-2 bg-primary-600 dark:bg-primary-400 rounded-full mt-2 flex-shrink-0"></div>
+          <span class="text-gray-700 dark:text-gray-300"><strong>Postgres-backed checkpoints:</strong> Persistent chat memory</span>
+        </div>
+        <div class="flex items-start space-x-3">
+          <div class="w-2 h-2 bg-primary-600 dark:bg-primary-400 rounded-full mt-2 flex-shrink-0"></div>
+          <span class="text-gray-700 dark:text-gray-300"><strong>Minimal graph design:</strong> Clear retrieve → generate flow using LangGraph</span>
+        </div>
+      </div>
+    </div>
+    
+    <div>
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+        <svg class="w-6 h-6 mr-2 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        API Endpoints
+      </h3>
+      <div class="space-y-3">
+        <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+          <code class="text-green-600 dark:text-green-400 font-mono text-sm">POST /initialize</code>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">Ingest documents into vector store</p>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+          <code class="text-blue-600 dark:text-blue-400 font-mono text-sm">POST /chat</code>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">Query with conversation memory</p>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+          <code class="text-purple-600 dark:text-purple-400 font-mono text-sm">GET /graph/state</code>
+          <p class="text-gray-600 dark:text-gray-400 text-sm mt-1">Inspect graph state for debugging</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Technical Architecture Section -->
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">
+    Technical Architecture
+  </h2>
+  
+  <div class="mb-8">
+    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg p-6">
+      <h3 class="text-lg font-semibold text-indigo-800 dark:text-indigo-200 mb-3 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        Data Flow
+      </h3>
+      <p class="text-indigo-700 dark:text-indigo-300 font-mono text-sm">
+        Client → FastAPI → LangGraph → Vector Store + LLM → Postgres (checkpoints)
+      </p>
+    </div>
+  </div>
+  
+  <div class="grid md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Stack Components</h3>
+      <div class="space-y-2">
+        <div class="flex items-center space-x-3">
+          <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+          <span class="text-gray-700 dark:text-gray-300">FastAPI for REST endpoints</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+          <span class="text-gray-700 dark:text-gray-300">LangGraph for pipeline orchestration</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
+          <span class="text-gray-700 dark:text-gray-300">PostgreSQL + pgvector for storage</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <div class="w-3 h-3 bg-orange-500 rounded-full"></div>
+          <span class="text-gray-700 dark:text-gray-300">OpenAI API for embeddings & generation</span>
+        </div>
+      </div>
+    </div>
+    
+    <div>
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Module Structure</h3>
+      <div class="space-y-2 text-sm">
+        <div class="flex items-start space-x-3">
+          <code class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono flex-shrink-0">main.py</code>
+          <span class="text-gray-600 dark:text-gray-400">API lifecycle + graph compile</span>
+        </div>
+        <div class="flex items-start space-x-3">
+          <code class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono flex-shrink-0">graph_runtime.py</code>
+          <span class="text-gray-600 dark:text-gray-400">Retrieve → generate flow</span>
+        </div>
+        <div class="flex items-start space-x-3">
+          <code class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono flex-shrink-0">nodes.py</code>
+          <span class="text-gray-600 dark:text-gray-400">Retrieval & generation logic</span>
+        </div>
+        <div class="flex items-start space-x-3">
+          <code class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono flex-shrink-0">adapters.py</code>
+          <span class="text-gray-600 dark:text-gray-400">LLM, embeddings, vector store</span>
+        </div>
+        <div class="flex items-start space-x-3">
+          <code class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono flex-shrink-0">ingest.py</code>
+          <span class="text-gray-600 dark:text-gray-400">Markdown document indexing</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Challenges & Trade-offs Section -->
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">
+    Challenges & Trade-offs
+  </h2>
+  
+  <div class="grid gap-6">
+    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+      <h3 class="font-semibold text-yellow-800 dark:text-yellow-200 mb-3 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        Scope Control
+      </h3>
+      <p class="text-yellow-700 dark:text-yellow-300">
+        Kept it under ~1K lines to ensure readability, at the cost of advanced features (e.g., reranking, hybrid search).
+      </p>
+    </div>
+    
+    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+      <h3 class="font-semibold text-red-800 dark:text-red-200 mb-3 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+        </svg>
+        State Management
+      </h3>
+      <p class="text-red-700 dark:text-red-300">
+        Designing checkpoints to reliably track multi-turn conversations required careful persistence logic.
+      </p>
+    </div>
+    
+    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+      <h3 class="font-semibold text-blue-800 dark:text-blue-200 mb-3 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+        </svg>
+        Generality vs Personal Use
+      </h3>
+      <p class="text-blue-700 dark:text-blue-300">
+        Balancing a system tailored to my CV with code flexible enough for others to adapt.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Outcomes & Learnings Section -->
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">
+    Outcomes & Learnings
+  </h2>
+  
+  <div class="grid md:grid-cols-2 gap-8 mb-8">
+    <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6">
+      <h3 class="font-semibold text-green-800 dark:text-green-200 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Technical Achievements
+      </h3>
+      <div class="space-y-2 text-green-700 dark:text-green-300">
+        <div class="flex items-start space-x-2">
+          <div class="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+          <span>Built a clean RAG service from scratch</span>
+        </div>
+        <div class="flex items-start space-x-2">
+          <div class="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+          <span>Gained hands-on clarity of ingestion, retrieval, generation, and memory management</span>
+        </div>
+        <div class="flex items-start space-x-2">
+          <div class="w-1.5 h-1.5 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+          <span>Integrated LangGraph pipelines with FastAPI</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+      <h3 class="font-semibold text-blue-800 dark:text-blue-200 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        Validation Results
+      </h3>
+      <p class="text-blue-700 dark:text-blue-300">
+        Successfully validated the system by querying my portfolio documents through conversation, proving both technical functionality and practical utility for recruiters.
+      </p>
+    </div>
+  </div>
+  
+  <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-6">
+    <h3 class="font-semibold text-purple-800 dark:text-purple-200 mb-2 flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+      </svg>
+      Proudest Achievement
+    </h3>
+    <p class="text-purple-700 dark:text-purple-300 font-medium">
+      Turning my <strong>resume into an interactive chatbot</strong> that demonstrates RAG in a recruiter-friendly way.
+    </p>
+  </div>
+</section>
+
+<!-- Future Directions Section -->
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">
+    Future Directions
+  </h2>
+  
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="space-y-4">
+      <div class="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+          <svg class="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-medium text-gray-900 dark:text-white">Frontend Integration</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm">Add a chatbot widget for portfolio website integration</p>
+        </div>
+      </div>
+      
+      <div class="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+          <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-medium text-gray-900 dark:text-white">Hybrid Search</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm">Experiment with BM25 + vector search for better grounding</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="space-y-4">
+      <div class="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+          <svg class="w-4 h-4 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-medium text-gray-900 dark:text-white">Guardrails</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm">Handle hallucinations and off-topic queries</p>
+        </div>
+      </div>
+      
+      <div class="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+          <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-medium text-gray-900 dark:text-white">Multi-Document Ingestion</h3>
+          <p class="text-gray-600 dark:text-gray-400 text-sm">Expand to case studies, blog posts, academic notes</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Reflection Section -->
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">
+    Reflection
+  </h2>
+  
+  <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-8">
+    <div class="prose prose-lg max-w-none">
+      <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-6">
+        RAG-on-Me taught me how to go beyond toy demos and build a real, production-style pipeline with <strong class="text-gray-900 dark:text-white">persistence, modularity, and API design</strong>. It is also a personal branding tool: instead of reading my CV, recruiters can <strong class="text-gray-900 dark:text-white">chat with it</strong>.
+      </p>
+      
+      <div class="bg-primary-50 dark:bg-primary-900/20 border-l-4 border-primary-500 dark:border-primary-400 p-6 rounded-r-lg">
+        <div class="flex items-start space-x-3">
+          <svg class="w-6 h-6 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          <div>
+            <h3 class="font-semibold text-primary-800 dark:text-primary-200 mb-2">Advice for Others</h3>
+            <p class="text-primary-700 dark:text-primary-300 italic">
+              <em>"Strip down RAG to its essentials first. Understand the flow from request → retrieval → generation → memory. Once you've nailed that, scaling features becomes easier."</em>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</ProjectLayout>
