@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { CHAT_API_ENDPOINT, ChatRequestPayload, ChatResponsePayload } from '../config/chat';
 
 interface Message {
   id: string;
@@ -39,31 +40,45 @@ export default function ChatWidget() {
     }
   }, [isOpen]);
 
-  // Mock responses for demonstration
-  const getMockResponse = (userMessage: string): string => {
-    const message = userMessage.toLowerCase();
-    
-    if (message.includes('experience') || message.includes('background')) {
-      return "Jose has 9+ years of software engineering experience, transitioning from Technical Solutions Engineer to AI/ML Engineer. He's worked across FinTech and enterprise environments, delivering end-to-end solutions.";
+  const parseAssistantMessage = (payload: ChatResponsePayload | string): string => {
+    const fallback = "I'm having trouble reading the assistant's reply right now. Please try again.";
+
+    if (typeof payload === 'string') {
+      return payload.trim() || fallback;
     }
-    
-    if (message.includes('project') || message.includes('work')) {
-      return "Jose has worked on several impactful projects including: Customer Churn prediction (23% churn reduction), Quest To Solvin RPG chatbot (95% user satisfaction), CV-RAG system with retrieval, and POS systems for multiple businesses. Would you like details about any specific project?";
+
+    // Handle your specific API response format
+    if (payload.output && payload.output.messages) {
+      return payload.output.messages.trim();
     }
-    
-    if (message.includes('skill') || message.includes('technology') || message.includes('tech')) {
-      return "Jose's technical skills include Python, JavaScript/TypeScript, React, Next.js, Node.js, PostgreSQL, Docker, and AI/ML technologies like LangChain, OpenAI API, scikit-learn, and pandas. He specializes in RAG systems, LLM applications, and classical ML.";
+
+    // Fallback to other common formats
+    const candidates: Array<keyof ChatResponsePayload | string> = [
+      'response',
+      'reply',
+      'message',
+      'answer',
+      'content',
+    ];
+
+    for (const key of candidates) {
+      const value = payload[key as keyof ChatResponsePayload];
+      if (typeof value === 'string' && value.trim()) {
+        return value.trim();
+      }
     }
-    
-    if (message.includes('contact') || message.includes('reach') || message.includes('hire')) {
-      return "You can reach Jose at hello@josegonzales.dev or connect with him on LinkedIn. He's currently open to AI/ML Engineer roles and would love to discuss opportunities!";
+
+    const choices = payload.choices;
+    if (Array.isArray(choices)) {
+      for (const choice of choices) {
+        const content = choice?.message?.content;
+        if (typeof content === 'string' && content.trim()) {
+          return content.trim();
+        }
+      }
     }
-    
-    if (message.includes('education') || message.includes('degree')) {
-      return "Jose has a strong technical background with multiple hackathon wins and academic honors. His practical experience spans across various industries, giving him a unique perspective on real-world problem solving.";
-    }
-    
-    return "That's an interesting question! I'd be happy to help you learn more about Jose's background. You might want to ask about his projects, technical skills, experience, or how to contact him. What would you like to know?";
+
+    return fallback;
   };
 
   const handleSendMessage = async () => {
@@ -80,24 +95,59 @@ export default function ChatWidget() {
     setInputValue('');
     setIsLoading(true);
 
-    // Simulate AI response delay
-    setTimeout(() => {
+    try {
+      const payload: ChatRequestPayload = {
+        messages: [
+          {
+            role: 'human',
+            content: userMessage.content
+          }
+        ],
+        thread_id: `thread-${Date.now()}`
+      };
+      
+      const response = await fetch(CHAT_API_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const data = (await response.json()) as ChatResponsePayload | string;
+      const content = parseAssistantMessage(data);
+
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        content: getMockResponse(userMessage.content),
+        content,
         isUser: false,
         timestamp: new Date(),
       };
-      
+
       setMessages(prev => [...prev, aiResponse]);
+    } catch (error) {
+      console.error('Failed to fetch chat response', error);
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        content:
+          "I'm having trouble connecting to Jose's AI assistant at the moment. Please try again shortly.",
+        isUser: false,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
       setIsLoading(false);
-    }, 1000 + Math.random() * 1000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      void handleSendMessage();
     }
   };
 
@@ -161,9 +211,10 @@ export default function ChatWidget() {
       {/* Floating Action Button */}
       <button
         onClick={toggleChat}
-        className="fixed bottom-6 right-6 z-50 bg-primary-600 hover:bg-primary-700 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+        className="fixed bottom-6 right-6 z-50 bg-tuxedo-black hover:bg-primary-800 text-tuxedo-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
         aria-label="Open chat with CV assistant"
         title="Chat with my CV"
+        data-chat-fab
       >
         <svg
           className="w-6 h-6"
@@ -183,7 +234,7 @@ export default function ChatWidget() {
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ease-in-out"
+          className="fixed inset-0 bg-tuxedo-black/50 z-40 transition-opacity duration-300 ease-in-out"
           onClick={handleOverlayClick}
         />
       )}
@@ -191,7 +242,7 @@ export default function ChatWidget() {
       {/* Chat Drawer */}
       <div
         data-chat-drawer
-        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-gray-900 shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 right-0 h-full w-full max-w-md bg-tuxedo-white dark:bg-tuxedo-midnight shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         role="dialog"
@@ -199,16 +250,16 @@ export default function ChatWidget() {
         aria-labelledby="chat-title"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between p-4 border-b border-primary-200 dark:border-primary-800">
           <h2
             id="chat-title"
-            className="text-lg font-semibold text-gray-900 dark:text-white"
+            className="text-lg font-semibold text-tuxedo-black dark:text-tuxedo-pearl"
           >
             Chat with my CV
           </h2>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            className="p-2 text-primary-600 dark:text-primary-400 hover:text-tuxedo-black dark:hover:text-tuxedo-pearl hover:bg-primary-100 dark:hover:bg-primary-800 rounded-lg transition-colors"
             aria-label="Close chat"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -227,8 +278,8 @@ export default function ChatWidget() {
               <div
                 className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
                   message.isUser
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
+                    ? 'bg-tuxedo-black text-tuxedo-white'
+                    : 'bg-primary-100 dark:bg-primary-900 text-tuxedo-black dark:text-tuxedo-pearl'
                 }`}
               >
                 <p className="text-sm leading-relaxed">{message.content}</p>
@@ -238,11 +289,11 @@ export default function ChatWidget() {
           
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-2xl">
+              <div className="bg-primary-100 dark:bg-primary-900 px-4 py-2 rounded-2xl">
                 <div className="flex space-x-2">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 bg-primary-600 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 </div>
               </div>
             </div>
@@ -252,7 +303,7 @@ export default function ChatWidget() {
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-4 border-t border-primary-200 dark:border-primary-800">
           <div className="flex space-x-2">
             <input
               ref={inputRef}
@@ -261,13 +312,13 @@ export default function ChatWidget() {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Ask about Jose's experience..."
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
+              className="flex-1 px-4 py-2 border border-primary-300 dark:border-primary-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-tuxedo-white dark:bg-tuxedo-midnight text-tuxedo-black dark:text-tuxedo-pearl placeholder-primary-500 dark:placeholder-primary-400"
               disabled={isLoading}
             />
             <button
-              onClick={handleSendMessage}
+              onClick={() => void handleSendMessage()}
               disabled={!inputValue.trim() || isLoading}
-              className="px-4 py-2 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-tuxedo-black hover:bg-primary-800 disabled:bg-primary-300 dark:disabled:bg-primary-700 text-tuxedo-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed"
               aria-label="Send message"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
