@@ -223,6 +223,26 @@ Ruby on Rails Junior developer
 - Developed a DTR Tool, integrating iRipple, Inc.'s Employee Management System and Time and Attendance Management System
 - The integration of the DTR Tool improved operational efficiency and data accuracy, streamlining employee management and time tracking processes
 
+# Portfolio Projects
+
+- **Quest to Solvin (RPG Chatbot)**
+    
+    [GitHub](https://github.com/solvin-it/quest_to_solvin)
+    
+    Developed a Python-based RPG-style chatbot with gamified conversation flows, showcasing applied **NLP and conversational AI** techniques.
+    
+- **Customer Churn API (Machine Learning Pipeline)**
+    
+    [GitHub](https://github.com/solvin-it/customer-churn-api)
+    
+    Built and deployed a churn prediction API using **scikit-learn**, exposing a RESTful service to demonstrate ML model deployment and practical business use cases.
+    
+- **RAG on Me (Resume Chatbot)**
+    
+    [GitHub](https://github.com/solvin-it/rag-on-me)
+    
+    Implemented a **Retrieval-Augmented Generation (RAG)** pipeline using LangChain and vector databases to allow recruiters to query my CV and projects interactively.
+
 # Achievements
 
 - **2023–2025 – Payborit Continuous Enhancement:** Successfully integrated new payment processors, improved merchant onboarding workflows, and supported sales engagements with technical solutioning.
@@ -238,7 +258,7 @@ Ruby on Rails Junior developer
 
 - **Post Graduate Diploma in Artificial Intelligence and Machine Learning**
 *Emeritus x Asian Institute of Management*
-March 2025 – June 2026 (Ongoing)
+March 2025 – March 2026 (Ongoing)
 - **Bachelor of Science in Information Technology**
 *University of Asia and the Pacific*
 June 2012 – June 2016
