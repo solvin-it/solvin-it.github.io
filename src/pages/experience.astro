@@ -3,107 +3,92 @@ import MainLayout from '../layouts/MainLayout.astro';
 import { siteConfig } from '../content/site.ts';
 
 const title = `Experience | ${siteConfig.name}`;
-const description = 'My professional journey from Technical Solutions Engineer to AI/ML Engineer, featuring key roles, achievements, and technical evolution.';
+const description = 'My journey to becoming an Generative AI Engineer, built on a strong foundation of 9+ years in technical solutions and business analysis.';
 
 // Experience data
 const experiences = [
   {
-    role: "AI/ML Engineer",
-    company: "Consulting & Freelance",
-    duration: "2023 - Present",
-    location: "Remote",
-    type: "current",
-    description: "Building production-ready AI/ML solutions for clients, specializing in RAG systems, LLM applications, and classical ML models.",
-    achievements: [
-      "Developed 15+ ML models with measurable business impact",
-      "Built RAG systems with 95% user satisfaction rates",
-      "Reduced customer churn by 23% through predictive modeling",
-      "Created interactive AI applications with 40s+ average engagement"
-    ],
-    technologies: ["Python", "LangChain", "OpenAI API", "Scikit-learn", "FastAPI", "Docker", "PostgreSQL", "React"]
-  },
-  {
-    role: "Senior Technical Solutions Engineer",
-    company: "FinTech Solutions Inc",
-    duration: "2020 - 2023",
-    location: "San Francisco, CA",
-    type: "previous",
-    description: "Led technical solutions delivery for enterprise clients, bridging business requirements with scalable technology implementations.",
-    achievements: [
-      "Delivered $2M+ in technical solutions across 20+ enterprise clients",
-      "Reduced client implementation time by 40% through automation",
-      "Built customer-facing APIs handling 10M+ requests/month",
-      "Mentored 5 junior engineers in solution architecture"
-    ],
-    technologies: ["JavaScript", "Node.js", "Python", "React", "PostgreSQL", "Redis", "AWS", "Docker"]
-  },
-  {
     role: "Technical Solutions Engineer",
-    company: "Enterprise Systems Co",
-    duration: "2018 - 2020",
-    location: "Austin, TX",
-    type: "previous",
-    description: "Designed and implemented technical solutions for complex business challenges, working directly with stakeholders to translate requirements into working systems.",
+    company: "DigitalPH Asia Corporation",
+    duration: "Dec 2024 – Present",
+    location: "Makati City, Philippines",
+    type: "current",
+    description: "Driving continuous enhancements of Payborit, a major payment aggregator system, while supporting sales and product teams through solution design and client-facing engagements. Began exploring AI-assisted prototyping using AI Agents and Spec-Driven Development, and currently pursuing formal postgraduate studies in Artificial Intelligence and Machine Learning.",
     achievements: [
-      "Architected solutions serving 500K+ daily active users",
-      "Improved system performance by 60% through optimization",
-      "Led cross-functional teams of 8+ engineers and designers",
-      "Established CI/CD practices reducing deployment time by 70%"
+      "Enhanced Payborit Payment Aggregator with new integrations and improved merchant onboarding workflows",
+      "Supported solution design, proposal preparation, and client presentations for enterprise merchants",
+      "Applied AI tools and agent workflows to accelerate prototyping and improve productivity",
+      "Ensured operational stability of live payment systems through testing, review, and cross-team collaboration"
     ],
-    technologies: ["Java", "Spring Boot", "Angular", "MySQL", "Jenkins", "AWS"]
+    technologies: ["Python", "FastAPI", "Docker", "GCP", "AI Agents", "Spec-Driven Development", "SQL", "API Integration"]
   },
   {
-    role: "Software Engineer",
-    company: "Innovation Labs",
-    duration: "2016 - 2018",
-    location: "Austin, TX",
+    role: "Senior Technical Business Analyst",
+    company: "DigitalPH Asia Corporation",
+    duration: "Dec 2020 – Dec 2024",
+    location: "Makati City, Philippines",
+    type: "previous",
+    description: "Bridged the gap between business needs and technical solutions across multiple large-scale system implementations. Progressively took on hands-on development, starting with debugging and automation scripts, then advancing to Python development, API integrations, and containerized deployments on GCP.",
+    achievements: [
+      "Delivered 10+ projects by leading requirements gathering, system design, and stakeholder management",
+      "Built Python automation scripts and handled API integrations to streamline business workflows",
+      "Implemented containerized services on GCP for smoother deployment and system reliability",
+      "Developed strong foundation in solution architecture, technical documentation, and cross-functional delivery"
+    ],
+    technologies: ["Python", "SQL", "Docker", "GCP", "Business Analysis", "System Architecture", "Project Management", "API Integration"]
+  },
+  {
+    role: "Technical Business Analyst",
+    company: "EightD Corporation",
+    duration: "Sep 2019 - Dec 2020",
+    location: "Philippines",
+    type: "previous",
+    description: "Developed systematic problem-solving methodologies and process optimization skills that are crucial for AI solution design. This role taught me how to analyze complex systems and identify automation opportunities.",
+    achievements: [
+      "Achieved 99.98% efficiency improvement through process automation (skills now applied to AI workflows)",
+      "Mastered complex system integration and multi-stakeholder project management",
+      "Built expertise in solution architecture and technical specification development",
+      "Developed strong foundation in automation and process optimization"
+    ],
+    technologies: ["Process Automation", "System Integration", "AFCS Systems", "Solution Design", "Requirements Analysis"]
+  },
+  {
+    role: "SAP SD Technology Consultant",
+    company: "DXC Technology",
+    duration: "May 2016 - Sep 2019",
+    location: "Philippines",
     type: "previous", 
-    description: "Full-stack development on customer-facing applications, focusing on user experience and system reliability.",
+    description: "Built expertise in enterprise-scale system implementation and business process optimization. This foundational experience in understanding how technology serves business needs is invaluable for AI solution development.",
     achievements: [
-      "Built 10+ full-stack applications from concept to deployment",
-      "Maintained 99.9% uptime across production services",
-      "Implemented automated testing reducing bugs by 50%",
-      "Contributed to open-source projects with 1000+ GitHub stars"
+      "Delivered 20+ enterprise projects with focus on business process improvement",
+      "Developed strong foundation in system configuration and business requirements analysis",
+      "Built expertise in client consultation and technical solution presentation",
+      "Mastered enterprise software implementation methodologies"
     ],
-    technologies: ["JavaScript", "React", "Node.js", "MongoDB", "Git", "Heroku"]
-  },
-  {
-    role: "Junior Software Developer",
-    company: "TechStart Solutions",
-    duration: "2015 - 2016",
-    location: "Dallas, TX",
-    type: "previous",
-    description: "Entry-level position focusing on web development and learning software engineering best practices.",
-    achievements: [
-      "Completed 50+ feature implementations under senior guidance",
-      "Participated in agile development processes",
-      "Built responsive web interfaces for mobile and desktop",
-      "Gained foundation in software testing and debugging"
-    ],
-    technologies: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"]
+    technologies: ["Enterprise Systems", "Business Process Design", "SAP SD", "Client Consultation", "System Implementation"]
   }
 ];
 
 const skills = [
   {
-    category: "AI/ML & Data Science",
-    skills: ["Python", "Scikit-learn", "Pandas", "NumPy", "LangChain", "OpenAI API", "RAG Systems", "Model Evaluation", "Feature Engineering"]
+    category: "Business & Technical Analysis",
+    skills: ["Requirements Gathering", "Solution Design", "Process Improvement", "Stakeholder Management", "Project Management", "Business Analysis", "Technical Specifications"]
   },
   {
-    category: "Full-Stack Development", 
-    skills: ["JavaScript", "TypeScript", "React", "Next.js", "Node.js", "FastAPI", "RESTful APIs", "GraphQL"]
+    category: "Programming & Development", 
+    skills: ["Python", "SQL", "HTML/CSS", "Bootstrap", "API Integration", "Microservice Architecture", "Database Design", "SAP SD"]
   },
   {
-    category: "Databases & Storage",
-    skills: ["PostgreSQL", "MongoDB", "Redis", "ChromaDB", "Vector Databases", "SQL Optimization"]
+    category: "AI/ML (Learning)",
+    skills: ["Scikit-learn", "LangChain", "OpenAI API", "RAG Systems", "Prompt Engineering", "Spec-Driven Development", "Machine Learning Basics"]
   },
   {
-    category: "DevOps & Cloud",
-    skills: ["Docker", "AWS", "CI/CD", "Git", "Linux", "Microservices", "System Architecture"]
+    category: "Tools & Technologies",
+    skills: ["Jira", "Trello", "Docker (Basic)", "GCP (Some)", "Git", "Payment Systems", "AFCS", "System Integration"]
   },
   {
-    category: "Business & Leadership",
-    skills: ["Stakeholder Management", "Technical Writing", "Mentoring", "Project Management", "Requirements Analysis"]
+    category: "Domain Expertise",
+    skills: ["FinTech", "Payment Aggregation", "Enterprise Applications", "AFCS Implementation", "Business Process Optimization", "Client Consultation"]
   }
 ];
 ---
@@ -117,7 +102,7 @@ const skills = [
           Experience
         </h1>
         <p class="body-large max-w-3xl mx-auto">
-          My journey from software engineering to AI/ML, highlighting key roles, achievements, and the evolution of my technical expertise across 9+ years in the industry.
+          My journey to becoming an Generative AI Engineer, built on a strong foundation of understanding how to bridge business needs with technical solutions. This background enables me to create AI applications that deliver real value.
         </p>
       </div>
 
@@ -235,10 +220,10 @@ const skills = [
               🏗️
             </div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              Strong Foundation
+              Business-First Foundation
             </h3>
             <p class="text-sm text-gray-600 dark:text-gray-300">
-              9 years of software engineering across full-stack, systems, and enterprise solutions built a solid technical foundation.
+              9 years of understanding real business problems, stakeholder needs, and translating requirements into technical solutions.
             </p>
           </div>
           
@@ -247,10 +232,10 @@ const skills = [
               🌉
             </div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              Natural Bridge
+              The AI Advantage
             </h3>
             <p class="text-sm text-gray-600 dark:text-gray-300">
-              Solutions engineering experience in understanding business problems and building practical technology solutions directly applies to ML applications.
+              This business context understanding is what makes my AI solutions different - I build AI that solves actual problems, not just demonstrates technology.
             </p>
           </div>
           
