@@ -21,7 +21,7 @@ export default function ChatWidget() {
     setMessages([
       {
         id: '1',
-        content: "Hi! I'm Jose's AI assistant. Ask me anything about his experience, skills, or projects. For example: 'Tell me about Jose's ML experience' or 'What projects has he worked on?'",
+        content: "Good day. I am the AI butler of Mr. Jose Fernando Gonzales. You may inquire about his career, skills, or projects, and I shall provide the details. Shall we begin?",
         isUser: false,
         timestamp: new Date(),
       },
@@ -212,8 +212,8 @@ export default function ChatWidget() {
       <button
         onClick={toggleChat}
         className="fixed bottom-6 right-6 z-50 bg-tuxedo-black hover:bg-primary-800 text-tuxedo-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-        aria-label="Open chat with CV assistant"
-        title="Chat with my CV"
+        aria-label="Open chat with AI Butler"
+        title="Chat with my AI Butler"
         data-chat-fab
       >
         <svg
@@ -255,7 +255,7 @@ export default function ChatWidget() {
             id="chat-title"
             className="text-lg font-semibold text-tuxedo-black dark:text-tuxedo-pearl"
           >
-            Chat with my CV
+            Chat with my AI Butler
           </h2>
           <button
             onClick={() => setIsOpen(false)}

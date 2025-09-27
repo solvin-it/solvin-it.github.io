@@ -3,67 +3,49 @@ import MainLayout from '../../layouts/MainLayout.astro';
 import { siteConfig } from '../../content/site.ts';
 
 const title = `Notes | ${siteConfig.name}`;
-const description = 'Thoughts and insights on AI/ML, software engineering, and technology trends from my experience building production systems.';
+const description = 'Case studies and project documentation showcasing AI/ML engineering projects, technical implementations, and real-world solutions.';
 
-// Mock blog posts - in a real implementation, these would be fetched from MDX files
+// Case studies and project documentation
 const posts = [
   {
-    title: "Building Production RAG Systems",
-    slug: "building-production-rag-systems",
-    excerpt: "Key lessons learned from deploying retrieval-augmented generation systems in production environments, including architecture decisions, performance optimization, and monitoring strategies.",
+    title: "Quest to Solvin Case Study",
+    slug: "../projects/quest-to-solvin",
+    excerpt: "Building an AI-driven interactive storytelling prototype with dynamic NPC generation, personality traits, and quest mechanics using OpenAI APIs.",
     publishedAt: "2024-03-15",
     readTime: "8 min read",
-    category: "AI/ML",
-    tags: ["RAG", "Production", "LLM", "Architecture"]
+    category: "Case Study",
+    tags: ["AI", "Storytelling", "OpenAI", "Streamlit"]
   },
   {
-    title: "From Solutions Engineering to ML",
-    slug: "solutions-engineering-to-ml", 
-    excerpt: "How my technical solutions background prepared me for AI/ML engineering challenges. The transferable skills, mindset shifts, and practical approaches that made the transition successful.",
+    title: "RAG-on-Me Case Study",
+    slug: "../projects/rag-on-me", 
+    excerpt: "A minimal Retrieval-Augmented Generation system that turns my resume into an interactive chatbot, demonstrating modern AI pipeline architecture with LangGraph and FastAPI.",
     publishedAt: "2024-03-08",
-    readTime: "6 min read",
-    category: "Career",
-    tags: ["Career", "AI/ML", "Solutions Engineering", "Transition"]
-  },
-  {
-    title: "Evaluating LLM Applications",
-    slug: "evaluating-llm-applications",
-    excerpt: "Practical approaches to measuring quality and performance in LLM-powered applications. From automated metrics to human evaluation frameworks and everything in between.",
-    publishedAt: "2024-02-28",
     readTime: "10 min read",
-    category: "AI/ML",
-    tags: ["LLM", "Evaluation", "Testing", "Quality"]
+    category: "Case Study",
+    tags: ["RAG", "LangChain", "FastAPI", "PostgreSQL"]
   },
   {
-    title: "The Art of Feature Engineering",
-    slug: "art-of-feature-engineering",
-    excerpt: "Domain expertise beats algorithm choice every time. How thoughtful feature engineering can dramatically improve model performance and business impact.",
-    publishedAt: "2024-02-15",
+    title: "Customer Churn Predictor API Case Study",
+    slug: "../projects/customer-churn",
+    excerpt: "End-to-end machine learning deployment project: from data preprocessing to production API, showcasing ML engineering skills with FastAPI and Docker.",
+    publishedAt: "2024-02-28",
     readTime: "7 min read",
-    category: "Data Science",
-    tags: ["Feature Engineering", "Machine Learning", "Data Science"]
+    category: "Case Study",
+    tags: ["Machine Learning", "FastAPI", "Docker", "Scikit-learn"]
   },
   {
-    title: "Real-Time Systems with Socket.io",
-    slug: "realtime-systems-socketio",
-    excerpt: "Building scalable real-time applications with Socket.io. Architecture patterns, performance considerations, and lessons from production deployments.",
-    publishedAt: "2024-02-01",
+    title: "Gentleman's POS Case Study",
+    slug: "../projects/pos-system",
+    excerpt: "Modular Python web application for dual-service business operations, featuring Flask blueprints, hardware integration, and real-world deployment.",
+    publishedAt: "2024-02-15",
     readTime: "9 min read",
-    category: "Full Stack",
-    tags: ["Socket.io", "Real-time", "Node.js", "WebSocket"]
-  },
-  {
-    title: "Prompt Engineering Best Practices",
-    slug: "prompt-engineering-best-practices",
-    excerpt: "Systematic approaches to prompt design for reliable LLM applications. Structure, context management, and optimization techniques that actually work.",
-    publishedAt: "2024-01-18",
-    readTime: "12 min read", 
-    category: "AI/ML",
-    tags: ["Prompt Engineering", "LLM", "OpenAI", "Best Practices"]
+    category: "Case Study",
+    tags: ["Python", "Flask", "POS System", "Hardware Integration"]
   }
 ];
 
-const categories = ["All", "AI/ML", "Data Science", "Full Stack", "Career"];
+const categories = ["All", "Case Study"];
 ---
 
 <MainLayout title={title} description={description}>
@@ -75,7 +57,7 @@ const categories = ["All", "AI/ML", "Data Science", "Full Stack", "Career"];
           Notes
         </h1>
         <p class="body-large max-w-3xl mx-auto">
-          Thoughts and insights on AI/ML, software engineering, and technology trends from my experience building production systems and solving real-world problems.
+          Case studies and project documentation showcasing AI/ML engineering projects, technical implementations, and real-world solutions I've built.
         </p>
       </div>
 
@@ -103,6 +85,7 @@ const categories = ["All", "AI/ML", "Data Science", "Full Stack", "Career"];
             <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
               <div class="flex items-center space-x-2">
                 <span class={`px-2 py-1 rounded-full text-xs font-medium ${
+                  post.category === 'Case Study' ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300' :
                   post.category === 'AI/ML' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' :
                   post.category === 'Data Science' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
                   post.category === 'Full Stack' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300' :
@@ -232,18 +215,19 @@ const categories = ["All", "AI/ML", "Data Science", "Full Stack", "Career"];
         // Filter posts
         posts.forEach(post => {
           const postCategory = post.getAttribute('data-category');
+          const htmlPost = post as HTMLElement;
           
           if (category === 'all' || postCategory === category) {
-            post.style.display = 'block';
-            post.style.opacity = '1';
-            post.style.transform = 'translateY(0)';
+            htmlPost.style.display = 'block';
+            htmlPost.style.opacity = '1';
+            htmlPost.style.transform = 'translateY(0)';
           } else {
-            post.style.opacity = '0';
-            post.style.transform = 'translateY(20px)';
+            htmlPost.style.opacity = '0';
+            htmlPost.style.transform = 'translateY(20px)';
             
             setTimeout(() => {
-              if (post.style.opacity === '0') {
-                post.style.display = 'none';
+              if (htmlPost.style.opacity === '0') {
+                htmlPost.style.display = 'none';
               }
             }, 200);
           }
