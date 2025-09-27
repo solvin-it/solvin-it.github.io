@@ -382,6 +382,14 @@ const description = 'Get in touch to discuss AI/ML engineering opportunities, co
         // Try to get reCAPTCHA token (v3) and append to formData
         try {
           const grecaptcha = await loadRecaptcha(RECAPTCHA_SITE_KEY);
+          // grecaptcha may need a ready() call after the script loads
+          try {
+            if ((grecaptcha as any).ready) {
+              await new Promise((resolve) => (grecaptcha as any).ready(resolve));
+            }
+          } catch (readyErr) {
+            // ignore
+          }
           const token = await (grecaptcha as any).execute(RECAPTCHA_SITE_KEY, { action: 'contact' });
           if (token) formData.append('g-recaptcha-response', token);
         } catch (recapErr) {
