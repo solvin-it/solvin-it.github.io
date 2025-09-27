@@ -187,7 +187,7 @@ import { siteConfig } from '../content/site.ts';
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <article class="card p-6 animate-in" style="animation-delay: 0.1s">
           <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-            March 15, 2024
+            September 27, 2025
           </div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
             Quest to Solvin Case Study
@@ -202,7 +202,7 @@ import { siteConfig } from '../content/site.ts';
         
         <article class="card p-6 animate-in" style="animation-delay: 0.2s">
           <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-            March 8, 2024
+            September 27, 2025
           </div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
             RAG-on-Me Case Study
@@ -217,7 +217,7 @@ import { siteConfig } from '../content/site.ts';
         
         <article class="card p-6 animate-in" style="animation-delay: 0.3s">
           <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-            February 28, 2024
+            September 27, 2025
           </div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
             Customer Churn Predictor API
@@ -283,7 +283,8 @@ import { siteConfig } from '../content/site.ts';
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.style.animationPlayState = 'running';
+            // cast to HTMLElement to satisfy TypeScript in strict DOM checks
+            (entry.target as HTMLElement).style.animationPlayState = 'running';
           }
         });
       }, {
