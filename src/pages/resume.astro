@@ -20,17 +20,16 @@ const description = 'Download my resume or view the HTML version showcasing my e
         
         <!-- Download Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a 
-            href="/resume.pdf" 
-            target="_blank"
+          <button
+            id="download-pdf-btn"
             class="btn btn-primary inline-flex items-center"
-            download="Jose_Gonzales_Resume.pdf"
+            type="button"
           >
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-4-4m4 4l4-4m-4 4V5a3 3 0 00-3-3H7a3 3 0 00-3 3v14a3 3 0 003 3h10a3 3 0 003-3V8l-4-4H7a3 3 0 00-3 3z" />
             </svg>
             Download PDF
-          </a>
+          </button>
           <a 
             href="#html-resume" 
             class="btn btn-secondary"
@@ -493,3 +492,72 @@ const description = 'Download my resume or view the HTML version showcasing my e
     }
   }
 </style>
+
+<script>
+  // Simple PDF generation
+  async function generatePDF() {
+    const btn = document.getElementById('download-pdf-btn') as HTMLButtonElement;
+    if (!btn) return;
+    
+    btn.disabled = true;
+    btn.innerHTML = 'Generating...';
+    
+    try {
+      // Load html2pdf from CDN
+      if (!(window as any).html2pdf) {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js';
+        document.head.appendChild(script);
+        await new Promise((resolve) => { script.onload = () => resolve(undefined); });
+      }
+      
+      const element = document.getElementById('html-resume');
+      if (element) {
+        // Make sure element is visible for capture
+        const el = element as HTMLElement;
+        const originalStyle = el.style.cssText;
+        
+        // Force visibility
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+        el.style.visibility = 'visible';
+        el.classList.remove('animate-in');
+        
+        // Wait for styles to apply
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Simple options
+        const opt = {
+          margin: 10,
+          filename: 'Jose_Gonzales_Resume.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+        };
+        
+        await (window as any).html2pdf().set(opt).from(el).save();
+        
+        // Restore original styles
+        el.style.cssText = originalStyle;
+        el.classList.add('animate-in');
+      }
+    } catch (err) {
+      console.error('PDF generation failed:', err);
+      // Fallback to static PDF
+      window.open('/resume.pdf', '_blank');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-4-4m4 4l4-4m-4 4V5a3 3 0 00-3-3H7a3 3 0 00-3 3v14a3 3 0 003 3h10a3 3 0 003-3V8l-4-4H7a3 3 0 00-3 3z" />
+        </svg>
+        Download PDF
+      `;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('download-pdf-btn');
+    if (btn) btn.addEventListener('click', generatePDF);
+  });
+</script>
