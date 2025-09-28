@@ -1,14 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Hook: tracks keyboard bottom inset using Visual Viewport API with throttling
 export default function useKeyboardInset(isOpen: boolean, isMobile: boolean) {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const baselineRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!isOpen || !isMobile) return () => {};
+    if (!isOpen || !isMobile) {
+      baselineRef.current = null;
+      setKeyboardHeight(0);
+      return () => {};
+    }
 
     let animationFrame = 0;
     let mounted = true;
+
+    const HYSTERESIS_PX = 80;
 
     const throttle = (fn: Function, ms = 50) => {
       let lastCall = 0;
@@ -27,8 +34,17 @@ export default function useKeyboardInset(isOpen: boolean, isMobile: boolean) {
         if (!mounted) return;
         if (window.visualViewport) {
           const vv = window.visualViewport;
-          const bottomInset = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
-          setKeyboardHeight(bottomInset > 140 ? bottomInset : 0);
+          const currentViewportExtent = vv.height + vv.offsetTop;
+
+          if (baselineRef.current === null || currentViewportExtent >= baselineRef.current) {
+            baselineRef.current = currentViewportExtent;
+            setKeyboardHeight(0);
+            return;
+          }
+
+          const baseline = baselineRef.current;
+          const diff = Math.max(0, baseline - currentViewportExtent);
+          setKeyboardHeight(diff > HYSTERESIS_PX ? diff : 0);
         }
       });
     }, 50);
@@ -54,6 +70,8 @@ export default function useKeyboardInset(isOpen: boolean, isMobile: boolean) {
   useEffect(() => {
     if (!isOpen || !isMobile) return () => {};
     const onOrientation = () => {
+      baselineRef.current = null;
+      setKeyboardHeight(0);
       setTimeout(() => {
         if (window.visualViewport) window.visualViewport.dispatchEvent(new Event('resize'));
       }, 400);

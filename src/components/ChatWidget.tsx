@@ -18,6 +18,18 @@ interface ChatError {
   retryable: boolean;
 }
 
+// Utility functions
+const throttle = (fn: Function, ms = 50) => {
+  let lastCall = 0;
+  return (...args: any[]) => {
+    const now = performance.now();
+    if (now - lastCall >= ms) {
+      lastCall = now;
+      fn(...args);
+    }
+  };
+};
+
 const generateId = () => Math.random().toString(36).substring(2, 15);
 
 const isMobileDevice = () => {
@@ -46,6 +58,7 @@ export default function ChatWidget() {
   const fabRef = useRef<HTMLButtonElement>(null);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const liveRegionRef = useRef<HTMLDivElement>(null);
+  const liveRegionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const updateDrawerBounds = useCallback(() => {
     if (!drawerRef.current) return;
@@ -416,7 +429,16 @@ export default function ChatWidget() {
       
       // Announce new message to screen readers
       if (liveRegionRef.current) {
+        if (liveRegionTimeoutRef.current) {
+          clearTimeout(liveRegionTimeoutRef.current);
+        }
+
         liveRegionRef.current.textContent = `New message: ${content.slice(0, 120)}`;
+        liveRegionTimeoutRef.current = setTimeout(() => {
+          if (liveRegionRef.current) {
+            liveRegionRef.current.textContent = '';
+          }
+        }, 1000);
       }
       
     } catch (err: any) {
@@ -542,6 +564,9 @@ export default function ChatWidget() {
       if (focusTimeoutRef.current) {
         clearTimeout(focusTimeoutRef.current);
       }
+      if (liveRegionTimeoutRef.current) {
+        clearTimeout(liveRegionTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -614,10 +639,11 @@ export default function ChatWidget() {
         </div>
 
         {/* Messages */}
-        <MessageList 
-          messages={messages} 
-          isLoading={isLoading} 
+        <MessageList
+          messages={messages}
+          isLoading={isLoading}
           messagesEndRef={messagesEndRef}
+          liveRegionRef={liveRegionRef}
           inputHeight={inputHeight}
           keyboardHeight={keyboardHeight}
           isMobile={isMobile}
