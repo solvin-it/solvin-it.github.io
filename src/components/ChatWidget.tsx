@@ -135,7 +135,14 @@ export default function ChatWidget() {
     
     focusTimeoutRef.current = setTimeout(() => {
       if (inputRef.current && isOpen) {
-        inputRef.current.focus({ preventScroll });
+        // Special handling for iOS
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          // Force focus and keyboard on iOS
+          inputRef.current.focus();
+          inputRef.current.click(); // Additional trigger for iOS keyboard
+        } else {
+          inputRef.current.focus({ preventScroll });
+        }
       }
     }, isMobile ? 100 : 50);
   };
@@ -164,29 +171,54 @@ export default function ChatWidget() {
     
     const inputElement = inputRef.current;
     let blurTimeout: NodeJS.Timeout;
+    let preventBlur = false;
+    
+    const handleTouchStart = () => {
+      // Prevent blur when user is interacting with the input area
+      preventBlur = true;
+      setTimeout(() => { preventBlur = false; }, 300);
+    };
     
     const handleFocus = () => {
       if (blurTimeout) clearTimeout(blurTimeout);
+      // Force keyboard to appear on iOS
+      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        inputElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     };
     
-    const handleBlur = () => {
-      // Only re-focus if we're still in the chat and not switching to another element
-      blurTimeout = setTimeout(() => {
-        if (isOpen && inputRef.current && document.activeElement !== inputRef.current) {
-          const isClickingOutside = !drawerRef.current?.contains(document.activeElement as Node);
-          if (!isClickingOutside) {
-            inputRef.current.focus({ preventScroll: true });
+    const handleBlur = (e: FocusEvent) => {
+      // Don't prevent blur if user is clicking outside the chat
+      const relatedTarget = e.relatedTarget as Element;
+      const isClickingInDrawer = drawerRef.current?.contains(relatedTarget);
+      
+      if (!preventBlur && isOpen && !relatedTarget && isClickingInDrawer !== false) {
+        blurTimeout = setTimeout(() => {
+          if (isOpen && inputRef.current && !preventBlur) {
+            inputRef.current.focus();
           }
-        }
-      }, 100);
+        }, 150);
+      }
     };
     
+    // Enhanced input event handling for iOS
+    const handleInput = () => {
+      // Ensure cursor visibility on iOS
+      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        inputElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    };
+    
+    inputElement.addEventListener('touchstart', handleTouchStart, { passive: true });
     inputElement.addEventListener('focus', handleFocus);
     inputElement.addEventListener('blur', handleBlur);
+    inputElement.addEventListener('input', handleInput);
     
     return () => {
+      inputElement.removeEventListener('touchstart', handleTouchStart);
       inputElement.removeEventListener('focus', handleFocus);
       inputElement.removeEventListener('blur', handleBlur);
+      inputElement.removeEventListener('input', handleInput);
       if (blurTimeout) clearTimeout(blurTimeout);
     };
   }, [isOpen, isMobile]);
@@ -423,12 +455,10 @@ export default function ChatWidget() {
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         style={{ 
-          height: keyboardHeight > 0 
+          height: isMobile && keyboardHeight > 0 
             ? `${window.innerHeight - keyboardHeight}px` 
             : '100vh',
-          maxHeight: keyboardHeight > 0 
-            ? `${window.innerHeight - keyboardHeight}px` 
-            : '100vh'
+          maxHeight: '100vh'
         }}
         role="dialog"
         aria-modal="true"
@@ -454,10 +484,17 @@ export default function ChatWidget() {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0" style={{ 
-          paddingBottom: keyboardHeight > 0 ? '1rem' : '1rem',
-          scrollBehavior: 'smooth'
-        }}>
+        <div 
+          className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0" 
+          style={{ 
+            paddingBottom: isMobile ? '1rem' : '1rem',
+            scrollBehavior: 'smooth',
+            // Ensure messages area takes up remaining space properly
+            maxHeight: isMobile && keyboardHeight > 0 
+              ? `calc(100vh - ${keyboardHeight}px - 140px)` 
+              : 'calc(100vh - 140px)'
+          }}
+        >
           {messages.map((message) => (
             <div
               key={message.id}
@@ -491,7 +528,9 @@ export default function ChatWidget() {
         </div>
 
         {/* Input */}
-        <div className="flex-shrink-0 p-4 border-t border-primary-200 dark:border-primary-800 bg-tuxedo-white dark:bg-tuxedo-midnight">
+        <div className={`flex-shrink-0 border-t border-primary-200 dark:border-primary-800 bg-tuxedo-white dark:bg-tuxedo-midnight ${
+          isMobile ? 'p-3 pb-safe' : 'p-4'
+        }`}>
           <div className="flex space-x-2">
             <input
               ref={inputRef}
@@ -500,24 +539,33 @@ export default function ChatWidget() {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder={isLoading ? "AI is thinking..." : "Ask about Jose's experience..."}
-              className={`flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-tuxedo-white dark:bg-tuxedo-midnight text-tuxedo-black dark:text-tuxedo-pearl text-base transition-all duration-200 ${
+              className={`flex-1 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-tuxedo-white dark:bg-tuxedo-midnight text-tuxedo-black dark:text-tuxedo-pearl transition-all duration-200 ${
                 isLoading 
                   ? 'border-primary-400 dark:border-primary-500 bg-gray-50 dark:bg-gray-800' 
                   : 'border-primary-300 dark:border-primary-600'
               } ${
-                isMobile ? 'text-base' : 'text-sm'
+                isMobile ? 'py-4 text-base min-h-[44px]' : 'py-3 text-sm'
               }`}
               disabled={isLoading}
               autoComplete="off"
               autoCapitalize="sentences"
               autoCorrect="on"
+              spellCheck="true"
               inputMode="text"
               enterKeyHint="send"
+              // iOS specific attributes
+              style={{
+                fontSize: isMobile ? '16px' : undefined, // Prevents zoom on iOS
+                WebkitAppearance: 'none',
+                appearance: 'none'
+              }}
             />
             <button
               onClick={() => void handleSendMessage()}
               disabled={!inputValue.trim() || isLoading}
-              className={`px-4 py-3 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed flex-shrink-0 ${
+              className={`rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed flex-shrink-0 ${
+                isMobile ? 'px-4 py-4 min-w-[44px] min-h-[44px]' : 'px-4 py-3'
+              } ${
                 isLoading
                   ? 'bg-primary-400 text-white'
                   : !inputValue.trim()
@@ -540,7 +588,7 @@ export default function ChatWidget() {
           </div>
           {isMobile && (
             <div className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-              {isLoading ? "Processing your question..." : "Tap to type your question"}
+              {isLoading ? "Processing your question..." : "Tap input field above to start typing"}
             </div>
           )}
         </div>

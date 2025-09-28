@@ -49,15 +49,39 @@
     /* Improve scrolling on mobile */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    /* Add safe area padding for newer iPhones */
+    padding-bottom: env(safe-area-inset-bottom);
   }
   
   [data-chat-drawer] input {
     /* Prevent zoom on iOS */
-    font-size: 16px;
+    font-size: 16px !important;
     /* Smooth interaction */
     -webkit-appearance: none;
     appearance: none;
     border-radius: 8px;
+    /* Fix iOS input styling issues */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: text;
+    user-select: text;
+  }
+  
+  /* iOS specific input container fixes */
+  @supports (-webkit-touch-callout: none) {
+    [data-chat-drawer] .flex-shrink-0:last-child {
+      padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    }
+    
+    /* Ensure input is always visible */
+    [data-chat-drawer] input:focus {
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+  }
+  
+  /* Safe area handling for notched devices */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
   }
   
   /* Elegant text selection */
