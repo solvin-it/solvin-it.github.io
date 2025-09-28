@@ -58,6 +58,31 @@ export default function ChatWidget() {
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const liveRegionRef = useRef<HTMLDivElement>(null);
 
+  // Helper function to reset textarea height and update input height state
+  const resetTextareaHeight = () => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+      inputRef.current.style.height = `${Math.max(inputRef.current.scrollHeight, isMobile ? 52 : 40)}px`;
+      
+      // Update input height state for proper message list spacing
+      setTimeout(() => {
+        // Prefer reading the ChatInput container height
+        const container = document.querySelector('[data-chat-input-root]') as HTMLElement | null;
+        if (container) {
+          setInputHeight(container.offsetHeight);
+        } else if (inputRef.current) {
+          const height = inputRef.current.offsetHeight;
+          setInputHeight(height + 24);
+        }
+
+        // Ensure message list scrolls to the end so input visually sits at bottom
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
+        }
+      }, 0);
+    }
+  };
+
   // Detect mobile device
   useEffect(() => {
     const checkMobile = () => {
@@ -79,10 +104,17 @@ export default function ChatWidget() {
   // Measure input height for proper message list padding
   useEffect(() => {
     const updateInputHeight = () => {
+      // Prefer measuring the input container (ChatInput root) if present
+      const container = document.querySelector('[data-chat-input-root]') as HTMLElement | null;
+      if (container) {
+        setInputHeight(container.offsetHeight);
+        return;
+      }
+
       if (inputRef.current) {
+        // Fallback: measure textarea and include estimated container chrome
         const height = inputRef.current.offsetHeight;
-        // Add container padding and border to get total input area height
-        const containerHeight = height + (isMobile ? 24 : 32) + 16; // padding + border
+        const containerHeight = height + 24; // small fallback padding
         setInputHeight(containerHeight);
       }
     };
@@ -318,19 +350,7 @@ export default function ChatWidget() {
     setInputValue('');
     
     // Reset textarea height when input is cleared
-    if (inputRef.current) {
-      inputRef.current.style.height = 'auto';
-      inputRef.current.style.height = `${Math.max(inputRef.current.scrollHeight, isMobile ? 52 : 40)}px`;
-      
-      // Update input height for proper message list spacing
-      setTimeout(() => {
-        if (inputRef.current) {
-          const height = inputRef.current.offsetHeight;
-          const containerHeight = height + (isMobile ? 24 : 32) + 16;
-          setInputHeight(containerHeight);
-        }
-      }, 0);
-    }
+    resetTextareaHeight();
     
     setIsLoading(true);
 

@@ -53,6 +53,7 @@ export default function ChatInput({
 
   return (
     <div 
+      data-chat-input-root
       className={`flex-shrink-0 border-t border-primary-200 dark:border-primary-800 bg-tuxedo-white dark:bg-tuxedo-midnight ${!isMobile ? 'p-4' : ''}`}
       style={containerStyle}
     >
