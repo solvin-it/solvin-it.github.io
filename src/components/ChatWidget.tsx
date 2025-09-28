@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { CHAT_API_ENDPOINT, ChatRequestPayload, ChatResponsePayload } from '../config/chat';
 
 interface Message {
@@ -8,6 +8,32 @@ interface Message {
   timestamp: Date;
 }
 
+interface ChatError {
+  type: 'network' | 'timeout' | 'server' | 'offline';
+  message: string;
+  retryable: boolean;
+}
+
+// Utility functions
+const throttle = (fn: Function, ms = 50) => {
+  let lastCall = 0;
+  return (...args: any[]) => {
+    const now = performance.now();
+    if (now - lastCall >= ms) {
+      lastCall = now;
+      fn(...args);
+    }
+  };
+};
+
+const generateId = () => Math.random().toString(36).substring(2, 15);
+
+const isMobileDevice = () => {
+  if (typeof window === 'undefined') return false;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+         ('ontouchstart' in window && window.innerWidth < 768);
+};
+
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -15,18 +41,21 @@ export default function ChatWidget() {
   const [isLoading, setIsLoading] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
+  const [error, setError] = useState<ChatError | null>(null);
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
+  const fabRef = useRef<HTMLButtonElement>(null);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const liveRegionRef = useRef<HTMLDivElement>(null);
 
   // Detect mobile device
   useEffect(() => {
     const checkMobile = () => {
-      const userAgent = navigator.userAgent;
-      const isMobileDevice = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      setIsMobile(isMobileDevice || (isTouchDevice && window.innerWidth < 768));
+      setIsMobile(isMobileDevice());
     };
     
     checkMobile();
@@ -34,65 +63,57 @@ export default function ChatWidget() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Enhanced mobile keyboard detection with better viewport handling
+  // Enhanced mobile keyboard detection with throttling
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !isMobile) return () => {};
 
-    let initialViewportHeight = window.innerHeight;
-    let initialVisualViewportHeight = window.visualViewport?.height || window.innerHeight;
-    
-    const updateKeyboardHeight = () => {
-      const currentViewportHeight = window.innerHeight;
-      const currentVisualHeight = window.visualViewport?.height || currentViewportHeight;
-      
-      // Use the most reliable method based on device
-      let keyboardOffset = 0;
-      
-      if (window.visualViewport) {
-        // Use Visual Viewport API when available (modern browsers)
-        keyboardOffset = initialVisualViewportHeight - currentVisualHeight;
-      } else {
-        // Fallback for older browsers
-        keyboardOffset = initialViewportHeight - currentViewportHeight;
-      }
-      
-      // Only consider it a keyboard if the change is significant
-      const newKeyboardHeight = keyboardOffset > 150 ? keyboardOffset : 0;
-      
-      console.log('Keyboard height update:', { 
-        initialViewportHeight, 
-        currentViewportHeight, 
-        initialVisualViewportHeight, 
-        currentVisualHeight, 
-        keyboardOffset, 
-        newKeyboardHeight 
+    let animationFrame = 0;
+    const handleViewportChange = throttle(() => {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = requestAnimationFrame(() => {
+        if (window.visualViewport) {
+          const vv = window.visualViewport;
+          // Calculate bottom inset from viewport changes
+          const bottomInset = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
+          setKeyboardHeight(bottomInset > 140 ? bottomInset : 0);
+        }
       });
-      
-      setKeyboardHeight(newKeyboardHeight);
-    };
+    }, 50);
 
-    // Listen for both viewport and visual viewport changes
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', updateKeyboardHeight);
+      const vv = window.visualViewport;
+      vv.addEventListener('resize', handleViewportChange);
+      vv.addEventListener('scroll', handleViewportChange);
+      handleViewportChange(); // Initial check
+      
+      return () => {
+        vv.removeEventListener('resize', handleViewportChange);
+        vv.removeEventListener('scroll', handleViewportChange);
+        cancelAnimationFrame(animationFrame);
+      };
     }
-    window.addEventListener('resize', updateKeyboardHeight);
     
-    // Also listen for orientationchange
-    window.addEventListener('orientationchange', () => {
-      setTimeout(() => {
-        initialViewportHeight = window.innerHeight;
-        initialVisualViewportHeight = window.visualViewport?.height || window.innerHeight;
-        updateKeyboardHeight();
-      }, 500);
-    });
-
     return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', updateKeyboardHeight);
-      }
-      window.removeEventListener('resize', updateKeyboardHeight);
+      cancelAnimationFrame(animationFrame);
     };
-  }, [isOpen]);
+  }, [isOpen, isMobile]);
+
+  // Clean orientation change handling
+  useEffect(() => {
+    if (!isOpen || !isMobile) return;
+    
+    const handleOrientationChange = () => {
+      // Let browsers settle after orientation change
+      setTimeout(() => {
+        if (window.visualViewport) {
+          window.visualViewport.dispatchEvent(new Event('resize'));
+        }
+      }, 400);
+    };
+    
+    window.addEventListener('orientationchange', handleOrientationChange);
+    return () => window.removeEventListener('orientationchange', handleOrientationChange);
+  }, [isOpen, isMobile]);
 
   // Prevent body scroll when chat is open (mobile only)
   useEffect(() => {
@@ -291,8 +312,26 @@ export default function ChatWidget() {
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
 
+    // Clear any previous errors
+    setError(null);
+    
+    // Cancel any previous request
+    if (abortController) {
+      abortController.abort();
+    }
+    
+    // Check if offline
+    if (!navigator.onLine) {
+      setError({
+        type: 'offline',
+        message: 'You appear to be offline. Please check your connection.',
+        retryable: true
+      });
+      return;
+    }
+
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: generateId(),
       content: inputValue.trim(),
       isUser: true,
       timestamp: new Date(),
@@ -301,6 +340,13 @@ export default function ChatWidget() {
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsLoading(true);
+
+    // Create new abort controller
+    const controller = new AbortController();
+    setAbortController(controller);
+    
+    // Set timeout
+    const timeout = setTimeout(() => controller.abort(), 20000);
 
     // Immediate focus restoration after clearing input
     focusInput();
@@ -322,6 +368,7 @@ export default function ChatWidget() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -332,25 +379,50 @@ export default function ChatWidget() {
       const content = parseAssistantMessage(data);
 
       const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
+        id: generateId(),
         content,
         isUser: false,
         timestamp: new Date(),
       };
 
       setMessages(prev => [...prev, aiResponse]);
+      
+      // Announce new message to screen readers
+      if (liveRegionRef.current) {
+        liveRegionRef.current.textContent = `New message: ${content.slice(0, 120)}`;
+      }
+      
     } catch (error) {
-      console.error('Failed to fetch chat response', error);
+      if (error instanceof Error && error.name === 'AbortError') {
+        // Request was aborted - either timeout or user action
+        if (controller.signal.aborted) {
+          setError({
+            type: 'timeout',
+            message: 'The request took too long. Please try again.',
+            retryable: true
+          });
+        }
+        return;
+      }
+
+      const errorType: ChatError['type'] = error instanceof TypeError ? 'network' : 'server';
+      setError({
+        type: errorType,
+        message: "I'm having trouble connecting to Jose's AI assistant at the moment. Please try again shortly.",
+        retryable: true
+      });
+
       const errorResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        content:
-          "I'm having trouble connecting to Jose's AI assistant at the moment. Please try again shortly.",
+        id: generateId(),
+        content: "I'm having trouble connecting right now. Please try again shortly.",
         isUser: false,
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, errorResponse]);
     } finally {
+      clearTimeout(timeout);
       setIsLoading(false);
+      setAbortController(null);
       
       // Final focus restoration after response
       setTimeout(() => {
@@ -359,15 +431,32 @@ export default function ChatWidget() {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (isComposing) return; // Don't send during IME composition
+    
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       void handleSendMessage();
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const target = e.target;
+    setInputValue(target.value);
+    
+    // Auto-resize textarea
+    target.style.height = 'auto';
+    target.style.height = `${Math.min(target.scrollHeight, 6 * 24 + 24)}px`;
+  };
+
   const toggleChat = () => {
-    setIsOpen(!isOpen);
+    if (isOpen) {
+      setIsOpen(false);
+      // Return focus to FAB after closing
+      setTimeout(() => fabRef.current?.focus(), 100);
+    } else {
+      setIsOpen(true);
+    }
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -442,9 +531,12 @@ export default function ChatWidget() {
     <>
       {/* Floating Action Button */}
       <button
+        ref={fabRef}
         onClick={toggleChat}
         className="fixed bottom-6 right-6 z-50 bg-tuxedo-black hover:bg-primary-800 text-tuxedo-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
         aria-label="Open chat with AI Butler"
+        aria-expanded={isOpen}
+        aria-controls="chat-drawer"
         title="Chat with my AI Butler"
         data-chat-fab
       >
@@ -474,24 +566,12 @@ export default function ChatWidget() {
       {/* Chat Drawer */}
       <div
         ref={drawerRef}
+        id="chat-drawer"
         data-chat-drawer
         className={`fixed top-0 right-0 w-full max-w-md bg-tuxedo-white dark:bg-tuxedo-midnight shadow-2xl transform transition-transform duration-300 ease-in-out z-50 flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
-        style={{ 
-          height: isMobile 
-            ? (keyboardHeight > 0 
-                ? `${Math.max(window.innerHeight - keyboardHeight, 400)}px`
-                : '100vh')
-            : '100vh',
-          maxHeight: isMobile 
-            ? (keyboardHeight > 0 
-                ? `${Math.max(window.innerHeight - keyboardHeight, 400)}px`
-                : '100vh')
-            : '100vh',
-          // Ensure drawer is positioned correctly
-          bottom: isMobile && keyboardHeight > 0 ? `${keyboardHeight}px` : '0'
-        }}
+        style={{ bottom: 0 }}
         role="dialog"
         aria-modal="true"
         aria-labelledby="chat-title"
@@ -517,18 +597,21 @@ export default function ChatWidget() {
 
         {/* Messages */}
         <div 
+          data-chat-messages
           className="flex-1 overflow-y-auto p-4 space-y-4" 
           style={{ 
-            scrollBehavior: 'smooth',
-            // Calculate available space: total height - header (72px) - input area (estimated 120px)
-            minHeight: isMobile 
-              ? `${Math.max((keyboardHeight > 0 ? window.innerHeight - keyboardHeight : window.innerHeight) - 192, 200)}px`
-              : 'calc(100vh - 192px)',
-            maxHeight: isMobile 
-              ? `${Math.max((keyboardHeight > 0 ? window.innerHeight - keyboardHeight : window.innerHeight) - 192, 200)}px`
-              : 'calc(100vh - 192px)'
+            scrollBehavior: 'auto', // Prefer auto for better performance
+            overscrollBehavior: 'contain'
           }}
         >
+          {/* Live region for screen readers */}
+          <div 
+            ref={liveRegionRef}
+            aria-live="polite" 
+            className="sr-only" 
+            id="chat-live" 
+          />
+          
           {messages.map((message) => (
             <div
               key={message.id}
@@ -573,7 +656,7 @@ export default function ChatWidget() {
             zIndex: 10,
             // Add extra padding for mobile keyboards and safe areas
             paddingBottom: isMobile 
-              ? `calc(1rem + ${keyboardHeight > 0 ? '0px' : 'env(safe-area-inset-bottom, 20px)'})`
+              ? `calc(1rem + ${keyboardHeight}px + env(safe-area-inset-bottom, 0px))`
               : '1rem',
             // Ensure minimum height for touch targets
             minHeight: isMobile ? '100px' : '80px',
@@ -582,14 +665,16 @@ export default function ChatWidget() {
           }}
         >
           <div className="flex space-x-2 items-end">
-            <input
+            <textarea
               ref={inputRef}
-              type="text"
+              rows={1}
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
               placeholder={isLoading ? "AI is thinking..." : "Ask about Jose's experience..."}
-              className={`flex-1 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-tuxedo-white dark:bg-tuxedo-midnight text-tuxedo-black dark:text-tuxedo-pearl transition-all duration-200 ${
+              className={`flex-1 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-tuxedo-white dark:bg-tuxedo-midnight text-tuxedo-black dark:text-tuxedo-pearl transition-all duration-200 resize-none ${
                 isLoading 
                   ? 'border-primary-400 dark:border-primary-500 bg-gray-50 dark:bg-gray-800' 
                   : 'border-primary-300 dark:border-primary-600'
@@ -601,8 +686,8 @@ export default function ChatWidget() {
               autoCapitalize="sentences"
               autoCorrect="on"
               spellCheck="true"
-              inputMode="text"
-              enterKeyHint="send"
+              aria-label="Type your message"
+              aria-describedby={error ? "chat-error" : undefined}
               // iOS specific attributes
               style={{
                 fontSize: isMobile ? '16px' : undefined,
@@ -610,7 +695,8 @@ export default function ChatWidget() {
                 appearance: 'none',
                 // Ensure input stays above keyboard
                 transform: 'translateZ(0)',
-                willChange: 'transform'
+                willChange: 'transform',
+                maxHeight: '144px' // Cap at ~6 lines
               }}
             />
             <button
@@ -640,13 +726,40 @@ export default function ChatWidget() {
               )}
             </button>
           </div>
+          
+          {/* Error display */}
+          {error && (
+            <div 
+              id="chat-error"
+              className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+              role="alert"
+            >
+              <p className="text-sm text-red-700 dark:text-red-400">
+                {error.message}
+              </p>
+              {error.retryable && (
+                <button
+                  onClick={() => {
+                    setError(null);
+                    void handleSendMessage();
+                  }}
+                  className="mt-1 text-xs text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200 underline"
+                >
+                  Try again
+                </button>
+              )}
+            </div>
+          )}
+          
           {isMobile && (
             <div className="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center">
-              {keyboardHeight > 0 
-                ? "Keyboard active - ready to type!" 
+              {error 
+                ? "There was an issue. Please try again." 
+                : keyboardHeight > 0 
+                ? "Enter to send • Shift+Enter for new line" 
                 : isLoading 
                 ? "Processing your question..." 
-                : "Tap the input field to start chatting"}
+                : "Tap input field • Enter to send • Shift+Enter for new line"}
             </div>
           )}
         </div>

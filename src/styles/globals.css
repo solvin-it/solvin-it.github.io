@@ -46,11 +46,34 @@
   
   /* Chat widget mobile optimizations */
   [data-chat-drawer] {
+    /* Use modern viewport units with fallbacks */
+    height: 100dvh;
+    max-height: 100dvh;
     /* Improve scrolling on mobile */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
-    /* Add safe area padding for newer iPhones */
-    padding-bottom: env(safe-area-inset-bottom);
+    touch-action: manipulation;
+  }
+
+  /* Fallback for browsers that don't support dvh */
+  @supports not (height: 100dvh) {
+    [data-chat-drawer] {
+      height: 100vh;
+      max-height: 100vh;
+    }
+  }
+
+  /* Message list container with consistent height */
+  [data-chat-messages] {
+    min-height: calc(100dvh - 192px);
+    max-height: calc(100dvh - 192px);
+  }
+
+  @supports not (height: 100dvh) {
+    [data-chat-messages] {
+      min-height: calc(100vh - 192px);
+      max-height: calc(100vh - 192px);
+    }
   }
   
   [data-chat-drawer] input {
