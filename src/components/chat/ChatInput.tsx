@@ -82,7 +82,7 @@ export default function ChatInput({
 
       {isMobile && (
         <div className="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center">
-          {error ? 'There was an issue. Please try again.' : keyboardHeight > 0 ? 'Enter to send • Shift+Enter for new line' : isLoading ? 'Processing your question...' : 'Tap input field • Enter to send • Shift+Enter for new line'}
+          {error ? 'There was an issue. Please try again.' : keyboardHeight > 0 ? 'Enter to send' : isLoading ? 'Processing your question...' : 'Tap input field • Enter to send'}
         </div>
       )}
     </div>
