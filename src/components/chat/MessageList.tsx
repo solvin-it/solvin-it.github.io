@@ -11,20 +11,20 @@ interface Props {
   messages: Message[];
   isLoading: boolean;
   messagesEndRef: React.RefObject<HTMLDivElement>;
-  liveRegionRef: React.RefObject<HTMLDivElement>;
+  liveRegionRef?: React.RefObject<HTMLDivElement>;
   inputHeight?: number;
   keyboardHeight?: number;
   isMobile?: boolean;
 }
 
-export default function MessageList({
-  messages,
-  isLoading,
-  messagesEndRef,
+export default function MessageList({ 
+  messages, 
+  isLoading, 
+  messagesEndRef, 
   liveRegionRef,
-  inputHeight = 72,
-  keyboardHeight = 0,
-  isMobile = false
+  inputHeight = 72, 
+  keyboardHeight = 0, 
+  isMobile = false 
 }: Props) {
   // Calculate bottom padding to ensure messages aren't hidden behind the input
   const bottomPadding = isMobile 
@@ -41,7 +41,7 @@ export default function MessageList({
         paddingBottom: bottomPadding
       }}
     >
-      <div aria-live="polite" className="sr-only" id="chat-live" ref={liveRegionRef} />
+  <div aria-live="polite" className="sr-only" id="chat-live" ref={liveRegionRef} />
 
       {messages.map((message) => (
         <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>

@@ -57,27 +57,35 @@ export default function ChatWidget() {
   const drawerRef = useRef<HTMLDivElement>(null);
   const fabRef = useRef<HTMLButtonElement>(null);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const liveRegionRef = useRef<HTMLDivElement>(null);
   const liveRegionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const liveRegionRef = useRef<HTMLDivElement>(null);
 
   const updateDrawerBounds = useCallback(() => {
     if (!drawerRef.current) return;
 
     const rect = drawerRef.current.getBoundingClientRect();
-    setDrawerBounds(prev => {
-      const next = {
-        left: rect.left,
-        width: rect.width,
-        right: rect.right,
-      };
+    // account for page scroll when computing absolute left/right
+    const left = rect.left + window.scrollX;
+    const right = rect.right + window.scrollX;
+    const width = rect.width;
 
-      if (prev.left === next.left && prev.width === next.width && prev.right === next.right) {
-        return prev;
-      }
-
-      return next;
-    });
+    setDrawerBounds({ left, right, width });
   }, []);
+
+  // Reusable measurement for the chat input container / textarea
+  const measureInputHeight = useCallback(() => {
+    // Prefer reading the ChatInput container height
+    const container = document.querySelector('[data-chat-input-root]') as HTMLElement | null;
+    if (container) {
+      setInputHeight(container.offsetHeight);
+      return;
+    }
+
+    if (inputRef.current) {
+      const height = inputRef.current.offsetHeight;
+      setInputHeight(height + 24);
+    }
+  }, [isMobile]);
 
   // Helper function to reset textarea height and update input height state
   const resetTextareaHeight = () => {
@@ -124,25 +132,25 @@ export default function ChatWidget() {
 
   // Measure input height for proper message list padding
   useEffect(() => {
-    const updateInputHeight = () => {
-      // Prefer measuring the input container (ChatInput root) if present
-      const container = document.querySelector('[data-chat-input-root]') as HTMLElement | null;
-      if (container) {
-        setInputHeight(container.offsetHeight);
-        return;
-      }
+    measureInputHeight();
 
-      if (inputRef.current) {
-        // Fallback: measure textarea and include estimated container chrome
-        const height = inputRef.current.offsetHeight;
-        const containerHeight = height + 24; // small fallback padding
-        setInputHeight(containerHeight);
-      }
+    window.addEventListener('resize', measureInputHeight);
+
+    // Attach ResizeObserver to the chat input container when available
+    let observer: ResizeObserver | null = null;
+    const container = document.querySelector('[data-chat-input-root]') as HTMLElement | null;
+    if (container && typeof ResizeObserver !== 'undefined') {
+      observer = new ResizeObserver(() => {
+        // use a tiny debounce via rAF to batch layout reads
+        window.requestAnimationFrame(() => measureInputHeight());
+      });
+      observer.observe(container);
+    }
+
+    return () => {
+      window.removeEventListener('resize', measureInputHeight);
+      observer?.disconnect();
     };
-    
-    updateInputHeight();
-    window.addEventListener('resize', updateInputHeight);
-    return () => window.removeEventListener('resize', updateInputHeight);
   }, [inputValue, keyboardHeight, isMobile]);
 
   // Track drawer size/position for aligning mobile input
@@ -164,11 +172,20 @@ export default function ChatWidget() {
       observer.observe(drawerRef.current);
     }
 
+    // Also observe the input container if present so we update measurements when it grows/shrinks
+    let inputObserver: ResizeObserver | null = null;
+    const inputContainer = document.querySelector('[data-chat-input-root]') as HTMLElement | null;
+    if (typeof ResizeObserver !== 'undefined' && inputContainer) {
+      inputObserver = new ResizeObserver(() => handleUpdate());
+      inputObserver.observe(inputContainer);
+    }
+
     return () => {
       window.removeEventListener('resize', handleUpdate);
       window.removeEventListener('orientationchange', handleUpdate);
       viewport?.removeEventListener('resize', handleUpdate);
       observer?.disconnect();
+      inputObserver?.disconnect();
     };
   }, [isOpen, updateDrawerBounds]);
 
