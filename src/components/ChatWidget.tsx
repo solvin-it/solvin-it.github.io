@@ -213,6 +213,13 @@ export default function ChatWidget() {
       };
 
       setMessages(prev => [...prev, aiResponse]);
+      
+      // Refocus input after response on mobile for follow-up questions
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && inputRef.current) {
+        setTimeout(() => {
+          inputRef.current?.focus({ preventScroll: true });
+        }, 500); // Wait for keyboard animation and message rendering
+      }
     } catch (error) {
       console.error('Failed to fetch chat response', error);
       const errorResponse: Message = {
@@ -223,6 +230,13 @@ export default function ChatWidget() {
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, errorResponse]);
+      
+      // Refocus input even after error on mobile
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && inputRef.current) {
+        setTimeout(() => {
+          inputRef.current?.focus({ preventScroll: true });
+        }, 500);
+      }
     } finally {
       setIsLoading(false);
     }
