@@ -21,7 +21,7 @@ export default function ChatWidget() {
     setMessages([
       {
         id: '1',
-        content: "Good day. I am the AI butler of Mr. Gonzales. He told me you might inquire about his career, skills, or projects, and that I shall provide the details. Shall we begin?",
+        content: "Good day. I am Fred, the AI butler of Master Gonzales. He told me you might inquire about his career, skills, or projects, and that I shall provide the details. Shall we begin?",
         isUser: false,
         timestamp: new Date(),
       },
