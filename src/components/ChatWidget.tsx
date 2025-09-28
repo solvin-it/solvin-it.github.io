@@ -18,18 +18,6 @@ interface ChatError {
   retryable: boolean;
 }
 
-// Utility functions
-const throttle = (fn: Function, ms = 50) => {
-  let lastCall = 0;
-  return (...args: any[]) => {
-    const now = performance.now();
-    if (now - lastCall >= ms) {
-      lastCall = now;
-      fn(...args);
-    }
-  };
-};
-
 const generateId = () => Math.random().toString(36).substring(2, 15);
 
 const isMobileDevice = () => {
