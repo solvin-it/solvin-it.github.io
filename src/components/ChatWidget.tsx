@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CHAT_API_ENDPOINT, ChatRequestPayload, ChatResponsePayload } from '../config/chat';
 import useKeyboardInset from './chat/useKeyboardInset';
 import MessageList from './chat/MessageList';
@@ -77,7 +77,7 @@ export default function ChatWidget() {
   useEffect(() => setIsLoading(apiLoading), [apiLoading]);
 
   // Measure input height for proper message list padding
-  useLayoutEffect(() => {
+  useEffect(() => {
     const updateInputHeight = () => {
       if (inputRef.current) {
         const height = inputRef.current.offsetHeight;
@@ -320,9 +320,6 @@ export default function ChatWidget() {
 
   // We'll use sendMessage from the hook which handles abort & timeout
 
-    // Immediate focus restoration after clearing input
-    focusInput();
-
     try {
       const payload: ChatRequestPayload = {
         messages: [
@@ -368,10 +365,7 @@ export default function ChatWidget() {
       const errorResponse: Message = { id: generateId(), content: "I'm having trouble connecting right now. Please try again shortly.", isUser: false, timestamp: new Date() };
       setMessages(prev => [...prev, errorResponse]);
     } finally {
-      // Final focus restoration after response
-      setTimeout(() => {
-        focusInput();
-      }, isMobile ? 200 : 50);
+      // Response processing complete - no automatic focus restoration
     }
   };
 
