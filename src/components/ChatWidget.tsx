@@ -417,6 +417,13 @@ export default function ChatWidget() {
     // Reset textarea height when input is cleared
     resetTextareaHeight();
     
+    // Programmatically dismiss keyboard on mobile to prevent floating
+    if (isMobile && inputRef.current) {
+      inputRef.current.blur();
+      // Let the keyboard inset hook know immediately
+      window.visualViewport?.dispatchEvent(new Event('resize'));
+    }
+    
     setIsLoading(true);
 
   // We'll use sendMessage from the hook which handles abort & timeout
