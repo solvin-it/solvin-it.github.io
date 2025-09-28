@@ -316,6 +316,22 @@ export default function ChatWidget() {
 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
+    
+    // Reset textarea height when input is cleared
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+      inputRef.current.style.height = `${Math.max(inputRef.current.scrollHeight, isMobile ? 52 : 40)}px`;
+      
+      // Update input height for proper message list spacing
+      setTimeout(() => {
+        if (inputRef.current) {
+          const height = inputRef.current.offsetHeight;
+          const containerHeight = height + (isMobile ? 24 : 32) + 16;
+          setInputHeight(containerHeight);
+        }
+      }, 0);
+    }
+    
     setIsLoading(true);
 
   // We'll use sendMessage from the hook which handles abort & timeout
