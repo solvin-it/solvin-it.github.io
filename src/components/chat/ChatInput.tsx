@@ -14,6 +14,9 @@ interface Props {
   handleKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   handleSendMessage: () => Promise<void> | void;
   setIsComposing: (v: boolean) => void;
+  drawerLeft?: number;
+  drawerWidth?: number;
+  drawerRight?: number;
 }
 
 export default function ChatInput({
@@ -30,18 +33,30 @@ export default function ChatInput({
   handleKeyDown,
   handleSendMessage,
   setIsComposing,
+  drawerLeft,
+  drawerWidth,
+  drawerRight,
 }: Props) {
   // Mobile: fixed positioning to stick above keyboard
   // Desktop: sticky positioning within drawer
+  const hasDrawerLeft = typeof drawerLeft === 'number';
+  const hasDrawerRight = typeof drawerRight === 'number';
+  const measuredWidth =
+    hasDrawerLeft && hasDrawerRight
+      ? Math.max(drawerRight - drawerLeft, 0)
+      : drawerWidth;
+  const hasDrawerMeasurements = typeof measuredWidth === 'number' && measuredWidth > 0 && hasDrawerLeft;
   const containerStyle = isMobile
     ? {
         position: 'fixed' as const,
-        left: 0,
-        right: 0,
+        left: hasDrawerMeasurements ? drawerLeft ?? 0 : 0,
+        right: hasDrawerMeasurements ? undefined : 0,
+        width: hasDrawerMeasurements ? measuredWidth : undefined,
         bottom: `calc(${keyboardHeight}px + env(safe-area-inset-bottom, 0px))`,
         zIndex: 60,
         padding: '0.75rem',
         boxShadow: '0 -6px 20px rgba(0,0,0,0.12)',
+        boxSizing: 'border-box' as const,
       }
     : {
         position: 'sticky' as const,
