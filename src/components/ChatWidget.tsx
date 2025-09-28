@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { CHAT_API_ENDPOINT, ChatRequestPayload, ChatResponsePayload } from '../config/chat';
 import useKeyboardInset from './chat/useKeyboardInset';
 import MessageList from './chat/MessageList';
@@ -36,6 +36,7 @@ export default function ChatWidget() {
   const [isComposing, setIsComposing] = useState(false);
   const [error, setError] = useState<ChatError | null>(null);
   const [inputHeight, setInputHeight] = useState(72);
+  const [drawerBounds, setDrawerBounds] = useState({ left: 0, width: 0, right: 0 });
   // chat API hook
   const { sendMessage, isLoading: apiLoading, abort } = useChatApi();
   
@@ -45,6 +46,25 @@ export default function ChatWidget() {
   const fabRef = useRef<HTMLButtonElement>(null);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const liveRegionRef = useRef<HTMLDivElement>(null);
+
+  const updateDrawerBounds = useCallback(() => {
+    if (!drawerRef.current) return;
+
+    const rect = drawerRef.current.getBoundingClientRect();
+    setDrawerBounds(prev => {
+      const next = {
+        left: rect.left,
+        width: rect.width,
+        right: rect.right,
+      };
+
+      if (prev.left === next.left && prev.width === next.width && prev.right === next.right) {
+        return prev;
+      }
+
+      return next;
+    });
+  }, []);
 
   // Helper function to reset textarea height and update input height state
   const resetTextareaHeight = () => {
@@ -111,6 +131,33 @@ export default function ChatWidget() {
     window.addEventListener('resize', updateInputHeight);
     return () => window.removeEventListener('resize', updateInputHeight);
   }, [inputValue, keyboardHeight, isMobile]);
+
+  // Track drawer size/position for aligning mobile input
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleUpdate = throttle(() => updateDrawerBounds(), 100);
+
+    updateDrawerBounds();
+
+    window.addEventListener('resize', handleUpdate);
+    window.addEventListener('orientationchange', handleUpdate);
+    const viewport = window.visualViewport;
+    viewport?.addEventListener('resize', handleUpdate);
+
+    let observer: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined' && drawerRef.current) {
+      observer = new ResizeObserver(() => handleUpdate());
+      observer.observe(drawerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleUpdate);
+      window.removeEventListener('orientationchange', handleUpdate);
+      viewport?.removeEventListener('resize', handleUpdate);
+      observer?.disconnect();
+    };
+  }, [isOpen, updateDrawerBounds]);
 
   // orientation handling is inside the hook now
 
@@ -591,6 +638,9 @@ export default function ChatWidget() {
           handleKeyDown={handleKeyDown}
           handleSendMessage={handleSendMessage}
           setIsComposing={setIsComposing}
+          drawerLeft={drawerBounds.left}
+          drawerWidth={drawerBounds.width}
+          drawerRight={drawerBounds.right}
         />
       </div>
     </>
