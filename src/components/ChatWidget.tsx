@@ -13,31 +13,115 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  // Handle mobile keyboard and viewport changes
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleResize = () => {
+      // Detect keyboard on mobile by comparing viewport height
+      const vh = window.visualViewport?.height || window.innerHeight;
+      const windowHeight = window.screen.height;
+      const keyboardOffset = windowHeight - vh;
+      
+      setKeyboardHeight(keyboardOffset > 150 ? keyboardOffset : 0);
+    };
+
+    const handleVisualViewportChange = () => {
+      if (window.visualViewport) {
+        const keyboardOffset = window.innerHeight - window.visualViewport.height;
+        setKeyboardHeight(keyboardOffset > 150 ? keyboardOffset : 0);
+      }
+    };
+
+    // Listen for viewport changes
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleVisualViewportChange);
+    } else {
+      window.addEventListener('resize', handleResize);
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleVisualViewportChange);
+      } else {
+        window.removeEventListener('resize', handleResize);
+      }
+    };
+  }, [isOpen]);
+
+  // Prevent body scroll when chat is open (mobile)
+  useEffect(() => {
+    if (!isOpen) return;
+    
+    // Store original body style
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    const originalPosition = window.getComputedStyle(document.body).position;
+    
+    // Prevent scroll
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${window.scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    
+    return () => {
+      // Restore scroll
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = originalStyle;
+      document.body.style.position = originalPosition;
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    };
+  }, [isOpen]);
 
   // Initial welcome message
   useEffect(() => {
     setMessages([
       {
         id: '1',
-        content: "Good day. I am Fred, the AI butler of Master Gonzales. He told me you might inquire about his career, skills, or projects, and that I shall provide the details. Shall we begin?",
+        content: "Good day. I am Fred, the AI butler of Mr. Gonzales. He told me you might inquire about his career, skills, or projects, and that I shall provide the details. Shall we begin?",
         isUser: false,
         timestamp: new Date(),
       },
     ]);
   }, []);
 
-  // Scroll to bottom when messages change
+  // Scroll to bottom when messages change or keyboard appears
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (!messagesEndRef.current || !isOpen) return;
+    
+    const scrollToBottom = () => {
+      messagesEndRef.current?.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest'
+      });
+    };
+    
+    // Delay to account for DOM updates and keyboard animations
+    const timeoutId = setTimeout(scrollToBottom, keyboardHeight > 0 ? 300 : 100);
+    return () => clearTimeout(timeoutId);
+  }, [messages, isOpen, keyboardHeight]);
 
-  // Focus input when drawer opens
+  // Focus input when drawer opens (with delay for mobile)
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
+    if (!isOpen || !inputRef.current) return;
+    
+    // Longer delay on mobile to account for animations and keyboard
+    const delay = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 300 : 100;
+    const timeoutId = setTimeout(() => {
+      inputRef.current?.focus({ preventScroll: true });
+    }, delay);
+    return () => clearTimeout(timeoutId);
   }, [isOpen]);
 
   const parseAssistantMessage = (payload: ChatResponsePayload | string): string => {
@@ -241,10 +325,19 @@ export default function ChatWidget() {
 
       {/* Chat Drawer */}
       <div
+        ref={drawerRef}
         data-chat-drawer
-        className={`fixed top-0 right-0 h-full w-full max-w-md bg-tuxedo-white dark:bg-tuxedo-midnight shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
+        className={`fixed top-0 right-0 w-full max-w-md bg-tuxedo-white dark:bg-tuxedo-midnight shadow-2xl transform transition-transform duration-300 ease-in-out z-50 flex flex-col ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
+        style={{ 
+          height: keyboardHeight > 0 
+            ? `${window.innerHeight - keyboardHeight}px` 
+            : '100vh',
+          maxHeight: keyboardHeight > 0 
+            ? `${window.innerHeight - keyboardHeight}px` 
+            : '100vh'
+        }}
         role="dialog"
         aria-modal="true"
         aria-labelledby="chat-title"
@@ -269,7 +362,10 @@ export default function ChatWidget() {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 h-[calc(100vh-8rem)]">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0" style={{ 
+          paddingBottom: keyboardHeight > 0 ? '1rem' : '1rem',
+          scrollBehavior: 'smooth'
+        }}>
           {messages.map((message) => (
             <div
               key={message.id}
@@ -303,7 +399,7 @@ export default function ChatWidget() {
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t border-primary-200 dark:border-primary-800">
+        <div className="flex-shrink-0 p-4 border-t border-primary-200 dark:border-primary-800 bg-tuxedo-white dark:bg-tuxedo-midnight">
           <div className="flex space-x-2">
             <input
               ref={inputRef}
@@ -312,13 +408,16 @@ export default function ChatWidget() {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Ask about Jose's experience..."
-              className="flex-1 px-4 py-2 border border-primary-300 dark:border-primary-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-tuxedo-white dark:bg-tuxedo-midnight text-tuxedo-black dark:text-tuxedo-pearl placeholder-primary-500 dark:placeholder-primary-400"
+              className="flex-1 px-4 py-3 border border-primary-300 dark:border-primary-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-tuxedo-white dark:bg-tuxedo-midnight text-tuxedo-black dark:text-tuxedo-pearl placeholder-primary-500 dark:placeholder-primary-400 text-base"
               disabled={isLoading}
+              autoComplete="off"
+              autoCapitalize="sentences"
+              autoCorrect="on"
             />
             <button
               onClick={() => void handleSendMessage()}
               disabled={!inputValue.trim() || isLoading}
-              className="px-4 py-2 bg-tuxedo-black hover:bg-primary-800 disabled:bg-primary-300 dark:disabled:bg-primary-700 text-tuxedo-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed"
+              className="px-4 py-3 bg-tuxedo-black hover:bg-primary-800 disabled:bg-primary-300 dark:disabled:bg-primary-700 text-tuxedo-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed flex-shrink-0"
               aria-label="Send message"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

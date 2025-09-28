@@ -28,6 +28,38 @@
     width: 100%;
   }
   
+  /* Mobile viewport fixes for chat widget */
+  @supports (-webkit-touch-callout: none) {
+    /* iOS Safari specific fixes */
+    body {
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Prevent zoom on input focus */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+      font-size: 16px;
+    }
+  }
+  
+  /* Chat widget mobile optimizations */
+  [data-chat-drawer] {
+    /* Improve scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  [data-chat-drawer] input {
+    /* Prevent zoom on iOS */
+    font-size: 16px;
+    /* Smooth interaction */
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 8px;
+  }
+  
   /* Elegant text selection */
   ::selection {
     background: rgba(128, 134, 139, 0.2);
