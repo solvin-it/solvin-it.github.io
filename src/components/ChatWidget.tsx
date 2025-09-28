@@ -124,6 +124,31 @@ export default function ChatWidget() {
     return () => clearTimeout(timeoutId);
   }, [isOpen]);
 
+  // Maintain input focus to keep keyboard visible on mobile
+  useEffect(() => {
+    if (!isOpen || !inputRef.current) return;
+    
+    const inputElement = inputRef.current;
+    
+    const handleBlur = (e: FocusEvent) => {
+      // Only prevent blur on mobile and if chat is still open
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && isOpen) {
+        // Small delay to avoid conflicts with touch events
+        setTimeout(() => {
+          if (inputRef.current && isOpen) {
+            inputRef.current.focus({ preventScroll: true });
+          }
+        }, 50);
+      }
+    };
+    
+    inputElement.addEventListener('blur', handleBlur);
+    
+    return () => {
+      inputElement.removeEventListener('blur', handleBlur);
+    };
+  }, [isOpen]);
+
   const parseAssistantMessage = (payload: ChatResponsePayload | string): string => {
     const fallback = "I'm having trouble reading the assistant's reply right now. Please try again.";
 
@@ -177,6 +202,12 @@ export default function ChatWidget() {
 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
+    
+    // Keep input focused to maintain keyboard on mobile
+    if (inputRef.current) {
+      inputRef.current.focus({ preventScroll: true });
+    }
+    
     setIsLoading(true);
 
     try {
@@ -213,13 +244,6 @@ export default function ChatWidget() {
       };
 
       setMessages(prev => [...prev, aiResponse]);
-      
-      // Refocus input after response on mobile for follow-up questions
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && inputRef.current) {
-        setTimeout(() => {
-          inputRef.current?.focus({ preventScroll: true });
-        }, 500); // Wait for keyboard animation and message rendering
-      }
     } catch (error) {
       console.error('Failed to fetch chat response', error);
       const errorResponse: Message = {
@@ -230,15 +254,13 @@ export default function ChatWidget() {
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, errorResponse]);
-      
-      // Refocus input even after error on mobile
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && inputRef.current) {
-        setTimeout(() => {
-          inputRef.current?.focus({ preventScroll: true });
-        }, 500);
-      }
     } finally {
       setIsLoading(false);
+      
+      // Ensure input stays focused after response
+      if (inputRef.current) {
+        inputRef.current.focus({ preventScroll: true });
+      }
     }
   };
 
