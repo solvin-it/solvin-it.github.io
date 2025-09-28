@@ -34,41 +34,65 @@ export default function ChatWidget() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Enhanced mobile keyboard detection
+  // Enhanced mobile keyboard detection with better viewport handling
   useEffect(() => {
-    if (!isOpen || !isMobile) return;
+    if (!isOpen) return;
 
-    let initialHeight = window.innerHeight;
+    let initialViewportHeight = window.innerHeight;
+    let initialVisualViewportHeight = window.visualViewport?.height || window.innerHeight;
     
-    const handleVisualViewportChange = () => {
+    const updateKeyboardHeight = () => {
+      const currentViewportHeight = window.innerHeight;
+      const currentVisualHeight = window.visualViewport?.height || currentViewportHeight;
+      
+      // Use the most reliable method based on device
+      let keyboardOffset = 0;
+      
       if (window.visualViewport) {
-        const currentHeight = window.visualViewport.height;
-        const keyboardOffset = initialHeight - currentHeight;
-        setKeyboardHeight(keyboardOffset > 150 ? keyboardOffset : 0);
+        // Use Visual Viewport API when available (modern browsers)
+        keyboardOffset = initialVisualViewportHeight - currentVisualHeight;
+      } else {
+        // Fallback for older browsers
+        keyboardOffset = initialViewportHeight - currentViewportHeight;
       }
+      
+      // Only consider it a keyboard if the change is significant
+      const newKeyboardHeight = keyboardOffset > 150 ? keyboardOffset : 0;
+      
+      console.log('Keyboard height update:', { 
+        initialViewportHeight, 
+        currentViewportHeight, 
+        initialVisualViewportHeight, 
+        currentVisualHeight, 
+        keyboardOffset, 
+        newKeyboardHeight 
+      });
+      
+      setKeyboardHeight(newKeyboardHeight);
     };
 
-    const handleResize = () => {
-      const currentHeight = window.innerHeight;
-      const keyboardOffset = initialHeight - currentHeight;
-      setKeyboardHeight(keyboardOffset > 150 ? keyboardOffset : 0);
-    };
-
-    // Prefer Visual Viewport API if available
+    // Listen for both viewport and visual viewport changes
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleVisualViewportChange);
-    } else {
-      window.addEventListener('resize', handleResize);
+      window.visualViewport.addEventListener('resize', updateKeyboardHeight);
     }
+    window.addEventListener('resize', updateKeyboardHeight);
+    
+    // Also listen for orientationchange
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        initialViewportHeight = window.innerHeight;
+        initialVisualViewportHeight = window.visualViewport?.height || window.innerHeight;
+        updateKeyboardHeight();
+      }, 500);
+    });
 
     return () => {
       if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleVisualViewportChange);
-      } else {
-        window.removeEventListener('resize', handleResize);
+        window.visualViewport.removeEventListener('resize', updateKeyboardHeight);
       }
+      window.removeEventListener('resize', updateKeyboardHeight);
     };
-  }, [isOpen, isMobile]);
+  }, [isOpen]);
 
   // Prevent body scroll when chat is open (mobile only)
   useEffect(() => {
@@ -455,10 +479,18 @@ export default function ChatWidget() {
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         style={{ 
-          height: isMobile && keyboardHeight > 0 
-            ? `${window.innerHeight - keyboardHeight}px` 
+          height: isMobile 
+            ? (keyboardHeight > 0 
+                ? `${Math.max(window.innerHeight - keyboardHeight, 400)}px`
+                : '100vh')
             : '100vh',
-          maxHeight: '100vh'
+          maxHeight: isMobile 
+            ? (keyboardHeight > 0 
+                ? `${Math.max(window.innerHeight - keyboardHeight, 400)}px`
+                : '100vh')
+            : '100vh',
+          // Ensure drawer is positioned correctly
+          bottom: isMobile && keyboardHeight > 0 ? `${keyboardHeight}px` : '0'
         }}
         role="dialog"
         aria-modal="true"
@@ -485,14 +517,16 @@ export default function ChatWidget() {
 
         {/* Messages */}
         <div 
-          className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0" 
+          className="flex-1 overflow-y-auto p-4 space-y-4" 
           style={{ 
-            paddingBottom: isMobile ? '1rem' : '1rem',
             scrollBehavior: 'smooth',
-            // Ensure messages area takes up remaining space properly
-            maxHeight: isMobile && keyboardHeight > 0 
-              ? `calc(100vh - ${keyboardHeight}px - 140px)` 
-              : 'calc(100vh - 140px)'
+            // Calculate available space: total height - header (72px) - input area (estimated 120px)
+            minHeight: isMobile 
+              ? `${Math.max((keyboardHeight > 0 ? window.innerHeight - keyboardHeight : window.innerHeight) - 192, 200)}px`
+              : 'calc(100vh - 192px)',
+            maxHeight: isMobile 
+              ? `${Math.max((keyboardHeight > 0 ? window.innerHeight - keyboardHeight : window.innerHeight) - 192, 200)}px`
+              : 'calc(100vh - 192px)'
           }}
         >
           {messages.map((message) => (
@@ -527,11 +561,27 @@ export default function ChatWidget() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input */}
-        <div className={`flex-shrink-0 border-t border-primary-200 dark:border-primary-800 bg-tuxedo-white dark:bg-tuxedo-midnight ${
-          isMobile ? 'p-3 pb-safe' : 'p-4'
-        }`}>
-          <div className="flex space-x-2">
+        {/* Input - Fixed at bottom with enhanced visibility */}
+        <div 
+          className={`flex-shrink-0 border-t border-primary-200 dark:border-primary-800 bg-tuxedo-white dark:bg-tuxedo-midnight ${
+            isMobile ? 'p-3' : 'p-4'
+          }`}
+          style={{
+            // Ensure input area is always visible and properly positioned
+            position: 'sticky',
+            bottom: 0,
+            zIndex: 10,
+            // Add extra padding for mobile keyboards and safe areas
+            paddingBottom: isMobile 
+              ? `calc(1rem + ${keyboardHeight > 0 ? '0px' : 'env(safe-area-inset-bottom, 20px)'})`
+              : '1rem',
+            // Ensure minimum height for touch targets
+            minHeight: isMobile ? '100px' : '80px',
+            // Add visual separation
+            boxShadow: '0 -2px 10px rgba(0,0,0,0.1)'
+          }}
+        >
+          <div className="flex space-x-2 items-end">
             <input
               ref={inputRef}
               type="text"
@@ -544,7 +594,7 @@ export default function ChatWidget() {
                   ? 'border-primary-400 dark:border-primary-500 bg-gray-50 dark:bg-gray-800' 
                   : 'border-primary-300 dark:border-primary-600'
               } ${
-                isMobile ? 'py-4 text-base min-h-[44px]' : 'py-3 text-sm'
+                isMobile ? 'py-4 text-base min-h-[52px]' : 'py-3 text-sm'
               }`}
               disabled={isLoading}
               autoComplete="off"
@@ -555,16 +605,19 @@ export default function ChatWidget() {
               enterKeyHint="send"
               // iOS specific attributes
               style={{
-                fontSize: isMobile ? '16px' : undefined, // Prevents zoom on iOS
+                fontSize: isMobile ? '16px' : undefined,
                 WebkitAppearance: 'none',
-                appearance: 'none'
+                appearance: 'none',
+                // Ensure input stays above keyboard
+                transform: 'translateZ(0)',
+                willChange: 'transform'
               }}
             />
             <button
               onClick={() => void handleSendMessage()}
               disabled={!inputValue.trim() || isLoading}
               className={`rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed flex-shrink-0 ${
-                isMobile ? 'px-4 py-4 min-w-[44px] min-h-[44px]' : 'px-4 py-3'
+                isMobile ? 'px-4 py-4 min-w-[52px] min-h-[52px]' : 'px-4 py-3'
               } ${
                 isLoading
                   ? 'bg-primary-400 text-white'
@@ -573,6 +626,7 @@ export default function ChatWidget() {
                   : 'bg-tuxedo-black hover:bg-primary-800 text-tuxedo-white shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95'
               }`}
               aria-label={isLoading ? "Sending message..." : "Send message"}
+              style={{ transform: 'translateZ(0)' }}
             >
               {isLoading ? (
                 <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -587,8 +641,12 @@ export default function ChatWidget() {
             </button>
           </div>
           {isMobile && (
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-              {isLoading ? "Processing your question..." : "Tap input field above to start typing"}
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center">
+              {keyboardHeight > 0 
+                ? "Keyboard active - ready to type!" 
+                : isLoading 
+                ? "Processing your question..." 
+                : "Tap the input field to start chatting"}
             </div>
           )}
         </div>
