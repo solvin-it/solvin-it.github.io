@@ -57,6 +57,7 @@ export default function ChatWidget() {
   const fabRef = useRef<HTMLButtonElement>(null);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const liveRegionRef = useRef<HTMLDivElement>(null);
+  const liveRegionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Helper function to reset textarea height and update input height state
   const resetTextareaHeight = () => {
@@ -381,7 +382,16 @@ export default function ChatWidget() {
       
       // Announce new message to screen readers
       if (liveRegionRef.current) {
+        if (liveRegionTimeoutRef.current) {
+          clearTimeout(liveRegionTimeoutRef.current);
+        }
+
         liveRegionRef.current.textContent = `New message: ${content.slice(0, 120)}`;
+        liveRegionTimeoutRef.current = setTimeout(() => {
+          if (liveRegionRef.current) {
+            liveRegionRef.current.textContent = '';
+          }
+        }, 1000);
       }
       
     } catch (err: any) {
@@ -507,6 +517,9 @@ export default function ChatWidget() {
       if (focusTimeoutRef.current) {
         clearTimeout(focusTimeoutRef.current);
       }
+      if (liveRegionTimeoutRef.current) {
+        clearTimeout(liveRegionTimeoutRef.current);
+      }
     };
   }, []);
 
@@ -579,10 +592,11 @@ export default function ChatWidget() {
         </div>
 
         {/* Messages */}
-        <MessageList 
-          messages={messages} 
-          isLoading={isLoading} 
+        <MessageList
+          messages={messages}
+          isLoading={isLoading}
           messagesEndRef={messagesEndRef}
+          liveRegionRef={liveRegionRef}
           inputHeight={inputHeight}
           keyboardHeight={keyboardHeight}
           isMobile={isMobile}
