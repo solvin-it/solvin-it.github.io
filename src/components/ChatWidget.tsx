@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { CHAT_API_ENDPOINT, ChatRequestPayload, ChatResponsePayload } from '../config/chat';
 import useKeyboardInset from './chat/useKeyboardInset';
 import MessageList from './chat/MessageList';
@@ -47,6 +47,7 @@ export default function ChatWidget() {
   const [isMobile, setIsMobile] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
   const [error, setError] = useState<ChatError | null>(null);
+  const [inputHeight, setInputHeight] = useState(72);
   // chat API hook
   const { sendMessage, isLoading: apiLoading, abort } = useChatApi();
   
@@ -74,6 +75,22 @@ export default function ChatWidget() {
 
   // Mirror API loading state
   useEffect(() => setIsLoading(apiLoading), [apiLoading]);
+
+  // Measure input height for proper message list padding
+  useLayoutEffect(() => {
+    const updateInputHeight = () => {
+      if (inputRef.current) {
+        const height = inputRef.current.offsetHeight;
+        // Add container padding and border to get total input area height
+        const containerHeight = height + (isMobile ? 24 : 32) + 16; // padding + border
+        setInputHeight(containerHeight);
+      }
+    };
+    
+    updateInputHeight();
+    window.addEventListener('resize', updateInputHeight);
+    return () => window.removeEventListener('resize', updateInputHeight);
+  }, [inputValue, keyboardHeight, isMobile]);
 
   // orientation handling is inside the hook now
 
@@ -374,6 +391,15 @@ export default function ChatWidget() {
     // Auto-resize textarea
     target.style.height = 'auto';
     target.style.height = `${Math.min(target.scrollHeight, 6 * 24 + 24)}px`;
+    
+    // Update input height for proper message list spacing
+    setTimeout(() => {
+      if (inputRef.current) {
+        const height = inputRef.current.offsetHeight;
+        const containerHeight = height + (isMobile ? 24 : 32) + 16;
+        setInputHeight(containerHeight);
+      }
+    }, 0);
   };
 
   const toggleChat = () => {
@@ -523,7 +549,14 @@ export default function ChatWidget() {
         </div>
 
         {/* Messages */}
-        <MessageList messages={messages} isLoading={isLoading} messagesEndRef={messagesEndRef} />
+        <MessageList 
+          messages={messages} 
+          isLoading={isLoading} 
+          messagesEndRef={messagesEndRef}
+          inputHeight={inputHeight}
+          keyboardHeight={keyboardHeight}
+          isMobile={isMobile}
+        />
 
         {/* Input */}
         <ChatInput
@@ -532,6 +565,7 @@ export default function ChatWidget() {
           isLoading={isLoading}
           isMobile={isMobile}
           keyboardHeight={keyboardHeight}
+          inputHeight={inputHeight}
           error={error}
           setError={setError}
           setInputValue={setInputValue}

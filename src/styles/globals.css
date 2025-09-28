@@ -63,18 +63,7 @@
     }
   }
 
-  /* Message list container with consistent height */
-  [data-chat-messages] {
-    min-height: calc(100dvh - 192px);
-    max-height: calc(100dvh - 192px);
-  }
-
-  @supports not (height: 100dvh) {
-    [data-chat-messages] {
-      min-height: calc(100vh - 192px);
-      max-height: calc(100vh - 192px);
-    }
-  }
+  /* Message list container - let flex handle height, MessageList now handles spacing via paddingBottom */
   
   [data-chat-drawer] input {
     /* Prevent zoom on iOS */

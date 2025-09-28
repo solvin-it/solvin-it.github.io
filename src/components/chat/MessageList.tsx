@@ -11,11 +11,34 @@ interface Props {
   messages: Message[];
   isLoading: boolean;
   messagesEndRef: React.RefObject<HTMLDivElement>;
+  inputHeight?: number;
+  keyboardHeight?: number;
+  isMobile?: boolean;
 }
 
-export default function MessageList({ messages, isLoading, messagesEndRef }: Props) {
+export default function MessageList({ 
+  messages, 
+  isLoading, 
+  messagesEndRef, 
+  inputHeight = 72, 
+  keyboardHeight = 0, 
+  isMobile = false 
+}: Props) {
+  // Calculate bottom padding to ensure messages aren't hidden behind the input
+  const bottomPadding = isMobile 
+    ? `calc(${inputHeight}px + ${keyboardHeight}px + env(safe-area-inset-bottom, 0px) + 1rem)`
+    : '1rem';
+
   return (
-    <div data-chat-messages className="flex-1 overflow-y-auto p-4 space-y-4" style={{ scrollBehavior: 'auto', overscrollBehavior: 'contain' }}>
+    <div 
+      data-chat-messages 
+      className="flex-1 overflow-y-auto p-4 space-y-4" 
+      style={{ 
+        scrollBehavior: 'auto', 
+        overscrollBehavior: 'contain',
+        paddingBottom: bottomPadding
+      }}
+    >
       <div aria-live="polite" className="sr-only" id="chat-live" />
 
       {messages.map((message) => (

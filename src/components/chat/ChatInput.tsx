@@ -6,6 +6,7 @@ interface Props {
   isLoading: boolean;
   isMobile: boolean;
   keyboardHeight: number;
+  inputHeight?: number;
   error: { message: string; retryable: boolean } | null;
   setError: (e: any) => void;
   setInputValue: (v: string) => void;
@@ -21,6 +22,7 @@ export default function ChatInput({
   isLoading,
   isMobile,
   keyboardHeight,
+  inputHeight = 72,
   error,
   setError,
   setInputValue,
@@ -29,8 +31,31 @@ export default function ChatInput({
   handleSendMessage,
   setIsComposing,
 }: Props) {
+  // Mobile: fixed positioning to stick above keyboard
+  // Desktop: sticky positioning within drawer
+  const containerStyle = isMobile
+    ? {
+        position: 'fixed' as const,
+        left: 0,
+        right: 0,
+        bottom: `calc(${keyboardHeight}px + env(safe-area-inset-bottom, 0px))`,
+        zIndex: 60,
+        padding: '0.75rem',
+        boxShadow: '0 -6px 20px rgba(0,0,0,0.12)',
+      }
+    : {
+        position: 'sticky' as const,
+        bottom: 0,
+        zIndex: 10,
+        paddingBottom: '1rem',
+        boxShadow: '0 -2px 10px rgba(0,0,0,0.1)',
+      };
+
   return (
-    <div className={`flex-shrink-0 border-t border-primary-200 dark:border-primary-800 bg-tuxedo-white dark:bg-tuxedo-midnight ${isMobile ? 'p-3' : 'p-4'}`} style={{ position: 'sticky', bottom: 0, zIndex: 10, paddingBottom: isMobile ? `calc(1rem + ${keyboardHeight}px + env(safe-area-inset-bottom, 0px))` : '1rem', minHeight: isMobile ? '100px' : '80px', boxShadow: '0 -2px 10px rgba(0,0,0,0.1)' }}>
+    <div 
+      className={`flex-shrink-0 border-t border-primary-200 dark:border-primary-800 bg-tuxedo-white dark:bg-tuxedo-midnight ${!isMobile ? 'p-4' : ''}`}
+      style={containerStyle}
+    >
       <div className="flex space-x-2 items-end">
         <textarea
           ref={inputRef}
