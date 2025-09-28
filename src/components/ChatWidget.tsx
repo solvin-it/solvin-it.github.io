@@ -14,31 +14,47 @@ export default function ChatWidget() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
+  const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Handle mobile keyboard and viewport changes
+  // Detect mobile device
   useEffect(() => {
-    if (!isOpen) return;
-
-    const handleResize = () => {
-      // Detect keyboard on mobile by comparing viewport height
-      const vh = window.visualViewport?.height || window.innerHeight;
-      const windowHeight = window.screen.height;
-      const keyboardOffset = windowHeight - vh;
-      
-      setKeyboardHeight(keyboardOffset > 150 ? keyboardOffset : 0);
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent;
+      const isMobileDevice = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      setIsMobile(isMobileDevice || (isTouchDevice && window.innerWidth < 768));
     };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
+  // Enhanced mobile keyboard detection
+  useEffect(() => {
+    if (!isOpen || !isMobile) return;
+
+    let initialHeight = window.innerHeight;
+    
     const handleVisualViewportChange = () => {
       if (window.visualViewport) {
-        const keyboardOffset = window.innerHeight - window.visualViewport.height;
+        const currentHeight = window.visualViewport.height;
+        const keyboardOffset = initialHeight - currentHeight;
         setKeyboardHeight(keyboardOffset > 150 ? keyboardOffset : 0);
       }
     };
 
-    // Listen for viewport changes
+    const handleResize = () => {
+      const currentHeight = window.innerHeight;
+      const keyboardOffset = initialHeight - currentHeight;
+      setKeyboardHeight(keyboardOffset > 150 ? keyboardOffset : 0);
+    };
+
+    // Prefer Visual Viewport API if available
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', handleVisualViewportChange);
     } else {
@@ -52,36 +68,35 @@ export default function ChatWidget() {
         window.removeEventListener('resize', handleResize);
       }
     };
-  }, [isOpen]);
+  }, [isOpen, isMobile]);
 
-  // Prevent body scroll when chat is open (mobile)
+  // Prevent body scroll when chat is open (mobile only)
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !isMobile) return;
     
-    // Store original body style
     const originalStyle = window.getComputedStyle(document.body).overflow;
     const originalPosition = window.getComputedStyle(document.body).position;
+    const scrollY = window.scrollY;
     
-    // Prevent scroll
+    // Prevent scroll on mobile
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
-    document.body.style.top = `-${window.scrollY}px`;
+    document.body.style.top = `-${scrollY}px`;
     document.body.style.left = '0';
     document.body.style.right = '0';
+    document.body.style.width = '100%';
     
     return () => {
       // Restore scroll
-      const scrollY = document.body.style.top;
       document.body.style.overflow = originalStyle;
       document.body.style.position = originalPosition;
       document.body.style.top = '';
       document.body.style.left = '';
       document.body.style.right = '';
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
-      }
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
     };
-  }, [isOpen]);
+  }, [isOpen, isMobile]);
 
   // Initial welcome message
   useEffect(() => {
@@ -112,42 +127,69 @@ export default function ChatWidget() {
     return () => clearTimeout(timeoutId);
   }, [messages, isOpen, keyboardHeight]);
 
-  // Focus input when drawer opens (with delay for mobile)
-  useEffect(() => {
-    if (!isOpen || !inputRef.current) return;
+  // Smart focus management
+  const focusInput = (preventScroll = true) => {
+    if (focusTimeoutRef.current) {
+      clearTimeout(focusTimeoutRef.current);
+    }
     
-    // Longer delay on mobile to account for animations and keyboard
-    const delay = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 300 : 100;
-    const timeoutId = setTimeout(() => {
-      inputRef.current?.focus({ preventScroll: true });
-    }, delay);
-    return () => clearTimeout(timeoutId);
-  }, [isOpen]);
+    focusTimeoutRef.current = setTimeout(() => {
+      if (inputRef.current && isOpen) {
+        inputRef.current.focus({ preventScroll });
+      }
+    }, isMobile ? 100 : 50);
+  };
 
-  // Maintain input focus to keep keyboard visible on mobile
+  // Initial focus when drawer opens
   useEffect(() => {
     if (!isOpen || !inputRef.current) return;
     
-    const inputElement = inputRef.current;
+    const delay = isMobile ? 300 : 100;
+    focusTimeoutRef.current = setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus({ preventScroll: true });
+      }
+    }, delay);
     
-    const handleBlur = (e: FocusEvent) => {
-      // Only prevent blur on mobile and if chat is still open
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && isOpen) {
-        // Small delay to avoid conflicts with touch events
-        setTimeout(() => {
-          if (inputRef.current && isOpen) {
-            inputRef.current.focus({ preventScroll: true });
-          }
-        }, 50);
+    return () => {
+      if (focusTimeoutRef.current) {
+        clearTimeout(focusTimeoutRef.current);
       }
     };
+  }, [isOpen, isMobile]);
+
+  // Mobile-specific keyboard persistence
+  useEffect(() => {
+    if (!isOpen || !isMobile || !inputRef.current) return;
     
+    const inputElement = inputRef.current;
+    let blurTimeout: NodeJS.Timeout;
+    
+    const handleFocus = () => {
+      if (blurTimeout) clearTimeout(blurTimeout);
+    };
+    
+    const handleBlur = () => {
+      // Only re-focus if we're still in the chat and not switching to another element
+      blurTimeout = setTimeout(() => {
+        if (isOpen && inputRef.current && document.activeElement !== inputRef.current) {
+          const isClickingOutside = !drawerRef.current?.contains(document.activeElement as Node);
+          if (!isClickingOutside) {
+            inputRef.current.focus({ preventScroll: true });
+          }
+        }
+      }, 100);
+    };
+    
+    inputElement.addEventListener('focus', handleFocus);
     inputElement.addEventListener('blur', handleBlur);
     
     return () => {
+      inputElement.removeEventListener('focus', handleFocus);
       inputElement.removeEventListener('blur', handleBlur);
+      if (blurTimeout) clearTimeout(blurTimeout);
     };
-  }, [isOpen]);
+  }, [isOpen, isMobile]);
 
   const parseAssistantMessage = (payload: ChatResponsePayload | string): string => {
     const fallback = "I'm having trouble reading the assistant's reply right now. Please try again.";
@@ -202,13 +244,10 @@ export default function ChatWidget() {
 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
-    
-    // Keep input focused to maintain keyboard on mobile
-    if (inputRef.current) {
-      inputRef.current.focus({ preventScroll: true });
-    }
-    
     setIsLoading(true);
+
+    // Immediate focus restoration after clearing input
+    focusInput();
 
     try {
       const payload: ChatRequestPayload = {
@@ -257,10 +296,10 @@ export default function ChatWidget() {
     } finally {
       setIsLoading(false);
       
-      // Ensure input stays focused after response
-      if (inputRef.current) {
-        inputRef.current.focus({ preventScroll: true });
-      }
+      // Final focus restoration after response
+      setTimeout(() => {
+        focusInput();
+      }, isMobile ? 200 : 50);
     }
   };
 
@@ -293,15 +332,15 @@ export default function ChatWidget() {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
 
-  // Focus trap
+  // Enhanced focus trap for better accessibility
   useEffect(() => {
     if (!isOpen) return;
 
-    const drawer = document.querySelector('[data-chat-drawer]');
+    const drawer = drawerRef.current;
     if (!drawer) return;
 
     const focusableElements = drawer.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
     );
     const firstElement = focusableElements[0] as HTMLElement;
     const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
@@ -309,14 +348,22 @@ export default function ChatWidget() {
     const handleTabKey = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
 
+      // On mobile, prefer keeping focus on input for better UX
+      if (isMobile && inputRef.current && !isLoading) {
+        e.preventDefault();
+        inputRef.current.focus({ preventScroll: true });
+        return;
+      }
+
+      // Desktop tab navigation
       if (e.shiftKey) {
         if (document.activeElement === firstElement) {
-          lastElement.focus();
+          lastElement?.focus();
           e.preventDefault();
         }
       } else {
         if (document.activeElement === lastElement) {
-          firstElement.focus();
+          firstElement?.focus();
           e.preventDefault();
         }
       }
@@ -324,7 +371,16 @@ export default function ChatWidget() {
 
     document.addEventListener('keydown', handleTabKey);
     return () => document.removeEventListener('keydown', handleTabKey);
-  }, [isOpen]);
+  }, [isOpen, isMobile, isLoading]);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (focusTimeoutRef.current) {
+        clearTimeout(focusTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -443,24 +499,50 @@ export default function ChatWidget() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Ask about Jose's experience..."
-              className="flex-1 px-4 py-3 border border-primary-300 dark:border-primary-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-tuxedo-white dark:bg-tuxedo-midnight text-tuxedo-black dark:text-tuxedo-pearl placeholder-primary-500 dark:placeholder-primary-400 text-base"
+              placeholder={isLoading ? "AI is thinking..." : "Ask about Jose's experience..."}
+              className={`flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-tuxedo-white dark:bg-tuxedo-midnight text-tuxedo-black dark:text-tuxedo-pearl text-base transition-all duration-200 ${
+                isLoading 
+                  ? 'border-primary-400 dark:border-primary-500 bg-gray-50 dark:bg-gray-800' 
+                  : 'border-primary-300 dark:border-primary-600'
+              } ${
+                isMobile ? 'text-base' : 'text-sm'
+              }`}
               disabled={isLoading}
               autoComplete="off"
               autoCapitalize="sentences"
               autoCorrect="on"
+              inputMode="text"
+              enterKeyHint="send"
             />
             <button
               onClick={() => void handleSendMessage()}
               disabled={!inputValue.trim() || isLoading}
-              className="px-4 py-3 bg-tuxedo-black hover:bg-primary-800 disabled:bg-primary-300 dark:disabled:bg-primary-700 text-tuxedo-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed flex-shrink-0"
-              aria-label="Send message"
+              className={`px-4 py-3 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed flex-shrink-0 ${
+                isLoading
+                  ? 'bg-primary-400 text-white'
+                  : !inputValue.trim()
+                  ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                  : 'bg-tuxedo-black hover:bg-primary-800 text-tuxedo-white shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95'
+              }`}
+              aria-label={isLoading ? "Sending message..." : "Send message"}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
+              {isLoading ? (
+                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              )}
             </button>
           </div>
+          {isMobile && (
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+              {isLoading ? "Processing your question..." : "Tap to type your question"}
+            </div>
+          )}
         </div>
       </div>
     </>
