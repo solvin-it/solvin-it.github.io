@@ -1,5 +1,9 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { CHAT_API_ENDPOINT, ChatRequestPayload, ChatResponsePayload } from '../config/chat';
+import useKeyboardInset from './chat/useKeyboardInset';
+import MessageList from './chat/MessageList';
+import ChatInput from './chat/ChatInput';
+import useChatApi from './chat/useChatApi';
 
 interface Message {
   id: string;
@@ -43,7 +47,8 @@ export default function ChatWidget() {
   const [isMobile, setIsMobile] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
   const [error, setError] = useState<ChatError | null>(null);
-  const [abortController, setAbortController] = useState<AbortController | null>(null);
+  // chat API hook
+  const { sendMessage, isLoading: apiLoading, abort } = useChatApi();
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -63,57 +68,14 @@ export default function ChatWidget() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Enhanced mobile keyboard detection with throttling
-  useEffect(() => {
-    if (!isOpen || !isMobile) return () => {};
+  // Use extracted hook for keyboard inset
+  const keyboardInset = useKeyboardInset(isOpen, isMobile);
+  useEffect(() => setKeyboardHeight(keyboardInset), [keyboardInset]);
 
-    let animationFrame = 0;
-    const handleViewportChange = throttle(() => {
-      cancelAnimationFrame(animationFrame);
-      animationFrame = requestAnimationFrame(() => {
-        if (window.visualViewport) {
-          const vv = window.visualViewport;
-          // Calculate bottom inset from viewport changes
-          const bottomInset = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
-          setKeyboardHeight(bottomInset > 140 ? bottomInset : 0);
-        }
-      });
-    }, 50);
+  // Mirror API loading state
+  useEffect(() => setIsLoading(apiLoading), [apiLoading]);
 
-    if (window.visualViewport) {
-      const vv = window.visualViewport;
-      vv.addEventListener('resize', handleViewportChange);
-      vv.addEventListener('scroll', handleViewportChange);
-      handleViewportChange(); // Initial check
-      
-      return () => {
-        vv.removeEventListener('resize', handleViewportChange);
-        vv.removeEventListener('scroll', handleViewportChange);
-        cancelAnimationFrame(animationFrame);
-      };
-    }
-    
-    return () => {
-      cancelAnimationFrame(animationFrame);
-    };
-  }, [isOpen, isMobile]);
-
-  // Clean orientation change handling
-  useEffect(() => {
-    if (!isOpen || !isMobile) return;
-    
-    const handleOrientationChange = () => {
-      // Let browsers settle after orientation change
-      setTimeout(() => {
-        if (window.visualViewport) {
-          window.visualViewport.dispatchEvent(new Event('resize'));
-        }
-      }, 400);
-    };
-    
-    window.addEventListener('orientationchange', handleOrientationChange);
-    return () => window.removeEventListener('orientationchange', handleOrientationChange);
-  }, [isOpen, isMobile]);
+  // orientation handling is inside the hook now
 
   // Prevent body scroll when chat is open (mobile only)
   useEffect(() => {
@@ -316,9 +278,7 @@ export default function ChatWidget() {
     setError(null);
     
     // Cancel any previous request
-    if (abortController) {
-      abortController.abort();
-    }
+    abort();
     
     // Check if offline
     if (!navigator.onLine) {
@@ -341,12 +301,7 @@ export default function ChatWidget() {
     setInputValue('');
     setIsLoading(true);
 
-    // Create new abort controller
-    const controller = new AbortController();
-    setAbortController(controller);
-    
-    // Set timeout
-    const timeout = setTimeout(() => controller.abort(), 20000);
+  // We'll use sendMessage from the hook which handles abort & timeout
 
     // Immediate focus restoration after clearing input
     focusInput();
@@ -361,22 +316,9 @@ export default function ChatWidget() {
         ],
         thread_id: `thread-${Date.now()}`
       };
-      
-      const response = await fetch(CHAT_API_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-      });
 
-      if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
-      }
-
-      const data = (await response.json()) as ChatResponsePayload | string;
-      const content = parseAssistantMessage(data);
+      const data = await sendMessage(payload);
+      const content = parseAssistantMessage(data as ChatResponsePayload | string);
 
       const aiResponse: Message = {
         id: generateId(),
@@ -392,38 +334,23 @@ export default function ChatWidget() {
         liveRegionRef.current.textContent = `New message: ${content.slice(0, 120)}`;
       }
       
-    } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
-        // Request was aborted - either timeout or user action
-        if (controller.signal.aborted) {
-          setError({
-            type: 'timeout',
-            message: 'The request took too long. Please try again.',
-            retryable: true
-          });
-        }
+    } catch (err: any) {
+      if (err?.type === 'timeout') {
+        setError({ type: 'timeout', message: 'The request took too long. Please try again.', retryable: true });
         return;
       }
 
-      const errorType: ChatError['type'] = error instanceof TypeError ? 'network' : 'server';
-      setError({
-        type: errorType,
-        message: "I'm having trouble connecting to Jose's AI assistant at the moment. Please try again shortly.",
-        retryable: true
-      });
+      if (err?.type === 'offline') {
+        setError({ type: 'offline', message: 'You appear to be offline. Please check your connection.', retryable: true });
+        return;
+      }
 
-      const errorResponse: Message = {
-        id: generateId(),
-        content: "I'm having trouble connecting right now. Please try again shortly.",
-        isUser: false,
-        timestamp: new Date(),
-      };
+      const errorType: ChatError['type'] = err?.type || 'server';
+      setError({ type: errorType, message: "I'm having trouble connecting to Jose's AI assistant at the moment. Please try again shortly.", retryable: true });
+
+      const errorResponse: Message = { id: generateId(), content: "I'm having trouble connecting right now. Please try again shortly.", isUser: false, timestamp: new Date() };
       setMessages(prev => [...prev, errorResponse]);
     } finally {
-      clearTimeout(timeout);
-      setIsLoading(false);
-      setAbortController(null);
-      
       // Final focus restoration after response
       setTimeout(() => {
         focusInput();
@@ -596,173 +523,23 @@ export default function ChatWidget() {
         </div>
 
         {/* Messages */}
-        <div 
-          data-chat-messages
-          className="flex-1 overflow-y-auto p-4 space-y-4" 
-          style={{ 
-            scrollBehavior: 'auto', // Prefer auto for better performance
-            overscrollBehavior: 'contain'
-          }}
-        >
-          {/* Live region for screen readers */}
-          <div 
-            ref={liveRegionRef}
-            aria-live="polite" 
-            className="sr-only" 
-            id="chat-live" 
-          />
-          
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-            >
-              <div
-                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
-                  message.isUser
-                    ? 'bg-tuxedo-black text-tuxedo-white'
-                    : 'bg-primary-100 dark:bg-primary-900 text-tuxedo-black dark:text-tuxedo-pearl'
-                }`}
-              >
-                <p className="text-sm leading-relaxed">{message.content}</p>
-              </div>
-            </div>
-          ))}
-          
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-primary-100 dark:bg-primary-900 px-4 py-2 rounded-2xl">
-                <div className="flex space-x-2">
-                  <div className="w-2 h-2 bg-primary-600 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-primary-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          <div ref={messagesEndRef} />
-        </div>
+        <MessageList messages={messages} isLoading={isLoading} messagesEndRef={messagesEndRef} />
 
-        {/* Input - Fixed at bottom with enhanced visibility */}
-        <div 
-          className={`flex-shrink-0 border-t border-primary-200 dark:border-primary-800 bg-tuxedo-white dark:bg-tuxedo-midnight ${
-            isMobile ? 'p-3' : 'p-4'
-          }`}
-          style={{
-            // Ensure input area is always visible and properly positioned
-            position: 'sticky',
-            bottom: 0,
-            zIndex: 10,
-            // Add extra padding for mobile keyboards and safe areas
-            paddingBottom: isMobile 
-              ? `calc(1rem + ${keyboardHeight}px + env(safe-area-inset-bottom, 0px))`
-              : '1rem',
-            // Ensure minimum height for touch targets
-            minHeight: isMobile ? '100px' : '80px',
-            // Add visual separation
-            boxShadow: '0 -2px 10px rgba(0,0,0,0.1)'
-          }}
-        >
-          <div className="flex space-x-2 items-end">
-            <textarea
-              ref={inputRef}
-              rows={1}
-              value={inputValue}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              onCompositionStart={() => setIsComposing(true)}
-              onCompositionEnd={() => setIsComposing(false)}
-              placeholder={isLoading ? "AI is thinking..." : "Ask about Jose's experience..."}
-              className={`flex-1 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-tuxedo-white dark:bg-tuxedo-midnight text-tuxedo-black dark:text-tuxedo-pearl transition-all duration-200 resize-none ${
-                isLoading 
-                  ? 'border-primary-400 dark:border-primary-500 bg-gray-50 dark:bg-gray-800' 
-                  : 'border-primary-300 dark:border-primary-600'
-              } ${
-                isMobile ? 'py-4 text-base min-h-[52px]' : 'py-3 text-sm'
-              }`}
-              disabled={isLoading}
-              autoComplete="off"
-              autoCapitalize="sentences"
-              autoCorrect="on"
-              spellCheck="true"
-              aria-label="Type your message"
-              aria-describedby={error ? "chat-error" : undefined}
-              // iOS specific attributes
-              style={{
-                fontSize: isMobile ? '16px' : undefined,
-                WebkitAppearance: 'none',
-                appearance: 'none',
-                // Ensure input stays above keyboard
-                transform: 'translateZ(0)',
-                willChange: 'transform',
-                maxHeight: '144px' // Cap at ~6 lines
-              }}
-            />
-            <button
-              onClick={() => void handleSendMessage()}
-              disabled={!inputValue.trim() || isLoading}
-              className={`rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed flex-shrink-0 ${
-                isMobile ? 'px-4 py-4 min-w-[52px] min-h-[52px]' : 'px-4 py-3'
-              } ${
-                isLoading
-                  ? 'bg-primary-400 text-white'
-                  : !inputValue.trim()
-                  ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                  : 'bg-tuxedo-black hover:bg-primary-800 text-tuxedo-white shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95'
-              }`}
-              aria-label={isLoading ? "Sending message..." : "Send message"}
-              style={{ transform: 'translateZ(0)' }}
-            >
-              {isLoading ? (
-                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
-              )}
-            </button>
-          </div>
-          
-          {/* Error display */}
-          {error && (
-            <div 
-              id="chat-error"
-              className="mt-2 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
-              role="alert"
-            >
-              <p className="text-sm text-red-700 dark:text-red-400">
-                {error.message}
-              </p>
-              {error.retryable && (
-                <button
-                  onClick={() => {
-                    setError(null);
-                    void handleSendMessage();
-                  }}
-                  className="mt-1 text-xs text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200 underline"
-                >
-                  Try again
-                </button>
-              )}
-            </div>
-          )}
-          
-          {isMobile && (
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-3 text-center">
-              {error 
-                ? "There was an issue. Please try again." 
-                : keyboardHeight > 0 
-                ? "Enter to send • Shift+Enter for new line" 
-                : isLoading 
-                ? "Processing your question..." 
-                : "Tap input field • Enter to send • Shift+Enter for new line"}
-            </div>
-          )}
-        </div>
+        {/* Input */}
+        <ChatInput
+          inputRef={inputRef}
+          inputValue={inputValue}
+          isLoading={isLoading}
+          isMobile={isMobile}
+          keyboardHeight={keyboardHeight}
+          error={error}
+          setError={setError}
+          setInputValue={setInputValue}
+          handleInputChange={handleInputChange}
+          handleKeyDown={handleKeyDown}
+          handleSendMessage={handleSendMessage}
+          setIsComposing={setIsComposing}
+        />
       </div>
     </>
   );
