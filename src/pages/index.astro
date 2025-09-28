@@ -145,23 +145,75 @@ import { siteConfig } from '../content/site.ts';
         </p>
       </div>
       
-      <div class="grid md:grid-cols-3 gap-8 lg:gap-12 max-w-6xl mx-auto">
-        {siteConfig.workPillars.map((pillar, index) => (
-          <div 
-            class="text-center animate-in p-6 lg:p-8"
-            style={`animation-delay: ${0.1 + index * 0.1}s`}
-          >
-            <div class="text-5xl lg:text-6xl mb-6" role="img" aria-label={pillar.title}>
-              {pillar.icon}
+      <div class="max-w-7xl mx-auto">
+        <!-- Process Flow -->
+        <div class="relative">
+          <!-- Connection lines for desktop -->
+          <div class="hidden md:block absolute top-24 left-1/2 transform -translate-x-1/2 w-full max-w-4xl">
+            <div class="flex justify-between items-center">
+              <div class="w-8 h-0.5 bg-primary-300 dark:bg-primary-600"></div>
+              <div class="w-8 h-0.5 bg-primary-300 dark:bg-primary-600"></div>
             </div>
-            <h3 class="text-xl lg:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
-              {pillar.title}
-            </h3>
-            <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-base lg:text-lg">
-              {pillar.description}
-            </p>
           </div>
-        ))}
+          
+          <div class="grid md:grid-cols-3 gap-8 lg:gap-12 relative z-10">
+            {siteConfig.workPillars.map((pillar, index) => (
+              <div 
+                class="text-center animate-in group"
+                style={`animation-delay: ${0.1 + index * 0.1}s`}
+              >
+                <!-- Step Card -->
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-4 lg:p-4 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-600 group-hover:border-primary-300 dark:group-hover:border-primary-600 relative overflow-hidden">
+                  
+                  <!-- Step Number -->
+                  <div class="absolute top-4 right-4 w-8 h-8 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
+                    <span class="text-sm font-bold text-primary-600 dark:text-primary-400">{index + 1}</span>
+                  </div>
+                  
+                  <!-- Icon Container -->
+                  <div class="relative mb-6">
+                    <div class="w-20 h-20 mx-auto bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <div class="text-3xl text-white" role="img" aria-label={pillar.title}>
+                        {pillar.icon}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Content -->
+                  <h3 class="text-lg lg:text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-4 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
+                    {pillar.title}
+                  </h3>
+                  
+                  <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-sm lg:text-base">
+                    {pillar.description}
+                  </p>
+                  
+                  <!-- Bottom accent -->
+                  <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-primary-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                </div>
+                
+                <!-- Mobile connector -->
+                {index < 2 && (
+                  <div class="md:hidden flex justify-center mt-6 mb-2">
+                    <div class="w-0.5 h-8 bg-primary-300 dark:bg-primary-600"></div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <!-- Call to action -->
+        <div class="text-center mt-16 animate-in" style="animation-delay: 0.5s">
+          <div class="bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 rounded-2xl p-8 border border-primary-200 dark:border-primary-700">
+            <p class="text-lg text-gray-700 dark:text-gray-300 mb-6 max-w-3xl mx-auto">
+              This systematic approach ensures every project delivers measurable business value while maintaining technical excellence.
+            </p>
+            <a href="/projects" class="btn btn-primary">
+              See This Process in Action →
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
