@@ -49,11 +49,26 @@ import { siteConfig } from '../content/site.ts';
         </div>
       </div>
       
-      <!-- Privacy Note for Chatbot -->
-      <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
+      <!-- Legal Links -->
+      <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p class="text-xs text-gray-500 dark:text-gray-400">
-          The CV chatbot uses your questions to provide relevant responses. No data is stored permanently.
+          The AI chatbot uses your questions to provide relevant responses. No data is stored permanently.
         </p>
+        <nav class="flex items-center gap-4" aria-label="Legal">
+          <a
+            href="/privacy-policy"
+            class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            Privacy Policy
+          </a>
+          <span class="text-gray-300 dark:text-gray-600" aria-hidden="true">·</span>
+          <a
+            href="/terms-of-service"
+            class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            Terms of Service
+          </a>
+        </nav>
       </div>
     </div>
   </div>
