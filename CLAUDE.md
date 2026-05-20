@@ -12,6 +12,21 @@ npm run preview   # Preview production build locally
 
 There is no test runner or lint script configured in `package.json`.
 
+## UI review workflow
+
+Use `playwright-cli` (not computer use / screenshots) to inspect the running site. Snapshots are text-based and 100–400× cheaper in tokens than images.
+
+```bash
+npm run dev &                                      # start dev server in background
+playwright-cli open http://localhost:4321/
+playwright-cli --raw snapshot --depth=4            # read copy and structure
+playwright-cli goto http://localhost:4321/experience
+playwright-cli --raw snapshot --depth=5
+playwright-cli screenshot --filename=home.png      # only when visual layout check needed
+playwright-cli show --annotate                     # interactive design feedback with user
+playwright-cli close
+```
+
 ## Architecture
 
 **Astro + React islands + Tailwind CSS** portfolio site, deployed to GitHub Pages via `.github/workflows/deploy.yml` on every push to `main`.
