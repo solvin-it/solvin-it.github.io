@@ -1,0 +1,279 @@
+---
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+---
+
+<ProjectLayout
+  title="Diabetic Readmission Prediction"
+  description="Recall-optimised ML system predicting 30-day hospital readmission for diabetic patients — capstone of the AIM x Emeritus Post Graduate Diploma in AI/ML."
+  technologies={['Python', 'scikit-learn', 'XGBoost', 'SHAP', 'FastAPI', 'Streamlit', 'LangChain', 'Docker', 'SMOTE', 'PCA']}
+  outcome="Production-ready ML system with SHAP explainability, demographic fairness audit, and FastAPI + Streamlit deployment with LLM-grounded explanation chatbot"
+  timeline="March 2025 – March 2026 (AIM x Emeritus Postgrad Capstone)"
+  role="ML Engineer — AIM x Emeritus Capstone"
+  repoUrl="https://github.com/solvin-it/diabetic-readmission-prediction"
+>
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">Project Overview</h2>
+
+  <div class="space-y-6">
+    <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+      The <strong>Diabetic Readmission Prediction</strong> system identifies diabetic patients at high risk of being readmitted to hospital within 30 days of discharge. By surfacing these patients before they leave, care teams can prioritise discharge planning, schedule follow-up calls, and allocate care coordinator resources where the need is highest.
+    </p>
+
+    <div class="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-6">
+      <p class="text-primary-800 dark:text-primary-200 font-medium">
+        <strong>Credential:</strong> Built as the capstone project for the Post Graduate Diploma in AI/ML from Emeritus x Asian Institute of Management (AIM). Demonstrates end-to-end ML from raw clinical data through recall-optimised modelling, SHAP explainability, fairness auditing, and production-ready deployment.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">Problem & Context</h2>
+
+  <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-6">
+    Hospital readmissions within 30 days are a standard quality-of-care metric and a significant cost driver for health systems. For diabetic patients — a chronic, often comorbid population sensitive to medication management and access to care — unplanned readmissions are both common and largely preventable with targeted follow-up.
+  </p>
+
+  <div class="grid md:grid-cols-2 gap-8 mb-6">
+    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+      <h3 class="font-semibold text-red-800 dark:text-red-300 mb-2">❌ False Negative (High Cost)</h3>
+      <p class="text-sm text-red-700 dark:text-red-300">
+        Missing a truly high-risk patient. They leave without adequate support and are likely to return as an emergency readmission — worse outcomes, higher cost.
+      </p>
+    </div>
+    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+      <h3 class="font-semibold text-yellow-800 dark:text-yellow-300 mb-2">⚠️ False Positive (Lower Cost)</h3>
+      <p class="text-sm text-yellow-700 dark:text-yellow-300">
+        Flagging a lower-risk patient. Consumes follow-up resources but provides a safety net — acceptable trade-off given the cost asymmetry.
+      </p>
+    </div>
+  </div>
+
+  <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+    This asymmetry drives the core design decision: optimise for <strong>recall</strong> (catch as many true positives as possible) while maintaining a minimum precision floor to keep the system operationally credible.
+  </p>
+</section>
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">Dataset & Preparation</h2>
+
+  <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-6">
+    The dataset covers <strong>101,766 hospital encounters</strong> across 130 U.S. hospitals from 1999–2008, sourced from the UCI Machine Learning Repository. Target class: readmitted within 30 days (~11% prevalence — an 8:1 class imbalance).
+  </p>
+
+  <div class="grid md:grid-cols-2 gap-8">
+    <div>
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">Cleaning & Leakage Prevention</h3>
+      <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300 space-y-1 text-sm">
+        <li>Removed identifiers, constant columns, and high-missingness fields (weight, payer code)</li>
+        <li>Excluded 1,671 structurally non-readmittable encounters (expired, hospice discharge) to prevent label leakage</li>
+        <li>80:20 stratified train-test split preserving class proportions</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">Feature Engineering & Selection</h3>
+      <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300 space-y-1 text-sm">
+        <li>ICD-9 diagnosis grouping, prior utilisation flags, age encoding, medication ordinals</li>
+        <li>170 engineered features → 117 selected via mutual information</li>
+        <li>PCA: 117 → 44 components (95.21% variance retained)</li>
+        <li>SMOTE applied to training set only: 80,076 → 141,980 balanced rows</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">Modelling & Threshold Optimisation</h2>
+
+  <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-6">
+    Eight candidate models were trained and compared. The final model — <strong>Random Forest on PCA-reduced features</strong> — was selected for its best AUC and recall combination.
+  </p>
+
+  <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Threshold Strategy Comparison</h3>
+  <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Default threshold of 0.50 left too much recall on the table. Four strategies were evaluated:</p>
+
+  <div class="overflow-x-auto mb-6">
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr class="border-b-2 border-gray-200 dark:border-gray-700">
+          <th class="text-left py-2 pr-4 font-semibold text-gray-900 dark:text-white">Strategy</th>
+          <th class="text-right py-2 pr-4 font-semibold text-gray-900 dark:text-white">Threshold</th>
+          <th class="text-right py-2 pr-4 font-semibold text-gray-900 dark:text-white">Recall</th>
+          <th class="text-right py-2 pr-4 font-semibold text-gray-900 dark:text-white">Precision</th>
+          <th class="text-right py-2 font-semibold text-gray-900 dark:text-white">Flags %</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-700 dark:text-gray-300 divide-y divide-gray-100 dark:divide-gray-800">
+        <tr>
+          <td class="py-2 pr-4">Default (0.50)</td>
+          <td class="text-right py-2 pr-4">0.50</td>
+          <td class="text-right py-2 pr-4">0.54</td>
+          <td class="text-right py-2 pr-4">0.17</td>
+          <td class="text-right py-2">35%</td>
+        </tr>
+        <tr>
+          <td class="py-2 pr-4">F2 Score Max</td>
+          <td class="text-right py-2 pr-4">0.42</td>
+          <td class="text-right py-2 pr-4">0.81</td>
+          <td class="text-right py-2 pr-4">0.14</td>
+          <td class="text-right py-2">66%</td>
+        </tr>
+        <tr>
+          <td class="py-2 pr-4">Youden's J</td>
+          <td class="text-right py-2 pr-4">0.50</td>
+          <td class="text-right py-2 pr-4">0.55</td>
+          <td class="text-right py-2 pr-4">0.17</td>
+          <td class="text-right py-2">36%</td>
+        </tr>
+        <tr class="bg-green-50 dark:bg-green-900/20 font-semibold">
+          <td class="py-2 pr-4">✓ Constrained (selected)</td>
+          <td class="text-right py-2 pr-4">0.46</td>
+          <td class="text-right py-2 pr-4">0.72</td>
+          <td class="text-right py-2 pr-4">0.15</td>
+          <td class="text-right py-2">54%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+    <p class="text-yellow-800 dark:text-yellow-300 text-sm">
+      <strong>Honest assessment:</strong> The AUC target (≥0.75) was not met — final test AUC was 0.6446. However, the recall target (≥0.50) was exceeded at 0.72. The result aligns with published benchmarks for this dataset given its class imbalance, administrative coding limitations, and temporal bounds. The model is positioned as a screening aid, not a standalone clinical decision system.
+    </p>
+  </div>
+</section>
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">Explainability (SHAP)</h2>
+
+  <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-6">
+    SHAP (SHapley Additive exPlanations) was used to understand which features drive individual predictions — critical for clinical credibility and user trust.
+  </p>
+
+  <div class="grid md:grid-cols-3 gap-6 mb-6">
+    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+      <h3 class="font-semibold text-gray-900 dark:text-white mb-3">Prior Utilisation</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Prior emergency visits and inpatient admissions are the strongest readmission signals — patients with high prior utilisation are chronically unstable.</p>
+    </div>
+    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+      <h3 class="font-semibold text-gray-900 dark:text-white mb-3">Encounter Complexity</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Number of diagnoses and length of stay reflect the complexity of the current admission and predict difficulty stabilising post-discharge.</p>
+    </div>
+    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+      <h3 class="font-semibold text-gray-900 dark:text-white mb-3">Discharge Pathway</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Home discharge is protective relative to facility destinations — patients discharged to rehab or skilled nursing have elevated risk.</p>
+    </div>
+  </div>
+</section>
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">Fairness Audit</h2>
+
+  <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-6">
+    A demographic fairness audit was run across gender and race subgroups, using recall as the primary equity metric — missing a high-risk patient matters equally regardless of demographic group.
+  </p>
+
+  <div class="grid md:grid-cols-2 gap-8 mb-6">
+    <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6">
+      <h3 class="font-semibold text-green-800 dark:text-green-300 mb-2">✓ Gender — Stable</h3>
+      <p class="text-sm text-green-700 dark:text-green-300">Female recall: 0.72 · Male recall: 0.71</p>
+      <p class="text-sm text-green-700 dark:text-green-300 mt-1">Negligible gap — model performs equitably across gender.</p>
+    </div>
+    <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+      <h3 class="font-semibold text-red-800 dark:text-red-300 mb-2">⚠️ Race — Known Limitation</h3>
+      <p class="text-sm text-red-700 dark:text-red-300">Caucasian recall: 0.74 · Other recall: 0.52</p>
+      <p class="text-sm text-red-700 dark:text-red-300 mt-1">Gap of 0.22 exceeds the ≤0.15 target. Documented as a limitation; mitigation paths identified.</p>
+    </div>
+  </div>
+
+  <p class="text-gray-700 dark:text-gray-300 text-sm">
+    The racial recall disparity is partly attributable to smaller subgroup sample sizes (especially the "Other" category with n=270) and the historical nature of the dataset. Future work includes stratified thresholds per demographic group and re-weighting strategies.
+  </p>
+</section>
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">Deployment Architecture</h2>
+
+  <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-6">
+    The project ships production-ready deployment artifacts — not just notebooks. The system is fully containerised with Docker Compose and exposes two services:
+  </p>
+
+  <div class="grid md:grid-cols-2 gap-8 mb-6">
+    <div>
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">FastAPI Backend</h3>
+      <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300 space-y-1 text-sm">
+        <li><code class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">POST /v1/predict</code> — async risk scoring with Pydantic validation</li>
+        <li><code class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">POST /v1/explain</code> — LangChain-powered Q&A with session memory</li>
+        <li><code class="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">GET /health</code> — health check endpoint</li>
+        <li>Structured logging, custom exception handling, environment config via Pydantic Settings</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">Streamlit Frontend</h3>
+      <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300 space-y-1 text-sm">
+        <li><strong>Tab 1 — Project Summary:</strong> Model analysis, metrics, and visualisations</li>
+        <li><strong>Tab 2 — Prediction Tool:</strong> Interactive form with preset patient profiles</li>
+        <li><strong>Tab 3 — Explanation Chatbot:</strong> LLM-grounded Q&A about predictions</li>
+        <li>Preset drift validation to detect risk-band consistency issues</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+    <p class="text-sm text-gray-600 dark:text-gray-400 font-mono">Artifacts: deployment_pipeline.joblib · best_model_random_forest_pca.joblib · standard_scaler.joblib · pca_transformer.joblib · selected_features.json</p>
+  </div>
+</section>
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">Outcomes & Learnings</h2>
+
+  <div class="grid md:grid-cols-2 gap-8 mb-6">
+    <div>
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">What Was Delivered</h3>
+      <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300 space-y-1 text-sm">
+        <li>Recall of 0.72 at the constrained threshold — recall target exceeded</li>
+        <li>Full production deployment stack (FastAPI, Streamlit, Docker)</li>
+        <li>SHAP explainability integrated into the explanation API endpoint</li>
+        <li>Demographic fairness audit with documented limitations and mitigation paths</li>
+        <li>Risk-band policy document and preset calibration scripts</li>
+        <li>Unit test coverage across feature adapter, API endpoints, and preset validation</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">Key Learnings</h3>
+      <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300 space-y-1 text-sm">
+        <li>Threshold engineering can recover more recall than model tuning alone</li>
+        <li>Fairness audits should be built into the pipeline, not bolted on at the end</li>
+        <li>AUC is not enough — operating metrics at deployment threshold matter more</li>
+        <li>SHAP explanations add credibility but require careful framing for non-ML stakeholders</li>
+        <li>PCA-based dimensionality reduction improved generalisation on this noisy dataset</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="mb-16">
+  <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b border-gray-200 dark:border-gray-700 pb-3">Future Directions</h2>
+
+  <ul class="list-disc ml-6 text-gray-700 dark:text-gray-300 space-y-2">
+    <li><strong>Stratified thresholds</strong> — set per-demographic operating thresholds to reduce the racial recall gap below the 0.15 target</li>
+    <li><strong>Temporal validation</strong> — test on more recent clinical data to assess model drift and generalisation beyond 1999–2008</li>
+    <li><strong>MLflow integration</strong> — replace local experiment tracking with a proper MLOps pipeline for reproducible runs and artefact versioning</li>
+    <li><strong>Richer clinical signals</strong> — incorporate medication adherence, lab trends, and post-discharge follow-up data currently absent from the dataset</li>
+  </ul>
+</section>
+
+<section>
+  <div class="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 border border-primary-200 dark:border-primary-700 rounded-2xl p-8">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Reflection</h2>
+    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+      This capstone reinforced something I already believed from my FinTech background: the model is only one part of the solution. Understanding the cost structure of errors, designing for operational credibility, auditing for fairness, and delivering something that can actually be deployed — that's the full job.
+    </p>
+    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+      A recall of 0.72 on a hard, imbalanced, historically bounded dataset is a defensible result when you've been honest about the limitations and designed the system with appropriate guardrails. The AIM x Emeritus programme gave me the framework to think rigorously about the full ML lifecycle — and this project is where that thinking became concrete.
+    </p>
+  </div>
+</section>
+
+</ProjectLayout>

@@ -38,6 +38,15 @@ export const siteConfig = {
   ],
   featuredProjects: [
     {
+      title: 'Diabetic Readmission Prediction',
+      description: 'Recall-optimised ML system to flag high-risk diabetic patients for discharge intervention — with SHAP explainability, fairness audit, and production API deployment',
+      outcome: 'AIM x Emeritus capstone: end-to-end ML from raw clinical data to FastAPI + Streamlit deployment with LLM explanation chatbot',
+      stack: ['Python', 'scikit-learn', 'XGBoost', 'SHAP', 'FastAPI', 'Streamlit', 'LangChain', 'Docker'],
+      slug: 'diabetic-readmission',
+      repoUrl: 'https://github.com/solvin-it/diabetic-readmission-prediction',
+      liveUrl: null,
+    },
+    {
       title: 'RAG on Me (Resume Chatbot)',
       description: 'Intelligent resume assistant with RAG, guardrails, and source attribution for recruiters',
       outcome: 'Enables natural language querying of professional experience with accurate, contextual responses',
