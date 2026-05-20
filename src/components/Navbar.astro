@@ -8,12 +8,16 @@ import ThemeToggle from './ThemeToggle.tsx';
     <div class="flex items-center justify-between h-20">
       <!-- Logo -->
       <div class="flex-shrink-0">
-        <a 
-          href="/" 
-          class="text-2xl font-serif font-medium text-tuxedo-black dark:text-tuxedo-pearl hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300"
-          aria-label="Home"
+        <a
+          href="/"
+          aria-label="Solvin — Home"
+          class="block transition-opacity duration-300 hover:opacity-70"
         >
-          {siteConfig.name}
+          <img
+            src="/solvin-logo-mini.png"
+            alt="Solvin"
+            class="h-10 w-auto dark:invert"
+          />
         </a>
       </div>
 
