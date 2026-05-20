@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: 'Jose Fernando Gonzales',
-  title: 'Jose Fernando Gonzales - Technical Solutions Engineer → AI/ML Engineer',
-  description: 'I design, build, and ship ML/LLM features and production-ready apps— from business problem to deploy.',
+  title: 'Jose Fernando Gonzales - AI Developer | Agentic Systems Engineer',
+  description: 'I build agentic AI systems and LLM-powered applications — backed by deep FinTech expertise and 9+ years of translating business problems into technical solutions.',
   url: 'https://solvin-it.github.io',
   author: {
     name: 'Jose Fernando Gonzales',
@@ -10,30 +10,30 @@ export const siteConfig = {
     github: 'https://github.com/solvin-it',
   },
   hero: {
-    headline: 'Technical Solutions Engineer → AI/ML Engineer',
-    subhead: 'I design, build, and ship ML/LLM features and production-ready apps— from business problem to deploy.',
+    headline: 'AI Developer | Agentic Systems Engineer',
+    subhead: 'I build agentic AI systems and LLM-powered applications — backed by deep FinTech expertise and 9+ years of translating business problems into technical solutions.',
     primaryCTA: 'View Projects',
     secondaryCTA: 'Download CV',
     tertiaryCTA: 'Chat with my AI Butler',
   },
   stats: [
     {
-      label: 'Business-First AI Solutions',
-      value: '3',
-      icon: '🚀',
-      tooltip: 'AI applications built to solve real business problems with measurable outcomes',
+      label: 'Enterprise AI in Production',
+      value: 'JPMorgan',
+      icon: '🏦',
+      tooltip: 'Building agentic AI systems at JPMorganChase using LangChain, LangGraph, and Google ADK',
     },
     {
-      label: 'Solutions Engineering Foundation',
+      label: 'FinTech & Systems Foundation',
       value: '9+ yrs',
       icon: '💼',
-      tooltip: 'Deep experience understanding business needs and building practical solutions',
+      tooltip: 'Deep experience in payment systems, solution design, and bridging business needs with technical implementations',
     },
     {
-      label: 'End-to-End AI Development',
-      value: 'Full Stack',
+      label: 'AI Architecture Focus',
+      value: 'Agentic',
       icon: '🤖',
-      tooltip: 'From problem analysis to deployment - RAG systems, ML pipelines, and web applications',
+      tooltip: 'Multi-agent orchestration, RAG systems, and LLM-powered workflows — from design to production',
     },
   ],
   featuredProjects: [
@@ -99,7 +99,7 @@ export const siteConfig = {
     { label: 'Contact', href: '/contact' },
   ],
   seo: {
-    keywords: ['Generative AI Engineer', 'Machine Learning', 'Full Stack Developer', 'Technical Solutions', 'RAG', 'LLM'],
+    keywords: ['AI Developer', 'Agentic AI', 'Generative AI Engineer', 'LangGraph', 'Google ADK', 'Agent Workflows', 'Multi-Agent Systems', 'FinTech AI', 'Machine Learning', 'RAG', 'LLM', 'Technical Solutions'],
     ogImage: '/og-image.jpg',
   },
 };
