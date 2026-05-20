@@ -203,7 +203,7 @@
   
   /* Section padding */
   .section {
-    @apply py-20 sm:py-24 lg:py-28 xl:py-36;
+    @apply py-12 sm:py-20 lg:py-28 xl:py-36;
   }
   
   /* Container */
@@ -213,17 +213,17 @@
   
   /* Typography */
   .heading-1 {
-    @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-medium tracking-tight leading-tight;
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-medium tracking-tight leading-tight;
     font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
   }
   
   .heading-2 {
-    @apply text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif font-medium tracking-tight leading-tight;
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif font-medium tracking-tight leading-tight;
     font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
   }
   
   .heading-3 {
-    @apply text-2xl md:text-3xl lg:text-4xl font-serif font-medium tracking-tight leading-tight;
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif font-medium tracking-tight leading-tight;
     font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
   }
   
