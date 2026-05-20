@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: 'Jose Fernando Gonzales',
   title: 'Jose Fernando Gonzales - AI Developer | Agentic Systems Engineer',
-  description: 'I build agentic AI systems and LLM-powered applications — backed by deep FinTech expertise and 10 years of translating business problems into technical solutions.',
+  description: 'I build agentic AI systems and LLM-powered applications — backed by deep FinTech expertise and a decade of turning business problems into production-ready technical solutions.',
   url: 'https://solvin-it.github.io',
   author: {
     name: 'Jose Fernando Gonzales',
@@ -10,8 +10,8 @@ export const siteConfig = {
     github: 'https://github.com/solvin-it',
   },
   hero: {
-    headline: 'AI Developer | Agentic Systems Engineer',
-    subhead: 'I build agentic AI systems and LLM-powered applications — backed by deep FinTech expertise and 10 years of translating business problems into technical solutions.',
+    headline: 'AI Developer · Agentic Systems Engineer',
+    subhead: 'I build agentic AI systems and LLM-powered applications — backed by deep FinTech expertise and a decade of turning business problems into production-ready technical solutions.',
     primaryCTA: 'View Projects',
     secondaryCTA: 'Download CV',
     tertiaryCTA: 'Chat with my AI Butler',
@@ -19,7 +19,7 @@ export const siteConfig = {
   stats: [
     {
       label: 'Enterprise AI in Production',
-      value: 'JPMorgan',
+      value: 'JPMC',
       icon: '🏦',
       tooltip: 'Building agentic AI systems at JPMorganChase using LangChain, LangGraph, and Google ADK',
     },
