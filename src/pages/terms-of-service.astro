@@ -1,0 +1,156 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { siteConfig } from '../content/site.ts';
+
+const title = `Terms of Service | ${siteConfig.name}`;
+const description = 'Terms of Service for Solvin IT — the rules that govern use of our websites, products, and services.';
+const effectiveDate = 'May 19, 2026';
+---
+
+<MainLayout title={title} description={description} noIndex={false}>
+  <section class="legal-page">
+    <div class="container legal-container">
+
+      <div class="legal-heading">
+        <h1 class="legal-title">Terms of Service</h1>
+        <p class="legal-date">Effective date: {effectiveDate}</p>
+      </div>
+
+      <div class="prose-legal">
+
+        <p>
+          Please read these Terms of Service ("Terms") carefully before using any website, web application, software product, or service (collectively, the "Services") provided by <strong>Solvin IT</strong>, operated by Jose Fernando Gonzales ("we," "us," or "our"). By accessing or using any of our Services you agree to be bound by these Terms. If you do not agree, do not use the Services.
+        </p>
+
+        <h2>1. Services</h2>
+        <p>
+          Solvin IT designs, builds, and operates a range of digital products and services, including but not limited to:
+        </p>
+        <ul>
+          <li><strong>Websites and web applications</strong> — informational sites, portfolios, interactive tools, and product interfaces.</li>
+          <li><strong>AI-powered features and tools</strong> — chatbots, assistants, generative features, and other machine-learning-backed functionality embedded in our products.</li>
+          <li><strong>Software products</strong> — standalone applications, APIs, and platforms developed and maintained by Solvin IT.</li>
+          <li><strong>Consulting and engineering services</strong> — AI/ML engineering, technical solutions consulting, and software development engagements contracted separately.</li>
+          <li><strong>Open-source software</strong> — code repositories published under their respective open-source licences.</li>
+        </ul>
+        <p>
+          These Terms apply to all of the above. Where a specific Service has supplemental terms, those terms apply in addition to and, in the case of conflict, take precedence over these Terms for that Service.
+        </p>
+
+        <h2>2. Eligibility</h2>
+        <p>
+          You must be at least 13 years old to use our Services. By using our Services you represent that you meet this requirement. If you are using our Services on behalf of an organisation, you represent that you have authority to bind that organisation to these Terms.
+        </p>
+
+        <h2>3. Acceptable Use</h2>
+        <p>You agree not to:</p>
+        <ul>
+          <li>Use our Services for any unlawful purpose or in violation of any applicable law or regulation.</li>
+          <li>Attempt to gain unauthorised access to any part of our Services, our servers, or any connected systems or networks.</li>
+          <li>Transmit malicious code, spam, or unsolicited bulk communications through any feature of our Services.</li>
+          <li>Interfere with or disrupt the integrity or performance of our Services or the data contained therein.</li>
+          <li>Scrape, crawl, or systematically extract content from our Services in a manner that places an unreasonable burden on our infrastructure, unless expressly permitted by a separate agreement or applicable law.</li>
+          <li>Misrepresent your identity or affiliation when using our Services or communicating with us.</li>
+          <li>Submit sensitive personal information — including financial data, government-issued ID numbers, health records, or authentication credentials — through AI-powered features unless a specific Service is expressly designed for that purpose.</li>
+          <li>Use our Services to develop competing products or services without prior written consent.</li>
+        </ul>
+
+        <h2>4. Intellectual Property</h2>
+        <p>
+          All original content, design, code, and materials within our Services — except where governed by a separate open-source licence — are the property of Jose Fernando Gonzales and are protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, modify, or create derivative works without our prior written permission.
+        </p>
+        <p>
+          Open-source repositories are governed by their stated licences (e.g., MIT, Apache 2.0). Nothing in these Terms restricts rights explicitly granted by those licences.
+        </p>
+        <p>
+          Any feedback, suggestions, or ideas you voluntarily provide may be used by us without restriction or compensation.
+        </p>
+
+        <h2>5. Third-Party Links and Integrations</h2>
+        <p>
+          Our Services may contain links to, or integrate with, third-party websites, APIs, or platforms. We are not responsible for the content, privacy practices, or terms of those third parties. The presence of a link or integration does not constitute an endorsement.
+        </p>
+
+        <h2>6. AI-Powered Features — Limitations and Disclaimer</h2>
+        <p>
+          Our Services may include AI-powered tools whose outputs are generated by machine learning models. These outputs may be incomplete, inaccurate, biased, or outdated. You should not rely on AI-generated content as professional, legal, financial, medical, or technical advice without independent verification. We make no warranty that outputs are error-free or suitable for any particular purpose.
+        </p>
+
+        <h2>7. Consulting and Contracted Services</h2>
+        <p>
+          Specific consulting or development engagements are governed by a separate written agreement (Statement of Work, contract, or email exchange confirming scope and terms). In the event of a conflict between these Terms and a separate agreement, the separate agreement controls for that engagement.
+        </p>
+        <p>Unless otherwise stated in a separate agreement:</p>
+        <ul>
+          <li>Deliverables are provided "as is" upon delivery.</li>
+          <li>Payment terms, milestones, and revision rounds are defined per engagement.</li>
+          <li>We retain ownership of general-purpose tools, frameworks, methodologies, and know-how developed during an engagement. You receive a licence to use the specific deliverables produced for you.</li>
+        </ul>
+
+        <h2>8. Disclaimer of Warranties</h2>
+        <p>
+          THE SERVICES ARE PROVIDED <strong>"AS IS"</strong> AND <strong>"AS AVAILABLE"</strong> WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, ACCURACY, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICES WILL BE UNINTERRUPTED, ERROR-FREE, SECURE, OR FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.
+        </p>
+
+        <h2>9. Limitation of Liability</h2>
+        <p>
+          TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, SOLVIN IT AND JOSE FERNANDO GONZALES SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, REVENUE, DATA, OR GOODWILL, ARISING OUT OF OR RELATED TO YOUR USE OF OR INABILITY TO USE THE SERVICES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+        </p>
+        <p>
+          OUR TOTAL AGGREGATE LIABILITY TO YOU FOR ANY CLAIMS ARISING FROM OR RELATED TO THESE TERMS OR THE SERVICES SHALL NOT EXCEED THE GREATER OF (A) THE TOTAL AMOUNT YOU PAID US IN THE 12 MONTHS PRECEDING THE CLAIM OR (B) ONE HUNDRED US DOLLARS (USD 100).
+        </p>
+
+        <h2>10. Indemnification</h2>
+        <p>
+          You agree to indemnify and hold harmless Solvin IT and Jose Fernando Gonzales from any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising from your use of the Services in violation of these Terms, your violation of any third-party rights, or your violation of any applicable law.
+        </p>
+
+        <h2>11. Governing Law and Dispute Resolution</h2>
+        <p>
+          These Terms are governed by the laws of the <strong>Republic of the Philippines</strong>, without regard to conflict-of-law principles. Any dispute arising from or relating to these Terms or our Services shall first be attempted to be resolved through good-faith negotiation between the parties. If unresolved within 30 days, disputes shall be submitted to the appropriate courts located in <strong>Makati City, Metro Manila, Philippines</strong>.
+        </p>
+
+        <h2>12. Changes to These Terms</h2>
+        <p>
+          We reserve the right to modify these Terms at any time. The "Effective date" at the top of this page will reflect the most recent revision. Your continued use of our Services after an update constitutes acceptance of the revised Terms. For material changes, we will make reasonable efforts to provide advance notice.
+        </p>
+
+        <h2>13. Severability and Waiver</h2>
+        <p>
+          If any provision of these Terms is found to be unenforceable, that provision will be limited or eliminated to the minimum extent necessary, and the remaining Terms will remain in full force and effect. Our failure to enforce any provision does not constitute a waiver of our right to enforce it in the future.
+        </p>
+
+        <h2>14. Entire Agreement</h2>
+        <p>
+          These Terms, together with any supplemental terms applicable to a specific Service and any separate written agreements for contracted engagements, constitute the entire agreement between you and Solvin IT regarding the subject matter herein and supersede any prior agreements or understandings.
+        </p>
+
+        <h2>15. Contact</h2>
+        <p>
+          Questions about these Terms may be directed to:<br />
+          <strong>Jose Fernando Gonzales — Solvin IT</strong><br />
+          Makati City, Philippines<br />
+          <a href={`mailto:${siteConfig.author.email}`}>{siteConfig.author.email}</a>
+        </p>
+
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .legal-page { padding: 5rem 0; }
+  .legal-container { max-width: 800px; }
+  .legal-heading { margin-bottom: 3rem; }
+  .legal-title { font-size: clamp(2.2rem, 6vw, 3.5rem); line-height: 1.15; letter-spacing: -0.05em; margin-bottom: 1rem; }
+  .legal-date { color: var(--muted); font-family: var(--font-mono); font-size: 0.8rem; }
+  .prose-legal { color: var(--muted); line-height: 1.8; overflow-wrap: anywhere; }
+  .prose-legal > * + * { margin-top: 1.5rem; }
+  .prose-legal h2 { color: var(--ink); font-size: 1.3rem; margin-top: 2.5rem; line-height: 1.4; }
+  .prose-legal h3 { color: var(--ink); font-size: 1rem; margin-top: 1.5rem; }
+  .prose-legal ul { list-style: disc; padding-left: 1.25rem; }
+  .prose-legal li + li { margin-top: 0.5rem; }
+  .prose-legal a { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
+  .prose-legal strong { color: var(--ink); font-weight: 600; }
+  .prose-legal code { background: var(--surface-2); padding: 0.15rem 0.35rem; border-radius: 4px; }
+</style>

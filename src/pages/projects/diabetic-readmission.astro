@@ -1,0 +1,7 @@
+---
+import ProjectLayout from "../../layouts/ProjectLayout.astro";
+import { getProject } from "../../content/projects";
+const project = getProject("diabetic-readmission");
+---
+
+<ProjectLayout project={project} />

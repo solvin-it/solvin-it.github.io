@@ -44,13 +44,13 @@ The main website assistant has its own product-brief purpose. Reusing that endpo
 
 ## Release
 
-No deployment is performed by the redesign task. The existing workflow publishes on pushes to `main`; inspect the complete working-tree diff before committing because the checkout contained prior career updates and unrelated untracked assets.
+The approved redesign is committed for publication through the existing `main` deployment workflow. Remote changes through `c8dc1e7` were reconciled, preserving the legal pages and capstone content. Legal body copy is unchanged; their presentation uses the new theme. Prior career updates are included, while unrelated untracked assets and local worktrees remain excluded.
 
 ## Verification completed
 
-- `npm run build`: 17 static routes generated successfully.
+- `npm run build`: 19 static routes generated successfully.
 - `npm run check`: zero errors and zero warnings; four existing unused-code hints remain in the unmounted chat components.
-- Production browser checks: all 17 routes at 1440, 390, and 320 pixels; additional homepage checks at 768, 1024, and 1920 pixels. No horizontal document overflow or missing images.
+- Production browser checks: all 19 routes at 1440, 390, and 320 pixels; additional homepage checks at 768, 1024, and 1920 pixels. No horizontal document overflow or missing images.
 - Project category counts, persistent dark/light theme, mobile menu and Escape focus return, email clipboard action, and print-to-PDF action passed.
 - With JavaScript disabled, all projects and mobile navigation remain available.
 - 434 generated internal links and asset references resolve, including in-page anchors. No private repository URLs or retired chatbot endpoint appear in generated HTML.

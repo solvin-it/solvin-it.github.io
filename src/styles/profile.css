@@ -925,3 +925,5 @@
     gap: 12px;
   }
 }
+
+.profile-legal-links { display: flex; flex-wrap: wrap; gap: 1rem; }

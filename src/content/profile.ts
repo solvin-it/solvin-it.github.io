@@ -38,6 +38,7 @@ export const experiences = [
       'AWS Glue',
       'Alteryx',
       'LangChain',
+      'LangGraph',
       'Google ADK',
       'RAG',
       'Prompt Engineering',
@@ -133,7 +134,7 @@ export const experiences = [
 export const skillGroups = [
   {
     category: 'AI Development',
-    skills: ['LLM Application Development', 'Agentic AI', 'RAG', 'LangChain', 'Google ADK', 'Prompt Engineering', 'Context Engineering'],
+    skills: ['LLM Application Development', 'Agentic AI', 'RAG', 'LangChain', 'LangGraph', 'Google ADK', 'Prompt Engineering', 'Context Engineering'],
   },
   {
     category: 'Data and Engineering',
