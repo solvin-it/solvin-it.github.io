@@ -1,77 +1,97 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
-import { siteConfig } from '../../content/site.ts';
-
-const title = `Projects | ${siteConfig.name}`;
-const description = 'Explore my AI/ML and full-stack development projects, from customer churn prediction to RAG systems and production applications.';
+import MainLayout from "../../layouts/MainLayout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { projects } from "../../content/projects";
+const categories = [
+  "All work",
+  "AI systems",
+  "Product engineering",
+  "Applied ML",
+];
 ---
 
-<MainLayout title={title} description={description}>
-  <section class="section">
-    <div class="container">
-      <!-- Page Header -->
-      <div class="text-center mb-16 animate-in">
-        <h1 class="heading-1 text-gray-900 dark:text-white mb-6">
-          Projects
-        </h1>
-        <p class="body-large max-w-3xl mx-auto">
-          A showcase of AI/ML and full-stack projects I've built, highlighting end-to-end delivery from problem understanding to production deployment.
-        </p>
-      </div>
-
-      <!-- Projects Grid -->
-      <div class="grid md:grid-cols-2 gap-8 mb-16">
-        {siteConfig.featuredProjects.map((project, index) => (
-          <div 
-            class="animate-in" 
-            style={`animation-delay: ${0.1 + index * 0.1}s`}
-          >
-            <ProjectCard {...project} />
-          </div>
-        ))}
-      </div>
-
-      <!-- Additional Projects Section -->
-      <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 md:p-12 text-center animate-in" style="animation-delay: 0.6s">
-        <h2 class="heading-3 text-gray-900 dark:text-white mb-4">
-          More Projects Coming Soon
-        </h2>
-        <p class="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-          I'm constantly working on new projects and exploring cutting-edge AI/ML technologies. Check back soon for updates, or reach out to discuss potential collaborations.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="/contact" class="btn btn-primary">
-            Let's Collaborate
-          </a>
-          <a href={siteConfig.author.github} target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-            View GitHub
-          </a>
-        </div>
-      </div>
+<MainLayout
+  title="Selected work — Jose Fernando Gonzales"
+  description="Independent products, AI systems, and applied ML. Explore the problem, the engineering decisions, and the limits of each project."
+>
+  <section class="page-intro container">
+    <p class="eyebrow">Curriculum vitae / Project portfolio</p>
+    <h1>
+      Projects &amp; case studies<span class="blue">.</span>
+    </h1>
+    <div class="intro-bottom">
+      <p>
+        Selected independent and academic work in AI, software engineering, and
+        machine learning.
+        <br />
+        The technical approach, key decisions, and scope of each project.
+      </p>
+      <span class="eyebrow">{projects.length} projects / A closer look</span>
+    </div>
+  </section>
+  <section class="container projects-section" aria-label="Project collection">
+    <div
+      class="filter-bar"
+      data-filters
+      hidden
+      role="group"
+      aria-label="Filter projects by discipline"
+    >
+      {categories.map((category, index) => (
+        <button
+          type="button"
+          class="filter-button"
+          aria-pressed={index === 0 ? "true" : "false"}
+          data-filter={category}
+        >
+          {category}
+          <span>
+            {index === 0
+              ? projects.length
+              : projects.filter((project) => project.category === category)
+                  .length}
+          </span>
+        </button>
+      ))}
+    </div>
+    <p class="sr-only" aria-live="polite" data-filter-status></p>
+    <div class="work-grid all-work">
+      {projects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+    <div class="collection-note">
+      <span class="eyebrow">A note on private work</span>
+      <p>
+        Private projects are described at a product and engineering level.
+        Source code, customer information, and internal documents remain
+        private. Illustrations are conceptual, not product screenshots.
+      </p>
     </div>
   </section>
 </MainLayout>
-
-<style>
-  .animate-in {
-    animation: slideIn 0.6s ease-out forwards;
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  @keyframes slideIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .animate-in {
-      animation: none;
-      opacity: 1;
-      transform: none;
-    }
-  }
-</style>
+<script>
+  const filters = document.querySelector<HTMLElement>("[data-filters]");
+  if (filters) filters.hidden = false;
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-filter]");
+  const cards = document.querySelectorAll<HTMLElement>(
+    ".work-card[data-category]",
+  );
+  buttons.forEach((button) =>
+    button.addEventListener("click", () => {
+      const category = button.dataset.filter;
+      buttons.forEach((item) =>
+        item.setAttribute("aria-pressed", String(item === button)),
+      );
+      let count = 0;
+      cards.forEach((card) => {
+        card.hidden =
+          category !== "All work" && card.dataset.category !== category;
+        if (!card.hidden) count++;
+      });
+      const status = document.querySelector("[data-filter-status]");
+      if (status)
+        status.textContent = `Showing ${count} ${category === "All work" ? "projects" : category + " projects"}.`;
+    }),
+  );
+</script>

@@ -1,300 +1,96 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
-import { siteConfig } from '../content/site.ts';
-
-const title = `Experience | ${siteConfig.name}`;
-const description = 'My journey to becoming an Generative AI Engineer, built on a strong foundation of 9+ years in technical solutions and business analysis.';
-
-// Experience data
-const experiences = [
-  {
-    role: "Technical Solutions Engineer",
-    company: "DigitalPH Asia Corporation",
-    duration: "Dec 2024 – Present",
-    location: "Makati City, Philippines",
-    type: "current",
-    description: "Driving continuous enhancements of Payborit, a major payment aggregator system, while supporting sales and product teams through solution design and client-facing engagements. Began exploring AI-assisted prototyping using AI Agents and Spec-Driven Development, and currently pursuing formal postgraduate studies in Artificial Intelligence and Machine Learning.",
-    achievements: [
-      "Enhanced Payborit Payment Aggregator with new integrations and improved merchant onboarding workflows",
-      "Supported solution design, proposal preparation, and client presentations for enterprise merchants",
-      "Applied AI tools and agent workflows to accelerate prototyping and improve productivity",
-      "Ensured operational stability of live payment systems through testing, review, and cross-team collaboration"
-    ],
-    technologies: ["Python", "FastAPI", "Docker", "GCP", "AI Agents", "Spec-Driven Development", "SQL", "API Integration"]
-  },
-  {
-    role: "Senior Technical Business Analyst",
-    company: "DigitalPH Asia Corporation",
-    duration: "Dec 2020 – Dec 2024",
-    location: "Makati City, Philippines",
-    type: "previous",
-    description: "Bridged the gap between business needs and technical solutions across multiple large-scale system implementations. Progressively took on hands-on development, starting with debugging and automation scripts, then advancing to Python development, API integrations, and containerized deployments on GCP.",
-    achievements: [
-      "Delivered 10+ projects by leading requirements gathering, system design, and stakeholder management",
-      "Built Python automation scripts and handled API integrations to streamline business workflows",
-      "Implemented containerized services on GCP for smoother deployment and system reliability",
-      "Developed strong foundation in solution architecture, technical documentation, and cross-functional delivery"
-    ],
-    technologies: ["Python", "SQL", "Docker", "GCP", "Business Analysis", "System Architecture", "Project Management", "API Integration"]
-  },
-  {
-    role: "Technical Business Analyst",
-    company: "EightD Corporation",
-    duration: "Sep 2019 - Dec 2020",
-    location: "Philippines",
-    type: "previous",
-    description: "Developed systematic problem-solving methodologies and process optimization skills that are crucial for AI solution design. This role taught me how to analyze complex systems and identify automation opportunities.",
-    achievements: [
-      "Achieved 99.98% efficiency improvement through process automation (skills now applied to AI workflows)",
-      "Mastered complex system integration and multi-stakeholder project management",
-      "Built expertise in solution architecture and technical specification development",
-      "Developed strong foundation in automation and process optimization"
-    ],
-    technologies: ["Process Automation", "System Integration", "AFCS Systems", "Solution Design", "Requirements Analysis"]
-  },
-  {
-    role: "SAP SD Technology Consultant",
-    company: "DXC Technology",
-    duration: "May 2016 - Sep 2019",
-    location: "Philippines",
-    type: "previous", 
-    description: "Built expertise in enterprise-scale system implementation and business process optimization. This foundational experience in understanding how technology serves business needs is invaluable for AI solution development.",
-    achievements: [
-      "Delivered 20+ enterprise projects with focus on business process improvement",
-      "Developed strong foundation in system configuration and business requirements analysis",
-      "Built expertise in client consultation and technical solution presentation",
-      "Mastered enterprise software implementation methodologies"
-    ],
-    technologies: ["Enterprise Systems", "Business Process Design", "SAP SD", "Client Consultation", "System Implementation"]
-  }
-];
-
-const skills = [
-  {
-    category: "Business & Technical Analysis",
-    skills: ["Requirements Gathering", "Solution Design", "Process Improvement", "Stakeholder Management", "Project Management", "Business Analysis", "Technical Specifications"]
-  },
-  {
-    category: "Programming & Development", 
-    skills: ["Python", "SQL", "HTML/CSS", "Bootstrap", "API Integration", "Microservice Architecture", "Database Design", "SAP SD"]
-  },
-  {
-    category: "AI/ML (Learning)",
-    skills: ["Scikit-learn", "LangChain", "OpenAI API", "RAG Systems", "Prompt Engineering", "Spec-Driven Development", "Machine Learning Basics"]
-  },
-  {
-    category: "Tools & Technologies",
-    skills: ["Jira", "Trello", "Docker (Basic)", "GCP (Some)", "Git", "Payment Systems", "AFCS", "System Integration"]
-  },
-  {
-    category: "Domain Expertise",
-    skills: ["FinTech", "Payment Aggregation", "Enterprise Applications", "AFCS Implementation", "Business Process Optimization", "Client Consultation"]
-  }
-];
+import MainLayout from "../layouts/MainLayout.astro";
+import { experiences, education, skillGroups } from "../content/profile";
 ---
 
-<MainLayout title={title} description={description}>
-  <section class="section">
-    <div class="container max-w-4xl">
-      <!-- Page Header -->
-      <div class="text-center mb-16 animate-in">
-        <h1 class="heading-1 text-gray-900 dark:text-white mb-6">
-          Experience
-        </h1>
-        <p class="body-large max-w-3xl mx-auto">
-          My journey to becoming an Generative AI Engineer, built on a strong foundation of understanding how to bridge business needs with technical solutions. This background enables me to create AI applications that deliver real value.
-        </p>
-      </div>
-
-      <!-- Experience Timeline -->
-      <div class="mb-20">
-        <h2 class="heading-3 text-gray-900 dark:text-white mb-8 animate-in">
-          Professional Timeline
-        </h2>
-        
-        <div class="space-y-8">
-          {experiences.map((exp, index) => (
-            <div 
-              class={`card p-8 animate-in ${exp.type === 'current' ? 'ring-2 ring-primary-500 ring-opacity-50' : ''}`}
-              style={`animation-delay: ${0.1 + index * 0.1}s`}
-            >
-              <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
-                <div class="mb-4 lg:mb-0">
-                  <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-1">
-                    {exp.role}
-                  </h3>
-                  <div class="text-lg text-primary-600 dark:text-primary-400 font-medium mb-1">
-                    {exp.company}
-                  </div>
-                  <div class="text-sm text-gray-500 dark:text-gray-400">
-                    {exp.location}
-                  </div>
-                </div>
-                
-                <div class="flex items-center space-x-2">
-                  <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
-                    {exp.duration}
-                  </span>
-                  {exp.type === 'current' && (
-                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
-                      Current
-                    </span>
-                  )}
-                </div>
-              </div>
-              
-              <p class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                {exp.description}
-              </p>
-              
-              <div class="mb-6">
-                <h4 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-                  Key Achievements
-                </h4>
-                <ul class="grid md:grid-cols-2 gap-2">
-                  {exp.achievements.map((achievement) => (
-                    <li class="flex items-start space-x-2">
-                      <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span class="text-sm text-gray-600 dark:text-gray-300">
-                        {achievement}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div>
-                <h4 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
-                  Technologies Used
-                </h4>
-                <div class="flex flex-wrap gap-2">
-                  {exp.technologies.map((tech) => (
-                    <span class="inline-block px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
+<MainLayout
+  title="Experience — Jose Fernando Gonzales"
+  description="A decade across AI development, FinTech, enterprise systems, and technical delivery. The experience behind the work."
+>
+  <section class="page-intro container">
+    <p class="eyebrow">Curriculum vitae / Experience</p>
+    <h1>
+      Professional experience<span class="blue">.</span>
+    </h1>
+    <div class="intro-bottom">
+      <p>
+        AI development, FinTech, and enterprise systems.
+        <br />
+        Roles, responsibilities, and contributions from 2016 to the present.
+      </p>
+      <a class="text-link" href="/resume/">
+        Read my résumé <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+  <section class="container timeline" aria-label="Professional experience">
+    {experiences.map((experience, index) => (
+      <article class="timeline-item">
+        <div class="timeline-date">
+          <span class="eyebrow">
+            {String(index + 1).padStart(2, "0")} /{" "}
+            {experience.type === "current" ? "Current" : "Previously"}
+          </span>
+          <p>{experience.duration}</p>
+          <span>{experience.location}</span>
         </div>
-      </div>
-
-      <!-- Skills Section -->
-      <div class="mb-20">
-        <h2 class="heading-3 text-gray-900 dark:text-white mb-8 animate-in">
-          Technical Skills
-        </h2>
-        
-        <div class="grid lg:grid-cols-2 gap-8">
-          {skills.map((skillGroup, index) => (
-            <div 
-              class="card p-6 animate-in"
-              style={`animation-delay: ${0.1 + index * 0.05}s`}
-            >
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {skillGroup.category}
-              </h3>
-              <div class="flex flex-wrap gap-2">
-                {skillGroup.skills.map((skill) => (
-                  <span class="inline-block px-3 py-1 text-sm font-medium bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-lg">
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <!-- Career Transition Section -->
-      <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 md:p-12 animate-in">
-        <h2 class="heading-3 text-gray-900 dark:text-white mb-6">
-          From Solutions Engineering to AI/ML
-        </h2>
-        <div class="grid md:grid-cols-3 gap-8">
-          <div class="text-center">
-            <div class="text-3xl mb-3" role="img" aria-label="Foundation">
-              🏗️
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              Business-First Foundation
-            </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300">
-              9 years of understanding real business problems, stakeholder needs, and translating requirements into technical solutions.
-            </p>
-          </div>
-          
-          <div class="text-center">
-            <div class="text-3xl mb-3" role="img" aria-label="Bridge">
-              🌉
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              The AI Advantage
-            </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300">
-              This business context understanding is what makes my AI solutions different - I build AI that solves actual problems, not just demonstrates technology.
-            </p>
-          </div>
-          
-          <div class="text-center">
-            <div class="text-3xl mb-3" role="img" aria-label="Innovation">
-              🚀
-            </div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              AI/ML Innovation
-            </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-300">
-              Now applying this foundation to build cutting-edge AI/ML solutions that solve real business problems with measurable impact.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- CTA Section -->
-      <div class="text-center mt-16 animate-in" style="animation-delay: 0.4s">
-        <div class="space-y-6">
-          <h2 class="heading-3 text-gray-900 dark:text-white">
-            Let's Build Something Amazing Together
-          </h2>
-          <p class="body-large max-w-2xl mx-auto">
-            I'm excited to bring my technical experience and AI/ML expertise to help your team deliver impactful solutions.
+        <div class="timeline-content">
+          <h2>{experience.role}</h2>
+          <p class="timeline-company">
+            {experience.company}
+            <span> / {experience.context}</span>
           </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/contact" class="btn btn-primary">
-              Get in Touch
-            </a>
-            <a href="/resume" class="btn btn-secondary">
-              View Full Resume
-            </a>
+          <p>{experience.description}</p>
+          <details open={experience.type === "current"}>
+            <summary>
+              Selected contributions <span aria-hidden="true">+</span>
+            </summary>
+            <ul>
+              {experience.achievements.map((achievement) => (
+                <li>{achievement}</li>
+              ))}
+            </ul>
+          </details>
+          <div class="tags">
+            {experience.technologies.map((technology) => (
+              <span>{technology}</span>
+            ))}
           </div>
         </div>
+      </article>
+    ))}
+  </section>
+  <section class="section container">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Skills</p>
+        <h2>Technical &amp; professional expertise</h2>
       </div>
+    </div>
+    <div class="skills-list">
+      {skillGroups.map((group) => (
+        <div>
+          <h3>{group.category}</h3>
+          <p>{group.skills.join(" · ")}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+  <section class="education-section">
+    <div class="container">
+      <p class="eyebrow">Education</p>
+      {education.map((item) => (
+        <article>
+          <div>
+            <h3>{item.degree}</h3>
+            <p>{item.school}</p>
+          </div>
+          <div>
+            <p>{item.duration}</p>
+            <span>{item.detail}</span>
+          </div>
+        </article>
+      ))}
     </div>
   </section>
 </MainLayout>
-
-<style>
-  .animate-in {
-    animation: slideIn 0.6s ease-out forwards;
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  @keyframes slideIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .animate-in {
-      animation: none;
-      opacity: 1;
-      transform: none;
-    }
-  }
-</style>

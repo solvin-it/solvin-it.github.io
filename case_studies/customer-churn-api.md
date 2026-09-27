@@ -1,86 +1,35 @@
-# Customer Churn Predictor API – Case Study
+# Customer churn API
 
-## Project Overview
+My first end-to-end ML API: connecting data preparation, model training, and reproducible inference behind a service.
 
-The **Customer Churn Predictor API** is my first end-to-end machine learning deployment project, designed to explore how ML can solve a real-world business problem: predicting customer churn. Using the **Telco Customer Churn dataset**, I built, trained, and deployed a churn prediction model wrapped in a **FastAPI microservice** and containerized with **Docker** for portability.
+Status: Earlier learning project · 2025
+Access: Public repository
+Technologies: Python, Scikit-learn, FastAPI, Docker
 
-This project was both a learning milestone and a showcase of my ability to take an ML workflow from **data preprocessing to production deployment**.
+## The context
 
----
+A trained model is not yet something a product can use. The learning goal was to connect experimentation to an interface that can accept data and return predictions consistently.
 
-## Problem & Opportunity
+## The approach
 
-Customer churn is a critical metric in industries like telecom, finance, and SaaS. High churn erodes revenue, while predicting at-risk customers enables proactive retention strategies.
+- Worked through customer-data preparation, model training, and evaluation as an end-to-end ML exercise.
+- Preserved preprocessing and model artifacts for reuse during inference.
+- Wrapped predictions in a FastAPI service and containerized the application.
 
-I chose this problem because it’s a classic machine learning use case that balances **technical depth** (classification, handling imbalanced data) with **business value** (actionable customer insights).
+Conceptual flow: Customer features → Saved ML pipeline → Prediction API
 
----
+## A key decision
 
-## Dataset & Preparation
+Treat preprocessing as part of the model contract. Training and inference need the same transformation rules.
 
-* **Dataset:** Telco Customer Churn dataset (Kaggle).
-* **Preprocessing steps:**
+## The result
 
-  * Cleaned missing values.
-  * Encoded categorical variables.
-  * Scaled numerical features.
-* **Feature handling:** Focused on customer demographics, tenure, contracts, and service subscriptions. These align with real-world churn factors.
+A first complete ML service that connected model development to application engineering.
 
----
+## Scope and limitations
 
-## Modeling Approach
+A learning project, not evidence of a production retention system. Production monitoring and model-drift detection were outside its scope. No live demo is advertised.
 
-* **Baseline Model:** Logistic Regression, chosen for interpretability and simplicity.
-* **Handling imbalance:** Adjusted class weights to prevent bias toward the majority class (non-churn).
-* **Evaluation metrics:** Focused on **recall** (catching churners) while monitoring **precision** and **AUC**.
-* **Results:** Achieved strong predictive accuracy with clear insight into key churn drivers like **contract type, tenure, and monthly charges**.
+[Public source](https://github.com/solvin-it/customer-churn-api)
 
----
-
-## Technical Architecture & Implementation
-
-* **Stack:** Python, scikit-learn, FastAPI, Docker.
-* **Repository structure:**
-
-  * `/notebooks` for experimentation.
-  * `/app` for API service.
-  * `/models` for serialized model artifacts.
-* **API design:**
-
-  * `POST /predict` endpoint accepts JSON payloads and returns churn probabilities.
-  * Includes sample payloads and documentation for ease of use.
-* **Deployment:** Packaged with Docker and deployed on GCP for accessibility.
-
----
-
-## Challenges & Trade-offs
-
-* **Pipeline design:** Iterating preprocessing steps without breaking downstream inference.
-* **Model selection:** Balancing interpretability (logistic regression) vs performance (tree-based methods).
-* **Deployment:** Ensuring API reliability and portability across environments with Docker.
-
----
-
-## Outcomes & Learnings
-
-* Successfully built an **end-to-end ML pipeline**, from dataset to deployment.
-* Gained hands-on skills in **model evaluation, API integration, and containerization**.
-* Learned the trade-offs between **model simplicity** and **predictive power**.
-* Proudest achievement: Demonstrating that I could not only train models but also **ship them as production-ready services**.
-
----
-
-## Future Directions
-
-* Experiment with **XGBoost or Random Forests** to boost predictive performance.
-* Add **MLOps practices**: CI/CD pipelines, monitoring, and version control for models.
-* Extend to other datasets or industries (e.g., fintech, subscription services).
-* Build a simple dashboard to visualize churn risk and business insights.
-
----
-
-## Reflection
-
-This project was my first true **AI/ML engineering experience**. It gave me confidence in connecting data science workflows with software engineering practices — a bridge I’ve always been passionate about.
-
-If I were mentoring someone on their first ML project, my advice would be: *don’t just stop at training a model — wrap it in an API, deploy it, and make it usable. That’s when ML becomes real.*
+[Portfolio case study](https://solvin-it.github.io/projects/customer-churn/)

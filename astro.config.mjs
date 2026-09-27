@@ -1,11 +1,12 @@
-import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
-import react from '@astrojs/react';
-import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
+import { defineConfig } from "astro/config";
+import tailwind from "@astrojs/tailwind";
+import react from "@astrojs/react";
+import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
-  site: 'https://solvin-it.github.io',
+  site: "https://solvin-it.github.io",
+  devToolbar: { enabled: false },
   integrations: [
     tailwind({
       applyBaseStyles: false,
@@ -16,7 +17,7 @@ export default defineConfig({
   ],
   markdown: {
     shikiConfig: {
-      theme: 'github-dark',
+      theme: "github-dark",
       wrap: true,
     },
   },

@@ -1,0 +1,229 @@
+---
+export interface Props {
+  kind: string;
+}
+const { kind } = Astro.props;
+---
+
+<div class:list={["project-visual", `visual-${kind}`]} aria-hidden="true">
+  {kind === "graph-rag" ? (
+    <div class="graph-scene">
+      <svg class="graph-lines" viewBox="0 0 600 320">
+        <path d="M115 70 300 160 470 60M100 245 300 160 490 260M300 160 320 40M300 160 340 285" />
+        <circle cx="300" cy="160" r="88" />
+      </svg>
+      <span class="graph-node node-1">Documents</span>
+      <span class="graph-node node-2">Relationships</span>
+      <span class="graph-node node-3">Source evidence</span>
+      <span class="graph-node node-4">Version history</span>
+      <span class="graph-center">
+        Connected
+        <br />
+        knowledge<span>Grounded in the source</span>
+      </span>
+      <span class="visual-caption">01 / Knowledge, with context</span>
+    </div>
+  ) : kind === "marker" ? (
+    <div class="ledger-scene">
+      <div class="ledger-heading">
+        <span class="ledger-logo">m.</span>
+        <span>
+          Every charge.
+          <br />A clear record.
+        </span>
+      </div>
+      <div class="ledger-row">
+        <span>01</span>
+        <span>Service recorded</span>
+        <span>↗</span>
+      </div>
+      <div class="ledger-row">
+        <span>02</span>
+        <span>Member confirmed</span>
+        <span class="confirmed">✓</span>
+      </div>
+      <div class="ledger-row">
+        <span>03</span>
+        <span>Ledger updated</span>
+        <span class="confirmed">✓</span>
+      </div>
+      <span class="visual-caption">02 / Accountable by design</span>
+    </div>
+  ) : kind === "civi" ? (
+    <div class="civi-scene">
+      <div class="civi-symbol">
+        c<span>ı</span>vi<span class="civi-dot">.</span>
+      </div>
+      <p>
+        Life happens.
+        <br />
+        <span>Keep it together.</span>
+      </p>
+      <div class="civi-domains">
+        <span>Household</span>
+        <span>Conversation</span>
+        <span>Workouts</span>
+      </div>
+      <span class="visual-caption">03 / A little more organized</span>
+    </div>
+  ) : kind === "oprenta" ? (
+    <div class="operations-scene">
+      <div class="operations-title">
+        From first quote.
+        <br />
+        <span>To a job well done.</span>
+      </div>
+      <div class="operations-flow">
+        <span>Plan</span>
+        <i></i>
+        <span>Dispatch</span>
+        <i></i>
+        <span>Complete ✓</span>
+      </div>
+      <div class="offline-label">
+        <span></span>Built for work in the field
+      </div>
+      <span class="visual-caption">04 / Connected operations</span>
+    </div>
+  ) : kind === "diabetic-readmission" ? (
+    <div class="evaluation-scene">
+      <span class="specimen-label">Academic ML / Reported test results</span>
+      <p class="specimen-title">
+        See the result.
+        <br />
+        See the tradeoff.
+      </p>
+      <div class="evaluation-metrics">
+        <div>
+          <strong>0.645</strong>
+          <span>AUC-ROC</span>
+        </div>
+        <div>
+          <strong>
+            71.6<span>%</span>
+          </strong>
+          <span>Recall</span>
+        </div>
+        <div>
+          <strong>
+            15.0<span>%</span>
+          </strong>
+          <span>Precision</span>
+        </div>
+      </div>
+      <span class="visual-caption">05 / An honest evaluation</span>
+    </div>
+  ) : kind === "maritime-learning" ? (
+    <div class="learning-scene">
+      <div class="lesson-sheet">
+        <span class="specimen-label">The learning layer</span>
+        <p>
+          Understand.
+          <br />
+          Apply.
+          <br />
+          <em>Refer back.</em>
+        </p>
+        <div class="lesson-rule"></div>
+        <span class="lesson-footnote">
+          Every idea, connected to its source.
+        </span>
+      </div>
+      <span class="learning-side">LEARN / REFERENCE / OFFLINE</span>
+      <span class="visual-caption">06 / Knowledge within reach</span>
+    </div>
+  ) : kind === "pos-system" ? (
+    <div class="receipt-scene">
+      <div class="receipt-sheet">
+        <span class="specimen-label">Gentleman POS</span>
+        <p>
+          At your
+          <br />
+          service.
+        </p>
+        <div class="receipt-line">
+          <span>Orders</span>
+          <span>01</span>
+        </div>
+        <div class="receipt-line">
+          <span>Payments</span>
+          <span>02</span>
+        </div>
+        <div class="receipt-line">
+          <span>Receipts</span>
+          <span>03</span>
+        </div>
+      </div>
+      <span class="receipt-aside">
+        A working day.
+        <br />A connected system.
+      </span>
+      <span class="visual-caption">07 / Built for the counter</span>
+    </div>
+  ) : kind === "rag-on-me" ? (
+    <div class="retrieval-scene">
+      <span class="specimen-label">An early RAG experiment</span>
+      <p class="specimen-title">
+        The experience.
+        <br />
+        In its own words.
+      </p>
+      <div class="retrieval-flow">
+        <span>CV</span>
+        <span>Project notes</span>
+        <span>↓</span>
+        <strong>A grounded answer.</strong>
+      </div>
+      <span class="visual-caption">08 / From documents to dialogue</span>
+    </div>
+  ) : kind === "quest-to-solvin" ? (
+    <div class="quest-scene">
+      <span class="quest-star">✧</span>
+      <span class="specimen-label">A conversational RPG</span>
+      <p>
+        The next chapter
+        <br />
+        starts with <em>you.</em>
+      </p>
+      <div class="quest-path">
+        <span>Character</span>
+        <i>—</i>
+        <span>Choice</span>
+        <i>—</i>
+        <span>Story</span>
+      </div>
+      <span class="visual-caption">09 / An open-ended adventure</span>
+    </div>
+  ) : kind === "customer-churn" ? (
+    <div class="churn-scene">
+      <span class="specimen-label">An end-to-end ML exercise</span>
+      <p class="specimen-title">
+        Out of the notebook.
+        <br />
+        Into the application.
+      </p>
+      <div class="churn-flow">
+        <div>
+          <span>01</span>Prepare
+        </div>
+        <i>→</i>
+        <div>
+          <span>02</span>Train
+        </div>
+        <i>→</i>
+        <div>
+          <span>03</span>Serve
+        </div>
+      </div>
+      <span class="visual-caption">10 / A model becomes a service</span>
+    </div>
+  ) : (
+    <div class="abstract-scene">
+      <img src="/brand/solvin-mark.svg" width="96" height="96" alt="" />
+      <span>
+        Thoughtful engineering.
+        <br />A closer look.
+      </span>
+    </div>
+  )}
+</div>

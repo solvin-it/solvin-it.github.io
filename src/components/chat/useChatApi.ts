@@ -21,6 +21,9 @@ export default function useChatApi() {
   };
 
   const sendMessage = async (payload: ChatRequestPayload): Promise<SendResult> => {
+    if (!CHAT_API_ENDPOINT) {
+      throw new Error('The portfolio assistant is not configured.');
+    }
     if (!navigator.onLine) {
       const err: any = new Error('offline');
       err.type = 'offline';

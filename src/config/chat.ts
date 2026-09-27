@@ -1,10 +1,14 @@
-const defaultBaseUrl = 'https://rag-on-me.solvin.co';
+// Legacy integration is unmounted. A replacement backend must be configured explicitly.
+const defaultBaseUrl = "";
 
 // Exported so the widget can easily update request targets when deploying.
 export const CHAT_API_BASE_URL =
-  import.meta.env.PUBLIC_CHAT_API_BASE_URL?.replace(/\/+$/, '') ?? defaultBaseUrl;
+  import.meta.env.PUBLIC_CHAT_API_BASE_URL?.replace(/\/+$/, "") ??
+  defaultBaseUrl;
 
-export const CHAT_API_ENDPOINT = `${CHAT_API_BASE_URL}/chat`;
+export const CHAT_API_ENDPOINT = CHAT_API_BASE_URL
+  ? `${CHAT_API_BASE_URL}/chat`
+  : "";
 
 export interface ChatRequestPayload {
   messages: Array<{

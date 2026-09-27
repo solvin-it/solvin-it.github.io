@@ -1,3 +1,5 @@
+> Legacy reference: this chat UI is unmounted in the September 2026 redesign. The retired endpoint is no longer configured by default. See `docs/portfolio-redesign.md` for the replacement assistant scope.
+
 # Chat components
 
 This folder contains small, focused pieces used by the main `ChatWidget` component:

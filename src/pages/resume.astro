@@ -1,563 +1,140 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
-import { siteConfig } from '../content/site.ts';
-
-const title = `Resume | ${siteConfig.name}`;
-const description = 'Download my resume or view the HTML version showcasing my experience as an Generative AI Engineer with a strong business solutions foundation.';
+import MainLayout from "../layouts/MainLayout.astro";
+import {
+  profile,
+  experiences,
+  education,
+  achievements,
+  trainings,
+  skillGroups,
+} from "../content/profile";
+import { projects } from "../content/projects";
 ---
 
-<MainLayout title={title} description={description}>
-  <section class="section">
-    <div class="container max-w-4xl">
-      <!-- Page Header -->
-      <div class="text-center mb-12 animate-in">
-        <h1 class="heading-1 text-gray-900 dark:text-white mb-6">
-          Resume
-        </h1>
-        <p class="body-large max-w-2xl mx-auto mb-8">
-          My professional background, skills, and achievements in a comprehensive format.
-        </p>
-        
-        <!-- Download Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            id="download-pdf-btn"
-            class="btn btn-primary inline-flex items-center"
-            type="button"
-          >
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-4-4m4 4l4-4m-4 4V5a3 3 0 00-3-3H7a3 3 0 00-3 3v14a3 3 0 003 3h10a3 3 0 003-3V8l-4-4H7a3 3 0 00-3 3z" />
-            </svg>
-            Download PDF
-          </button>
-          <a 
-            href="#html-resume" 
-            class="btn btn-secondary"
-          >
-            View HTML Version
-          </a>
-        </div>
-      </div>
-
-      <!-- HTML Resume -->
-      <div id="html-resume" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden animate-in" style="animation-delay: 0.2s">
-        <!-- Resume Header -->
-        <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white p-8 md:p-12">
-          <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-            <div class="mb-6 md:mb-0">
-              <h1 class="text-3xl md:text-4xl font-bold mb-2">
-                Jose Fernando Gonzales
-              </h1>
-              <p class="text-primary-100 text-lg mb-4">
-                Technical Solutions Engineer → Generative AI Engineer
-              </p>
-              <p class="text-primary-200 max-w-2xl">
-                I design, build, and ship AI applications that solve real business problems. My solutions engineering background enables me to create AI that delivers measurable business value.
-              </p>
-            </div>
-            
-            <div class="space-y-2 text-primary-100">
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                {siteConfig.author.email}
-              </div>
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-                LinkedIn Profile
-              </div>
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
-                GitHub Profile
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="p-8 md:p-12 space-y-12">
-          <!-- Professional Summary -->
-          <section>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 border-b-2 border-primary-500 pb-2">
-              Professional Summary
-            </h2>
-            <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-              Generative AI Engineer who designs, builds, and ships AI applications that solve real business problems. 
-              My 9+ years in technical solutions engineering provides a unique foundation for creating AI that delivers 
-              measurable business value. I specialize in RAG systems, conversational AI, and end-to-end ML pipelines, 
-              with deep expertise in understanding business requirements and translating them into production-ready AI solutions.
-            </p>
-          </section>
-
-          <!-- Core Competencies -->
-          <section>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b-2 border-primary-500 pb-2">
-              Core Competencies
-            </h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div>
-                <h3 class="font-semibold text-gray-900 dark:text-white mb-3">AI/ML Development</h3>
-                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                  <li>• RAG Systems (LangChain, Vector DBs)</li>
-                  <li>• Conversational AI (OpenAI API)</li>
-                  <li>• Machine Learning Pipelines</li>
-                  <li>• Prompt Engineering & AI Agents</li>
-                  <li>• Model Deployment (FastAPI)</li>
-                  <li>• Business-First AI Design</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 class="font-semibold text-gray-900 dark:text-white mb-3">Full-Stack Development</h3>
-                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                  <li>• Python (Advanced)</li>
-                  <li>• Web Applications (Flask, FastAPI)</li>
-                  <li>• Database Design & SQL</li>
-                  <li>• API Development & Integration</li>
-                  <li>• Docker & Containerization</li>
-                  <li>• HTML/CSS for UI</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 class="font-semibold text-gray-900 dark:text-white mb-3">Business Solutions Foundation</h3>
-                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                  <li>• Requirements Analysis</li>
-                  <li>• Business Process Understanding</li>
-                  <li>• Stakeholder Communication</li>
-                  <li>• Solution Architecture</li>
-                  <li>• Project Management</li>
-                  <li>• Problem Definition</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          <!-- Professional Experience -->
-          <section>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b-2 border-primary-500 pb-2">
-              Professional Experience
-            </h2>
-            
-            <div class="space-y-8">
-              <!-- Current Role -->
-              <div class="border-l-4 border-primary-500 pl-6">
-              <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-3">
-                <div>
-                  <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Technical Solutions Engineer
-                  </h3>
-                  <p class="text-primary-600 dark:text-primary-400 font-medium">
-                    DigitalPH Asia Corporation • Dec 2024 – Present • Makati City, Philippines
-                  </p>
-                </div>
-              </div>
-              <p class="text-gray-600 dark:text-gray-300 mb-4">
-                Driving enhancements of the Payborit Payment Aggregator System while supporting sales and product teams with technical solutioning. 
-                Exploring AI-assisted prototyping using AI Agents and Spec-Driven Development, and currently pursuing postgraduate studies in Artificial Intelligence and Machine Learning.
-              </p>
-              <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 mb-4">
-                <li>• Delivered new integrations and improved merchant onboarding for Payborit Payment Aggregator</li>
-                <li>• Supported solution design, proposal preparation, and client-facing technical presentations</li>
-                <li>• Applied AI tools and agent workflows to accelerate prototyping and improve productivity</li>
-                <li>• Ensured operational stability and quality of live payment systems through testing and review</li>
-                <li>• Collaborated with cross-functional teams to align enhancements with business and regulatory goals</li>
-              </ul>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Python</span>
-                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">FastAPI</span>
-                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Docker</span>
-                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">GCP</span>
-                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">AI Agents</span>
-                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Spec-Driven Development</span>
-                <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">API Integration</span>
-              </div>
-            </div>
-
-
-              <!-- Previous Roles -->
-              <div class="border-l-4 border-gray-300 dark:border-gray-600 pl-6">
-                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-3">
-                  <div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                      Senior Technical Business Analyst
-                    </h3>
-                    <p class="text-gray-600 dark:text-gray-400 font-medium">
-                      DigitalPH Asia Corporation • Dec 2020 - Dec 2024 • Makati City, Philippines
-                    </p>
-                  </div>
-                </div>
-                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 mb-4">
-                  <li>• Led assessment, planning, and execution of 10+ projects across payment aggregation systems</li>
-                  <li>• Enhanced Payborit Payment Aggregator System using Microservice Architecture principles</li>
-                  <li>• Developed National Nutrition Information System with comprehensive database design</li>
-                  <li>• Created detailed functional and technical specifications improving development efficiency</li>
-                  <li>• Managed project timelines and budgets, consistently delivering on schedule</li>
-                </ul>
-              </div>
-
-              <div class="border-l-4 border-gray-300 dark:border-gray-600 pl-6">
-                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-3">
-                  <div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                      Technical Business Analyst
-                    </h3>
-                    <p class="text-gray-600 dark:text-gray-400 font-medium">
-                      EightD Corporation • Sep 2019 - Dec 2020 • Philippines
-                    </p>
-                  </div>
-                </div>
-                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 mb-4">
-                  <li>• Successfully implemented Nepal AFCS with multi-route, multi-fare matrix structure</li>
-                  <li>• Designed automation solution achieving 99.98% reduction in AFCS configuration time</li>
-                  <li>• Led Boracay HOHO AFCS implementation with innovative card reading-writing sequences</li>
-                  <li>• Created comprehensive user manuals and provided UAT support for key users</li>
-                </ul>
-              </div>
-              
-              <div class="border-l-4 border-gray-300 dark:border-gray-600 pl-6">
-                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-3">
-                  <div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                      SAP SD Technology Consultant
-                    </h3>
-                    <p class="text-gray-600 dark:text-gray-400 font-medium">
-                      DXC Technology • May 2016 - Sep 2019 • Philippines
-                    </p>
-                  </div>
-                </div>
-                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                  <li>• Delivered 20+ SAP SD projects improving business processes and customer satisfaction</li>
-                  <li>• Managed end-to-end RFC execution from blueprinting to service management handover</li>
-                  <li>• Established shipping lanes for Vietnam and Indonesia operations (Asia AOV project)</li>
-                  <li>• Led continuous improvement initiatives and system upgrades across EMEA region</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          <!-- Major Professional Projects -->
-          <section>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b-2 border-primary-500 pb-2">
-              Major Professional Projects
-            </h2>
-            
-            <div class="space-y-6">
-              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-3">
-                  <div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                      Enhancement of Payborit Payment Aggregator System
-                    </h3>
-                    <p class="text-primary-600 dark:text-primary-400 font-medium">
-                      DigitalPH Asia Corporation • Technical Business Analyst
-                    </p>
-                  </div>
-                </div>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                  Led comprehensive enhancement of payment aggregation platform, applying Microservice Architecture principles and coordinating cross-functional teams through sprint planning and stakeholder collaboration.
-                </p>
-                <ul class="text-xs text-gray-600 dark:text-gray-300 space-y-1 mb-3">
-                  <li>• Identified key system functionalities through stakeholder collaboration sessions</li>
-                  <li>• Applied Microservice Architecture principles enhancing modularity and scalability</li>
-                  <li>• Utilized Trello for project management and stakeholder communication</li>
-                  <li>• Designed and maintained database schema reflecting development changes</li>
-                </ul>
-                <div class="flex flex-wrap gap-1">
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Microservices</span>
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Payment Systems</span>
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Database Design</span>
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Project Management</span>
-                </div>
-              </div>
-
-              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-3">
-                  <div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                      Development of National Nutrition Information System
-                    </h3>
-                    <p class="text-primary-600 dark:text-primary-400 font-medium">
-                      DigitalPH Asia Corporation • Technical Business Analyst
-                    </p>
-                  </div>
-                </div>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                  Developed comprehensive nutrition information system from planning to deployment, including database design, stakeholder collaboration, and user acceptance testing coordination.
-                </p>
-                <ul class="text-xs text-gray-600 dark:text-gray-300 space-y-1 mb-3">
-                  <li>• Developed comprehensive project plan with key tasks, timelines, and resources</li>
-                  <li>• Designed database schema integrating with existing tools and systems</li>
-                  <li>• Collaborated with UI/UX analyst to design intuitive user experience</li>
-                  <li>• Coordinated deployment and handover process ensuring smooth transition</li>
-                </ul>
-                <div class="flex flex-wrap gap-1">
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Database Design</span>
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">System Integration</span>
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Project Planning</span>
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">UAT Coordination</span>
-                </div>
-              </div>
-
-              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-3">
-                  <div>
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                      Nepal AFCS Implementation
-                    </h3>
-                    <p class="text-primary-600 dark:text-primary-400 font-medium">
-                      EightD Corporation • Technical Business Analyst
-                    </p>
-                  </div>
-                </div>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                  Led Automated Fare Collection System implementation with multi-route, multi-fare matrix structure, achieving 99.98% reduction in configuration process time through automation solution.
-                </p>
-                <ul class="text-xs text-gray-600 dark:text-gray-300 space-y-1 mb-3">
-                  <li>• Designed multi-route, multi-fare matrix structure for complex transit system</li>
-                  <li>• Recommended automation solution significantly improving manual configuration process</li>
-                  <li>• Created comprehensive User Manual for Fleet Management System</li>
-                  <li>• Provided essential support during User Acceptance Testing phase</li>
-                </ul>
-                <div class="flex flex-wrap gap-1">
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">AFCS Systems</span>
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Process Automation</span>
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">System Design</span>
-                  <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-xs rounded">Documentation</span>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Portfolio Projects -->
-          <section>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b-2 border-primary-500 pb-2">
-              Portfolio Projects
-            </h2>
-            
-            <div class="grid md:grid-cols-2 gap-6">
-              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 class="font-semibold text-gray-900 dark:text-white mb-2">RAG on Me (Resume Chatbot)</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                  Intelligent resume assistant with RAG, source attribution, and guardrails for accurate, contextual responses about professional experience.
-                </p>
-                <div class="flex flex-wrap gap-1">
-                  <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs rounded">Python</span>
-                  <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs rounded">LangChain</span>
-                  <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs rounded">RAG</span>
-                </div>
-              </div>
-              
-              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Quest to Solvin (RPG Chatbot)</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                  AI-powered RPG chatbot with dynamic storytelling and context-aware responses, showcasing advanced conversational AI design.
-                </p>
-                <div class="flex flex-wrap gap-1">
-                  <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded">Python</span>
-                  <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded">OpenAI API</span>
-                  <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs rounded">Context Management</span>
-                </div>
-              </div>
-              
-              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Customer Churn Prediction API</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                  Production-ready ML pipeline with RESTful API for business decision making, demonstrating end-to-end ML deployment.
-                </p>
-                <div class="flex flex-wrap gap-1">
-                  <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded">Python</span>
-                  <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded">Scikit-learn</span>
-                  <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded">FastAPI</span>
-                </div>
-              </div>
-              
-              <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Multi-Business POS System</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                  Full-stack web application for restaurant and carwash operations, reducing transaction time by 60% across 3 businesses.
-                </p>
-                <div class="flex flex-wrap gap-1">
-                  <span class="px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 text-xs rounded">Python</span>
-                  <span class="px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 text-xs rounded">Flask</span>
-                  <span class="px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 text-xs rounded">MySQL</span>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Education & Certifications -->
-          <section>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 border-b-2 border-primary-500 pb-2">
-              Education & Achievements
-            </h2>
-            
-            <div class="space-y-4">
-              <div>
-                <h3 class="font-semibold text-gray-900 dark:text-white">Education</h3>
-                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 mt-2">
-                  <li>• <strong>Post Graduate Diploma in AI/ML</strong> - Emeritus x Asian Institute of Management (March 2025 – March 2026)</li>
-                  <li>• <strong>BS Information Technology</strong> - University of Asia and the Pacific (Magna Cum Laude, GWA 1.29)</li>
-                  <li>• Merit Scholar</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 class="font-semibold text-gray-900 dark:text-white">Certifications & Training</h3>
-                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 mt-2">
-                  <li>• XBOX2 Solution Certification (DXC Technology, 2018)</li>
-                  <li>• ITIL V3 Foundation Training (DXC Technology, 2017)</li>
-                  <li>• SAP S4 HANA Training (HPE, 2016)</li>
-                  <li>• The Complete Python Bootcamp (Udemy, 2023)</li>
-                  <li>• OpenAI Python API Bootcamp (Udemy, 2023)</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 class="font-semibold text-gray-900 dark:text-white">Awards & Recognition</h3>
-                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1 mt-2">
-                  <li>• YSDA Hackathon Victory (2015) - Led team to international victory</li>
-                  <li>• Java Programming Champion (DevCon, 2014)</li>
-                  <li>• Graduated Magna Cum Laude (2016)</li>
-                  <li>• 99.98% AFCS Configuration Process Automation improvement (2019)</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-        </div>
-      </div>
-
-      <!-- Action Section -->
-      <div class="text-center mt-12 animate-in" style="animation-delay: 0.4s">
-        <div class="bg-primary-50 dark:bg-primary-900/20 rounded-2xl p-8">
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Interested in Working Together?
-          </h2>
-          <p class="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-            I'm actively seeking opportunities to apply my technical solutions background and AI/ML expertise 
-            to help organizations build impactful, data-driven products.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/contact" class="btn btn-primary">
-              Contact Me
-            </a>
-            <a href="/projects" class="btn btn-secondary">
-              View My Projects
-            </a>
-          </div>
-        </div>
-      </div>
+<MainLayout
+  title="Résumé — Jose Fernando Gonzales"
+  description="Résumé of Jose Fernando Gonzales. AI development, enterprise data, product engineering, and FinTech."
+>
+  <section class="page-intro container resume-intro">
+    <p class="eyebrow">The details, in one place</p>
+    <h1>
+      Résumé<span class="blue">.</span>
+    </h1>
+    <div class="intro-bottom">
+      <p>
+        Experience, skills, and selected work.
+        <br />
+        Use your browser’s print dialog to save a PDF.
+      </p>
+      <button class="btn" type="button" data-print hidden>
+        Print / Save as PDF <span aria-hidden="true">↗</span>
+      </button>
     </div>
   </section>
+  <article class="container resume-document">
+    <header class="resume-header">
+      <div>
+        <h2>{profile.fullName}</h2>
+        <p>AI Developer / Enterprise Data & Product Engineering</p>
+      </div>
+      <div>
+        <p>{profile.location}</p>
+        <a href={`mailto:${profile.email}`}>{profile.email}</a>
+        <a href={profile.linkedin}>LinkedIn ↗</a>
+        <a href={profile.github}>GitHub ↗</a>
+      </div>
+    </header>
+    <section class="resume-section">
+      <h3>Profile</h3>
+      <div>
+        {profile.summary.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+    </section>
+    <section class="resume-section">
+      <h3>Experience</h3>
+      <div>
+        {experiences.map((item) => (
+          <article class="resume-job">
+            <h4>{item.role}</h4>
+            <p class="resume-employer">
+              {item.company} · {item.duration}
+            </p>
+            <p>{item.context}</p>
+            <ul>
+              {item.achievements.map((achievement) => (
+                <li>{achievement}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
+    <section class="resume-section">
+      <h3>Skills</h3>
+      <div>
+        {skillGroups.map((group) => (
+          <p>
+            <strong>{group.category}</strong>
+            <br />
+            {group.skills.join(" · ")}
+          </p>
+        ))}
+      </div>
+    </section>
+    <section class="resume-section">
+      <h3>Selected projects</h3>
+      <div>
+        {projects.slice(0, 5).map((project) => (
+          <div class="resume-project">
+            <h4>
+              <a href={`/projects/${project.slug}/`}>{project.title} ↗</a>
+            </h4>
+            <p>{project.description}</p>
+            <span class="muted">
+              {project.status} · {project.access}
+            </span>
+          </div>
+        ))}
+      </div>
+    </section>
+    <section class="resume-section">
+      <h3>Education</h3>
+      <div>
+        {education.map((item) => (
+          <p>
+            <strong>{item.degree}</strong>
+            <br />
+            {item.school} · {item.duration}
+            <br />
+            {item.detail}
+          </p>
+        ))}
+      </div>
+    </section>
+    <section class="resume-section">
+      <h3>Achievements</h3>
+      <ul>
+        {achievements.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </section>
+    <section class="resume-section">
+      <h3>Additional training</h3>
+      <ul>
+        {trainings.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </section>
+  </article>
 </MainLayout>
-
-<style>
-  .animate-in {
-    animation: slideIn 0.6s ease-out forwards;
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  @keyframes slideIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .animate-in {
-      animation: none;
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  @media print {
-    .btn {
-      display: none;
-    }
-    
-    .animate-in {
-      opacity: 1;
-      transform: none;
-    }
-    
-    body {
-      print-color-adjust: exact;
-    }
-  }
-</style>
-
 <script>
-  // Simple PDF generation
-  async function generatePDF() {
-    const btn = document.getElementById('download-pdf-btn') as HTMLButtonElement;
-    if (!btn) return;
-    
-    btn.disabled = true;
-    btn.innerHTML = 'Generating...';
-    
-    try {
-      // Load html2pdf from CDN
-      if (!(window as any).html2pdf) {
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js';
-        document.head.appendChild(script);
-        await new Promise((resolve) => { script.onload = () => resolve(undefined); });
-      }
-      
-      const element = document.getElementById('html-resume');
-      if (element) {
-        // Make sure element is visible for capture
-        const el = element as HTMLElement;
-        const originalStyle = el.style.cssText;
-        
-        // Force visibility
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-        el.style.visibility = 'visible';
-        el.classList.remove('animate-in');
-        
-        // Wait for styles to apply
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Simple options
-        const opt = {
-          margin: 10,
-          filename: 'Jose_Gonzales_Resume.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
-        };
-        
-        await (window as any).html2pdf().set(opt).from(el).save();
-        
-        // Restore original styles
-        el.style.cssText = originalStyle;
-        el.classList.add('animate-in');
-      }
-    } catch (err) {
-      console.error('PDF generation failed:', err);
-      // Fallback to static PDF
-      window.open('/resume.pdf', '_blank');
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = `
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-4-4m4 4l4-4m-4 4V5a3 3 0 00-3-3H7a3 3 0 00-3 3v14a3 3 0 003 3h10a3 3 0 003-3V8l-4-4H7a3 3 0 00-3 3z" />
-        </svg>
-        Download PDF
-      `;
-    }
+  const printButton = document.querySelector<HTMLButtonElement>("[data-print]");
+  if (printButton) {
+    printButton.hidden = false;
+    printButton.addEventListener("click", () => window.print());
   }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('download-pdf-btn');
-    if (btn) btn.addEventListener('click', generatePDF);
-  });
 </script>

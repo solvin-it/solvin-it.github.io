@@ -1,134 +1,149 @@
 ---
-import { siteConfig } from '../content/site.ts';
-import ThemeToggle from './ThemeToggle.tsx';
+import { siteConfig } from "../content/site";
+const path = Astro.url.pathname;
 ---
 
-<nav class="sticky top-0 z-50 bg-tuxedo-white/95 dark:bg-tuxedo-midnight/95 backdrop-blur-md border-b border-primary-200 dark:border-primary-800 shadow-sm">
-  <div class="container">
-    <div class="flex items-center justify-between h-20">
-      <!-- Logo -->
-      <div class="flex-shrink-0">
-        <a 
-          href="/" 
-          class="text-2xl font-serif font-medium text-tuxedo-black dark:text-tuxedo-pearl hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300"
-          aria-label="Home"
-        >
-          {siteConfig.name}
-        </a>
-      </div>
-
-      <!-- Desktop Navigation -->
-      <div class="hidden md:block">
-        <div class="flex items-center space-x-10">
-          {siteConfig.navigation.map((item) => (
-            <a
-              href={item.href}
-              class="text-primary-700 dark:text-primary-300 hover:text-tuxedo-black dark:hover:text-tuxedo-white font-medium tracking-wide transition-all duration-300 relative group uppercase text-sm"
-            >
-              {item.label}
-              <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 transition-all duration-300 group-hover:w-full"></span>
-            </a>
-          ))}
-        </div>
-      </div>
-
-      <!-- Theme Toggle & Mobile Menu Button -->
-      <div class="flex items-center space-x-4">
-        <ThemeToggle client:load />
-        
-        <!-- Mobile menu button -->
-        <button
-          type="button"
-          class="md:hidden p-3 text-primary-600 dark:text-primary-400 hover:text-tuxedo-black dark:hover:text-tuxedo-white hover:bg-primary-100 dark:hover:bg-primary-800 rounded-none transition-all duration-300 border border-transparent hover:border-primary-300 dark:hover:border-primary-600"
-          aria-label="Open navigation menu"
-          aria-expanded="false"
-          data-mobile-menu-button
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile Navigation Menu -->
-  <div 
-    class="md:hidden fixed inset-0 top-20 bg-tuxedo-charcoal dark:bg-tuxedo-midnight z-40 transform translate-x-full transition-transform duration-300 ease-in-out pointer-events-none border-l border-primary-200 dark:border-primary-800"
-    data-mobile-menu
-    style="touch-action: pan-y; left: 0; right: -100%; width: 100vw;" 
-  >
-    <div class="px-8 py-12 space-y-8">
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Jose Gonzales, home">
+      <span class="personal-monogram" aria-hidden="true">
+        JG<span>.</span>
+      </span>
+      <span>
+        Jose Gonzales<span class="brand-subtitle">Professional profile</span>
+      </span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
       {siteConfig.navigation.map((item) => (
         <a
           href={item.href}
-          class="block px-6 py-4 text-xl font-serif font-medium text-tuxedo-white dark:text-tuxedo-white hover:bg-primary-600 dark:hover:bg-primary-900 hover:text-tuxedo-white dark:hover:text-primary-300 transition-all duration-300 border-l-2 border-transparent hover:border-primary-400 uppercase tracking-wide"
-          data-mobile-menu-link
+          aria-current={
+            (item.href === "/" ? path === "/" : path.startsWith(item.href))
+              ? "page"
+              : undefined
+          }
         >
           {item.label}
         </a>
       ))}
+    </nav>
+    <div class="header-actions">
+      <a class="btn btn-small nav-contact" href="/resume/">
+        Résumé <span aria-hidden="true">↗</span>
+      </a>
+      <button
+        class="icon-button theme-toggle"
+        type="button"
+        aria-label="Switch color theme"
+        title="Switch color theme"
+      >
+        <svg
+          class="moon-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          aria-hidden="true"
+        >
+          <path d="M20.5 14a8.5 8.5 0 0 1-10.5-10.5A8.5 8.5 0 1 0 20.5 14Z" />
+        </svg>
+        <svg
+          class="sun-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+        </svg>
+      </button>
+      <button
+        class="icon-button menu-toggle"
+        type="button"
+        hidden
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <span class="menu-lines" aria-hidden="true"></span>
+      </button>
     </div>
   </div>
-</nav>
-
-<!-- Mobile Menu Overlay: placed outside <nav> so it can darken the whole page -->
-<div 
-  class="md:hidden fixed inset-0 bg-tuxedo-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300 ease-in-out z-30"
-  data-mobile-overlay
-></div>
-
-<script>
-  function initMobileMenu() {
-    const button = document.querySelector('[data-mobile-menu-button]') as HTMLButtonElement;
-    const menu = document.querySelector('[data-mobile-menu]') as HTMLElement;
-    const overlay = document.querySelector('[data-mobile-overlay]') as HTMLElement;
-    const menuLinks = document.querySelectorAll('[data-mobile-menu-link]');
-
-    if (!button || !menu || !overlay) return;
-
-    let isOpen = false;
-
-    function toggleMenu() {
-      isOpen = !isOpen;
-      button.setAttribute('aria-expanded', isOpen.toString());
-      
-        if (isOpen) {
-          // Show menu and enable pointer events for interaction
-          menu.classList.remove('translate-x-full', 'pointer-events-none');
-          overlay.classList.remove('opacity-0', 'pointer-events-none');
-          document.body.classList.add('overflow-hidden');
-        } else {
-          // Hide menu and disable pointer events so off-screen menu can't be dragged into view
-          menu.classList.add('translate-x-full', 'pointer-events-none');
-          overlay.classList.add('opacity-0', 'pointer-events-none');
-          document.body.classList.remove('overflow-hidden');
+  <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation">
+    {siteConfig.navigation.map((item) => (
+      <a
+        href={item.href}
+        aria-current={
+          (item.href === "/" ? path === "/" : path.startsWith(item.href))
+            ? "page"
+            : undefined
         }
-    }
-
-    function closeMenu() {
-      if (isOpen) {
-        toggleMenu();
-      }
-    }
-
-    button.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', closeMenu);
-    
-    // Close menu when clicking on links
-    menuLinks.forEach(link => {
-      link.addEventListener('click', closeMenu);
-    });
-
-    // Close menu on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        closeMenu();
-      }
-    });
+      >
+        {item.label}
+        <span aria-hidden="true">↗</span>
+      </a>
+    ))}
+    <a href="/resume/">
+      Résumé <span aria-hidden="true">↗</span>
+    </a>
+    <a href="/contact/">
+      Contact <span aria-hidden="true">↗</span>
+    </a>
+    <a href={siteConfig.studioUrl} target="_blank" rel="noopener noreferrer">
+      Visit Solvin <span aria-hidden="true">↗</span>
+    </a>
+  </nav>
+</header>
+<script>
+  const themeButton =
+    document.querySelector<HTMLButtonElement>(".theme-toggle");
+  function updateThemeLabel() {
+    const dark = document.documentElement.dataset.theme === "dark";
+    themeButton?.setAttribute(
+      "aria-label",
+      `Use ${dark ? "light" : "dark"} theme`,
+    );
   }
-
-  // Initialize on page load and after navigation
-  document.addEventListener('DOMContentLoaded', initMobileMenu);
-  document.addEventListener('astro:after-swap', initMobileMenu);
+  updateThemeLabel();
+  themeButton?.addEventListener("click", () => {
+    const next =
+      document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem("solvin-theme", next);
+    } catch {}
+    updateThemeLabel();
+  });
+  const menuButton = document.querySelector<HTMLButtonElement>(".menu-toggle");
+  const menu = document.querySelector<HTMLElement>("#mobile-nav");
+  if (menu) menu.hidden = true;
+  if (menuButton) menuButton.hidden = false;
+  function closeMenu() {
+    if (menu) menu.hidden = true;
+    menuButton?.setAttribute("aria-expanded", "false");
+    menuButton?.setAttribute("aria-label", "Open navigation");
+  }
+  menuButton?.addEventListener("click", () => {
+    if (!menu) return;
+    menu.hidden = !menu.hidden;
+    menuButton.setAttribute("aria-expanded", String(!menu.hidden));
+    menuButton.setAttribute(
+      "aria-label",
+      menu.hidden ? "Open navigation" : "Close navigation",
+    );
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && menu && !menu.hidden) {
+      closeMenu();
+      menuButton?.focus();
+    }
+  });
+  menu
+    ?.querySelectorAll("a")
+    .forEach((link) => link.addEventListener("click", closeMenu));
+  matchMedia("(min-width: 961px)").addEventListener("change", (event) => {
+    if (event.matches) closeMenu();
+  });
 </script>

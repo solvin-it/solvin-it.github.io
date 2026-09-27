@@ -1,242 +1,72 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
-import { siteConfig } from '../../content/site.ts';
-
-const title = `Notes | ${siteConfig.name}`;
-const description = 'Case studies and project documentation showcasing AI/ML engineering projects, technical implementations, and real-world solutions.';
-
-// Case studies and project documentation
-const posts = [
+import MainLayout from "../../layouts/MainLayout.astro";
+const notes = [
   {
-    title: "Quest to Solvin Case Study",
-    slug: "../projects/quest-to-solvin",
-    excerpt: "Building an AI-driven interactive storytelling prototype with dynamic NPC generation, personality traits, and quest mechanics using OpenAI APIs.",
-    publishedAt: "2025-09-27",
-    readTime: "8 min read",
-    category: "Case Study",
-    tags: ["AI", "Storytelling", "OpenAI", "Streamlit"]
+    number: "01",
+    title: "Grounding is a product decision.",
+    body: "A cited answer is only one part of a knowledge system. Source versions, review status, and the ability to trace a claim matter just as much as the final response.",
+    project: "Solvin GraphRAG",
+    slug: "graph-rag",
+    category: "AI systems",
   },
   {
-    title: "RAG-on-Me Case Study",
-    slug: "../projects/rag-on-me", 
-    excerpt: "A minimal Retrieval-Augmented Generation system that turns my resume into an interactive chatbot, demonstrating modern AI pipeline architecture with LangGraph and FastAPI.",
-    publishedAt: "2025-09-27",
-    readTime: "10 min read",
-    category: "Case Study",
-    tags: ["RAG", "LangChain", "FastAPI", "PostgreSQL"]
+    number: "02",
+    title: "The interface should fit the task.",
+    body: "Conversation is useful when context matters. A direct control is often faster for repetitive work. Giving people both can make an assistant more useful, not less intelligent.",
+    project: "Civi",
+    slug: "civi",
+    category: "Product thinking",
   },
   {
-    title: "Customer Churn Predictor API Case Study",
-    slug: "../projects/customer-churn",
-    excerpt: "End-to-end machine learning deployment project: from data preprocessing to production API, showcasing ML engineering skills with FastAPI and Docker.",
-    publishedAt: "2025-09-27",
-    readTime: "7 min read",
-    category: "Case Study",
-    tags: ["Machine Learning", "FastAPI", "Docker", "Scikit-learn"]
+    number: "03",
+    title: "Make the tradeoff visible.",
+    body: "A recall improvement deserves its precision figure beside it. Good ML communication explains what a model gets wrong, what the threshold changes, and what remains unvalidated.",
+    project: "Readmission prediction",
+    slug: "diabetic-readmission",
+    category: "Applied ML",
   },
   {
-    title: "Gentleman's POS Case Study",
-    slug: "../projects/pos-system",
-    excerpt: "Modular Python web application for dual-service business operations, featuring Flask blueprints, hardware integration, and real-world deployment.",
-    publishedAt: "2025-09-27",
-    readTime: "9 min read",
-    category: "Case Study",
-    tags: ["Python", "Flask", "POS System", "Hardware Integration"]
-  }
+    number: "04",
+    title: "Connectivity is a design constraint.",
+    body: "Field software needs to work where the job happens. Capturing actions locally and making synchronization explicit changes the architecture from the beginning.",
+    project: "Oprenta",
+    slug: "oprenta",
+    category: "Product engineering",
+  },
 ];
-
-const categories = ["All", "Case Study"];
 ---
 
-<MainLayout title={title} description={description}>
-  <section class="section">
-    <div class="container max-w-6xl">
-      <!-- Page Header -->
-      <div class="text-center mb-16 animate-in">
-        <h1 class="heading-1 text-gray-900 dark:text-white mb-6">
-          Notes
-        </h1>
-        <p class="body-large max-w-3xl mx-auto">
-          Case studies and project documentation showcasing AI/ML engineering projects, technical implementations, and real-world solutions I've built.
-        </p>
-      </div>
-
-      <!-- Category Filter -->
-      <div class="flex flex-wrap justify-center gap-3 mb-12 animate-in" style="animation-delay: 0.1s">
-        {categories.map((category) => (
-          <button 
-            class="px-4 py-2 text-sm font-medium rounded-full transition-colors category-filter"
-            data-category={category.toLowerCase()}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
-      <!-- Posts Grid -->
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="posts-grid">
-        {posts.map((post, index) => (
-          <article 
-            class="card p-6 h-full flex flex-col hover:shadow-lg transition-all duration-300 ease-in-out group animate-in"
-            style={`animation-delay: ${0.1 + index * 0.05}s`}
-            data-category={post.category.toLowerCase()}
-          >
-            <!-- Post Meta -->
-            <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
-              <div class="flex items-center space-x-2">
-                <span class={`px-2 py-1 rounded-full text-xs font-medium ${
-                  post.category === 'Case Study' ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300' :
-                  post.category === 'AI/ML' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' :
-                  post.category === 'Data Science' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
-                  post.category === 'Full Stack' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300' :
-                  'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300'
-                }`}>
-                  {post.category}
-                </span>
-              </div>
-              <time datetime={post.publishedAt}>
-                {new Date(post.publishedAt).toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'short', 
-                  day: 'numeric' 
-                })}
-              </time>
-            </div>
-
-            <!-- Post Content -->
-            <div class="flex-1">
-              <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                {post.title}
-              </h2>
-              
-              <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">
-                {post.excerpt}
-              </p>
-              
-              <div class="flex flex-wrap gap-2 mb-4">
-                {post.tags.map((tag) => (
-                  <span class="inline-block px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <!-- Post Footer -->
-            <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-              <span class="text-xs text-gray-500 dark:text-gray-400">
-                {post.readTime}
-              </span>
-              
-              <a 
-                href={`/notes/${post.slug}`}
-                class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium inline-flex items-center group-hover:translate-x-1 transition-transform"
-              >
-                Read more 
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      <!-- Coming Soon Section -->
-      <div class="text-center mt-16 animate-in" style="animation-delay: 0.6s">
-        <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 md:p-12">
-          <h2 class="heading-3 text-gray-900 dark:text-white mb-4">
-            More Content Coming Soon
-          </h2>
-          <p class="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-            I'm constantly learning and building new things. Subscribe to get notified when I publish new insights about AI/ML, software engineering, and technology trends.
-          </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/contact" class="btn btn-primary">
-              Get in Touch
-            </a>
-            <a href={siteConfig.author.github} target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-              Follow on GitHub
-            </a>
-          </div>
-        </div>
-      </div>
+<MainLayout
+  title="Notes on the work — Jose Fernando Gonzales"
+  description="Short engineering observations from building AI systems, applications, and ML projects."
+>
+  <section class="page-intro container">
+    <p class="eyebrow">Professional development / Notes</p>
+    <h1>
+      Engineering notes<span class="blue">.</span>
+    </h1>
+    <div class="intro-bottom">
+      <p>
+        Short observations drawn from the projects.
+        <br />
+        The decisions behind the interface and the code.
+      </p>
     </div>
   </section>
+  <section class="container notes-list" aria-label="Engineering notes">
+    {notes.map((note) => (
+      <article id={`note-${note.number}`}>
+        <span class="eyebrow">
+          {note.number} / {note.category}
+        </span>
+        <div>
+          <h2>{note.title}</h2>
+          <p>{note.body}</p>
+          <a class="text-link" href={`/projects/${note.slug}/`}>
+            Inside {note.project} <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </article>
+    ))}
+  </section>
 </MainLayout>
-
-<style>
-  .animate-in {
-    animation: slideIn 0.6s ease-out forwards;
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  @keyframes slideIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .animate-in {
-      animation: none;
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  .category-filter {
-    @apply bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600;
-  }
-  
-  .category-filter.active {
-    @apply bg-primary-600 text-white hover:bg-primary-700;
-  }
-</style>
-
-<script>
-  function initCategoryFilter() {
-    const filterButtons = document.querySelectorAll('.category-filter');
-    const posts = document.querySelectorAll('[data-category]');
-    
-    // Set initial active state
-    filterButtons[0]?.classList.add('active');
-    
-    filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const category = button.getAttribute('data-category');
-        
-        // Update active button
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        
-        // Filter posts
-        posts.forEach(post => {
-          const postCategory = post.getAttribute('data-category');
-          const htmlPost = post as HTMLElement;
-          
-          if (category === 'all' || postCategory === category) {
-            htmlPost.style.display = 'block';
-            htmlPost.style.opacity = '1';
-            htmlPost.style.transform = 'translateY(0)';
-          } else {
-            htmlPost.style.opacity = '0';
-            htmlPost.style.transform = 'translateY(20px)';
-            
-            setTimeout(() => {
-              if (htmlPost.style.opacity === '0') {
-                htmlPost.style.display = 'none';
-              }
-            }, 200);
-          }
-        });
-      });
-    });
-  }
-
-  // Initialize filter functionality
-  document.addEventListener('DOMContentLoaded', initCategoryFilter);
-  document.addEventListener('astro:after-swap', initCategoryFilter);
-</script>

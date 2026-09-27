@@ -1,94 +1,35 @@
-# Quest to Solvin – Case Study
+# Quest to Solvin
 
-## Project Overview
+A fantasy RPG conversation experiment with generated characters, portraits, and quest-driven storytelling.
 
-*Quest to Solvin* is an AI-driven interactive storytelling prototype inspired by VRMMORPG-themed manhwas such as *Overgeared* and *Legendary Moonlight Sculptor*. These stories often feature advanced AIs capable of creating immersive worlds filled with lifelike NPCs. This project set out to explore how close we are to that vision today.
+Status: Earlier prototype · 2025
+Access: Public repository
+Technologies: Python, Streamlit, OpenAI API, Docker
 
-The goal was simple yet ambitious: create a random NPC with personality traits, generate a portrait, and let users chat with them in a way that feels dynamic and story-driven.
+## The context
 
----
+Scripted dialogue gives a game control, but limits player freedom. This prototype explored what a language model could add to open-ended character interactions.
 
-## Problem & Opportunity
+## The approach
 
-Interactive storytelling has seen experiments with AI, but the boundaries of what’s possible remain underexplored. Most narrative games are pre-scripted, limiting spontaneity. With the rise of LLMs, the opportunity lies in letting AI dynamically generate unique characters, conversations, and quests in real time.
+- Built a chat-based fantasy experience with character context, generated portraits, and quest mechanics.
+- Iterated prompts and conversation handling to give characters a more consistent role in the story.
+- Used Streamlit for rapid interface development and containerization for a reproducible runtime.
 
-*Quest to Solvin* takes a nod from fantasy novels and games that shaped my imagination and attempts to push AI into that space.
+Conceptual flow: Player action → Character context → Evolving story
 
----
+## A key decision
 
-## Scope & Features
+Prioritize a small playable loop. A convincing interaction teaches more about the design than a large world without coherent conversations.
 
-* **Must-haves:** NPC generation with unique personality, portrait, and chat functionality.
-* **Nice-to-haves:** Quest generation (implemented in early form).
-* **Dropped features:** Town exploration and map movement—too complex for Streamlit in this version.
+## The result
 
-NPC creation, quest objectives, lore, and user interaction were tied together through OpenAI APIs. The system begins with NPC generation, produces a pixel-art portrait, and equips the NPC with a quest aligned with their personality. Lore was loaded from markdown files for easy extensibility.
+A complete storytelling prototype and a practical exploration of prompt design, context, and interface constraints.
 
----
+## Scope and limitations
 
-## Technical Approach
+Personal playtesting rather than a formal usability study. Portrait generation cost and overly eager quest-giving were known limitations. No live demo is advertised.
 
-**Stack & Tools:**
+[Public source](https://github.com/solvin-it/quest_to_solvin)
 
-* Streamlit for the interface
-* OpenAI GPT models for dialogue and quest logic
-* DALL·E for pixel-art portrait generation
-* Markdown for lore files
-* Docker for portability
-* GCP for hosting
-
-**Architecture & Design:**
-
-* Code structured using OOP (`npc.py`, `quest.py`, `world.py`).
-* NPC personalities injected into prompts for consistency.
-* Chat context tracked via message state lists.
-* Lore loaded dynamically into the system to ground NPCs.
-
----
-
-## Challenges & Trade-offs
-
-* **Evolving APIs:** OpenAI model deprecations required constant updates.
-* **Cost:** Image generation via DALL·E was expensive; mitigated by requiring users to provide their own `OPENAI_API_KEY`.
-* **Trade-offs:** As a prototype, consistency was less important than showcasing freedom and creativity.
-* **Validation:** NPCs and quests worked best when users role-played properly; nonsense input led to nonsense output.
-
----
-
-## UX & Design
-
-The flow was designed to mimic an *isekai* entry: players awaken in an unknown world and encounter an NPC who gives them direction.
-
-* **Interface:** Streamlit-based chat UI with portraits and quests.
-* **Priority:** User input freedom over scripted storylines.
-* **Limitation:** No formal usability testing; the design relied on my own playtesting.
-
----
-
-## Outcomes & Learnings
-
-* **What worked:** NPC generation and chat were surprisingly fun and engaging.
-* **What fell short:** NPCs sometimes felt pushy in quest-giving, and portraits were costly to generate.
-* **Key lessons:**
-
-  * Prompt engineering is powerful but requires iteration.
-  * API integration with LLMs can create engaging prototypes quickly.
-  * Streamlit is great for MVPs but limiting for complex UIs.
-* **Proudest achievement:** Building my first complete AI-driven storytelling prototype from scratch.
-
----
-
-## Future Directions
-
-* Expand locations and branching narratives.
-* Implement progression systems for longer sessions.
-* Integrate AI agents to make NPCs more autonomous and lifelike.
-* Explore persistence features (accounts, saved states).
-
----
-
-## Reflection
-
-This project sharpened my skills in **prompt design, LLM integration, UI prototyping, and system deployment**. The hardest part was UI organization and balancing scope with technical limits.
-
-If I were to advise others: *start small, make it work, then refine*. Even a simple prototype can reveal deep insights into how AI can change storytelling.
+[Portfolio case study](https://solvin-it.github.io/projects/quest-to-solvin/)

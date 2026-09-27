@@ -1,0 +1,18 @@
+---
+import ProjectLayout from "../../layouts/ProjectLayout.astro";
+import { projects } from "../../content/projects";
+export function getStaticPaths() {
+  const existingRoutes = [
+    "rag-on-me",
+    "quest-to-solvin",
+    "customer-churn",
+    "pos-system",
+  ];
+  return projects
+    .filter((project) => !existingRoutes.includes(project.slug))
+    .map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+const { project } = Astro.props;
+---
+
+<ProjectLayout project={project} />
